@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222A38">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<script>
+// let backgroundCount = 1;
+</script>
+
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/favicon-32x32.png?v=5.1.3" color="#222A38">
+
+
+
+
+
+  <meta name="keywords" content="GL,WebGL,wave-generating,FFT," />
+
+
+
+
+
+  <link rel="alternate" href="http://feed43.com/koishi-rss.xml" title="KoishiChan's space" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="BriefNV的流程图介绍该算法简直再清楚不过了：  Phillips Spectrum统计模型的示例频谱是Phillips Spectrum： $$P_h(\vec k) = \left \langle { \left | {\widetilde h}^*(\vec k, t) \right | }^2 \right \rangle$$ 在统计学上使用如下模型来模拟Phillips Spectr">
+<meta name="keywords" content="GL,WebGL,wave-generating,FFT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于海洋学统计模型的海面波形生成">
+<meta property="og:url" content="http://yoursite.com/2018/05/18/基于海洋学统计模型的海面波形生成/index.html">
+<meta property="og:site_name" content="KoishiChan&#39;s space">
+<meta property="og:description" content="BriefNV的流程图介绍该算法简直再清楚不过了：  Phillips Spectrum统计模型的示例频谱是Phillips Spectrum： $$P_h(\vec k) = \left \langle { \left | {\widetilde h}^*(\vec k, t) \right | }^2 \right \rangle$$ 在统计学上使用如下模型来模拟Phillips Spectr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/nv-brief.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/phillips.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/H.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/Dx.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/Dy.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/displacement.png">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/fftwave.png">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/normal.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/fftwave2.png">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/fft-whitecap.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/fft-bump-whitecap.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/adjusted.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/unfiltered.png">
+<meta property="og:image" content="http://yoursite.com/img/2018/5/18/sigmod-filter.png">
+<meta property="og:updated_time" content="2018-05-27T12:25:06.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于海洋学统计模型的海面波形生成">
+<meta name="twitter:description" content="BriefNV的流程图介绍该算法简直再清楚不过了：  Phillips Spectrum统计模型的示例频谱是Phillips Spectrum： $$P_h(\vec k) = \left \langle { \left | {\widetilde h}^*(\vec k, t) \right | }^2 \right \rangle$$ 在统计学上使用如下模型来模拟Phillips Spectr">
+<meta name="twitter:image" content="http://yoursite.com/img/2018/5/18/nv-brief.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/18/基于海洋学统计模型的海面波形生成/"/>
+
+
+
+
+
+  <title>基于海洋学统计模型的海面波形生成 | KoishiChan's space -  |GL|WebGL|wave-generating|FFT|</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <script>
+    // let headband = document.querySelector('.headband');
+    // let backgroundIndex = Math.floor(Math.random() * backgroundCount);
+    // headband.style.setProperty('--background', 'url("/images/BG' + backgroundIndex + '.jpg")');
+    </script>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KoishiChan's space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/基于海洋学统计模型的海面波形生成/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KoishiChan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KoishiChan's space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于海洋学统计模型的海面波形生成</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T13:42:01+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/18/基于海洋学统计模型的海面波形生成/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/05/18/基于海洋学统计模型的海面波形生成/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Brief"><a href="#Brief" class="headerlink" title="Brief"></a>Brief</h1><p>NV的流程图介绍该算法简直再清楚不过了：</p>
+<p><img src="/img/2018/5/18/nv-brief.jpg" alt=""></p>
+<h1 id="Phillips-Spectrum"><a href="#Phillips-Spectrum" class="headerlink" title="Phillips Spectrum"></a>Phillips Spectrum</h1><p>统计模型的示例频谱是Phillips Spectrum：</p>
+<p>$$<br>P_h(\vec k) = \left \langle { \left | {\widetilde h}^*(\vec k, t) \right | }^2 \right \rangle<br>$$</p>
+<p>在统计学上使用如下模型来模拟Phillips Spectrum：</p>
+<p>$$<br>P_h(\vec k) = \frac A { |\vec k|^4} { | \hat k \cdot \hat \omega | }^2 {e^{-\frac 1 { { |\vec k| }^2 L^2}}}<br>$$</p>
+<p>生成Phillips Spectrum的像素着色器如下：</p>
+<a id="more"></a>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#version 300 es</span></div><div class="line"></div><div class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</div><div class="line"></div><div class="line"><span class="keyword">in</span> <span class="type">vec2</span> Position0;</div><div class="line"></div><div class="line"><span class="keyword">out</span> <span class="type">vec2</span> Phillips;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="type">float</span> V = <span class="number">1e4</span>;  <span class="comment">// wind speed </span></div><div class="line"><span class="keyword">const</span> <span class="type">vec2</span> u = <span class="built_in">normalize</span>(<span class="type">vec2</span>(<span class="number">1</span>, <span class="number">-1</span>));  <span class="comment">// wind direction</span></div><div class="line"><span class="keyword">const</span> <span class="type">float</span> g = <span class="number">9.8</span>;  <span class="comment">// gravity</span></div><div class="line"><span class="keyword">const</span> <span class="type">float</span> L = V * V / g;  <span class="comment">// parameter</span></div><div class="line"><span class="keyword">const</span> <span class="type">float</span> A = <span class="number">.02</span>;  <span class="comment">// amplitude</span></div><div class="line"></div><div class="line"><span class="type">void</span> main()</div><div class="line">&#123;</div><div class="line">	<span class="type">vec2</span> uv = Position0;</div><div class="line">	<span class="type">float</span> k = <span class="built_in">length</span>(uv);</div><div class="line">	<span class="type">vec2</span> kn = <span class="built_in">normalize</span>(uv);</div><div class="line">	<span class="type">float</span> d = <span class="built_in">dot</span>(kn, u);</div><div class="line">	<span class="type">vec2</span> ph = <span class="type">vec2</span>(A / <span class="built_in">pow</span>(k, <span class="number">4.</span>) * d * d * <span class="built_in">exp</span>(<span class="number">-1.</span>/(k * k * L * L)));</div><div class="line">	Phillips = <span class="built_in">sqrt</span>(ph / <span class="number">2.</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Gaussian-Random-Numbers"><a href="#Gaussian-Random-Numbers" class="headerlink" title="Gaussian Random Numbers"></a>Gaussian Random Numbers</h1><p>在原论文中表述为：</p>
+<p>$$<br>\xi(\vec k) = \xi_r + i \xi_i<br>$$</p>
+<p>其实部和虚部是两个独立的标准正态分布变量。</p>
+<p>后续会写一下这部分。</p>
+<h1 id="Initial-Spectrum"><a href="#Initial-Spectrum" class="headerlink" title="Initial Spectrum"></a>Initial Spectrum</h1><p>$$<br>\widetilde H_0(\vec k) = \frac 1 {\sqrt 2} \xi(\vec k) {\sqrt {P_h(\vec k)}}<br>$$</p>
+<p>实际生成频谱如图：</p>
+<p><img src="/img/2018/5/18/phillips.jpg" alt=""></p>
+<p>现有一个疑惑：NV的频谱是不对称的，而我生成的频谱是对称的。单看这个函数表达式感觉没有不对称的理由，不知我理解是不是有偏差。</p>
+<h1 id="Displacement-Map"><a href="#Displacement-Map" class="headerlink" title="Displacement Map"></a>Displacement Map</h1><p>Height field：</p>
+<p>$$<br>\widetilde H(\vec k, t) = \widetilde H_0(\vec k) e^{i \omega t} + {\widetilde H_0}^*(- \vec k) e^{- i \omega t}<br>$$</p>
+<p>即：</p>
+<p>$$<br>\widetilde H(\vec k, t) = (cos(\omega t) + i sin(\omega t)) \widetilde H_0(\vec k) + (cos(\omega t) - i sin(\omega t)) {\widetilde H_0}^*(- \vec k)<br>$$</p>
+<p>Choppy field：</p>
+<p>$$<br>\widetilde D_x(\vec k, t) = i \frac {\vec k.x} { | \vec k | } \widetilde H(\vec k, t)<br>$$</p>
+<p>$$<br>\widetilde D_y(\vec k, t) = i \frac {\vec k.y} { | \vec k | } \widetilde H(\vec k, t)<br>$$</p>
+<p>计算三个channel的像素着色器如下：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#version 300 es</span></div><div class="line"></div><div class="line"><span class="meta">#define PI 3.141592654</span></div><div class="line"><span class="meta">#define EPS .00</span></div><div class="line"></div><div class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</div><div class="line"></div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gSpectrum;</div><div class="line"><span class="keyword">uniform</span> <span class="type">float</span> gTime;</div><div class="line"></div><div class="line"><span class="keyword">in</span> <span class="type">vec2</span> Position0;</div><div class="line"></div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec2</span> H;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dx;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">2</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dy;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="type">float</span> omega = <span class="number">.5</span>;</div><div class="line"></div><div class="line"><span class="type">vec2</span> complexMul(<span class="type">vec2</span> a, <span class="type">vec2</span> b)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">return</span> <span class="type">vec2</span>(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="type">float</span> UVRandom(<span class="type">vec2</span> uv, <span class="type">float</span> salt, <span class="type">float</span> random)</div><div class="line">&#123;</div><div class="line">	uv += <span class="type">vec2</span>(salt, random);</div><div class="line">	<span class="keyword">return</span> <span class="built_in">fract</span>(<span class="built_in">sin</span>(<span class="built_in">dot</span>(uv, <span class="type">vec2</span>(<span class="number">12.9898</span>, <span class="number">78.233</span>))) * <span class="number">43758.5453</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="type">vec2</span> gaussian(<span class="type">vec2</span> uv, <span class="type">vec2</span> seed)</div><div class="line">&#123;</div><div class="line">	<span class="type">float</span> rand1 = UVRandom(uv, <span class="number">10.612</span>, seed.x);</div><div class="line">	<span class="type">float</span> rand2 = UVRandom(uv, <span class="number">11.899</span>, seed.y);</div><div class="line">	<span class="type">float</span> x = <span class="built_in">sqrt</span>(<span class="number">2.</span> * <span class="built_in">log</span>(rand1 + <span class="number">1.</span>));</div><div class="line">	<span class="type">float</span> y = <span class="number">2.</span> * PI * rand2;</div><div class="line">	<span class="keyword">return</span> x * <span class="type">vec2</span>(<span class="built_in">cos</span>(y), <span class="built_in">sin</span>(y)); </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="type">void</span> main()</div><div class="line">&#123;</div><div class="line">	<span class="type">float</span> t = gTime;</div><div class="line">	<span class="type">vec2</span> uv = Position0;</div><div class="line">	<span class="type">float</span> k = <span class="built_in">length</span>(uv);</div><div class="line">	<span class="type">float</span> sinv = <span class="built_in">sin</span>(omega * t);</div><div class="line">	<span class="type">float</span> cosv = <span class="built_in">cos</span>(omega * t);</div><div class="line">	<span class="type">vec2</span> tex = uv * <span class="number">.5</span> + <span class="number">.5</span>;</div><div class="line">	<span class="type">vec2</span> seed = <span class="type">vec2</span>(<span class="number">1.</span>, <span class="number">2.</span>) * t * <span class="number">1e-7</span>;</div><div class="line">	<span class="type">vec2</span> h0 = <span class="built_in">texture</span>(gSpectrum, tex).xy;</div><div class="line">	<span class="type">vec2</span> H0 = complexMul(h0, gaussian(tex, seed * <span class="number">.5</span> + <span class="number">1.</span>));</div><div class="line">	<span class="type">vec2</span> h0_conj = <span class="built_in">texture</span>(gSpectrum, -tex).xy * <span class="type">vec2</span>(<span class="number">1</span>, <span class="number">-1</span>);</div><div class="line">	<span class="type">vec2</span> H0_conj = complexMul(h0_conj, gaussian(tex, seed));</div><div class="line">	H = (H0 + H0_conj).xy * cosv + (H0 - H0_conj).yx * <span class="type">vec2</span>(<span class="number">-1</span>, <span class="number">1</span>) * sinv;</div><div class="line">	Dx = (uv.x / k * H).yx * <span class="type">vec2</span>(<span class="number">-1.</span>, <span class="number">1.</span>);</div><div class="line">	Dy = (uv.y / k * H).yx * <span class="type">vec2</span>(<span class="number">-1.</span>, <span class="number">1.</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果：</p>
+<p>Height field</p>
+<p><img src="/img/2018/5/18/H.jpg" alt=""></p>
+<p>Choopy field x</p>
+<p><img src="/img/2018/5/18/Dx.jpg" alt=""></p>
+<p>Choppy field y</p>
+<p><img src="/img/2018/5/18/Dy.jpg" alt=""></p>
+<p>基本和NV的结果差不多。</p>
+<h1 id="Cooley–Tukey-FFT-GPU-Version"><a href="#Cooley–Tukey-FFT-GPU-Version" class="headerlink" title="Cooley–Tukey FFT - GPU Version"></a>Cooley–Tukey FFT - GPU Version</h1><p>这里我们假定本文的读者都了解并熟悉Cooley-Tuley FFT算法（可以去维基百科简单了解一下），主要说明如何将本算法用普通的GPU渲染管线实现。</p>
+<p>普通渲染管线的特点：</p>
+<ul>
+<li>纯并行，各线程间无法同步</li>
+<li>每一个像素无法获取其他像素的任何信息</li>
+<li>没有共享内存</li>
+</ul>
+<p>普通渲染管线输入来源：</p>
+<ul>
+<li>uniform变量（对于同一个draw call而言是常量）</li>
+<li>顶点着色器输出varyings（的线性插值）</li>
+<li>纹理（可以有多个channel）</li>
+</ul>
+<p>普通渲染管线的输出：</p>
+<ul>
+<li>屏幕</li>
+<li>RenderBuffer（开MRT后可以输出多个channel）</li>
+<li>纹理（开MRT后可以输出多个channel）</li>
+</ul>
+<p>要在普通渲染管线上做FFT显然不能采用FFT的递归版本（因为没有共享内存，无法存放中间结果）。观察Cooley-Tukey FFT的流程图，我们发现它的中间结果是分层的。对大小为$N$的序列，中间结果共有$log N+1$层（+1在第一次的bit-reversal copy），每层的大小完全相同（为$N$），每层的寻址方式基本相同（每段分两组寻址，对段长取模即可）。这可以非常自然地使用双纹理交替渲染解决。要对三个channel分别做FFT，只需开启MRT并对接三个channel即可。</p>
+<p>二维FFT只要重复做两次一维FFT即可。</p>
+<p>渲染流程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// pseudo code</span></div><div class="line">generateFFTData();</div><div class="line">bitReverseCopyHorizontal();</div><div class="line">swapBuffers();</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i != N; i *= <span class="number">2</span>) &#123;</div><div class="line">	fftHorizontal();</div><div class="line">	swapBuffers();</div><div class="line">&#125;</div><div class="line">bitReverseCopyVertical();</div><div class="line">swapBuffers();</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i != N; i *= <span class="number">2</span>) &#123;</div><div class="line">	fftVertical();</div><div class="line">	swapBuffers();</div><div class="line">&#125;</div><div class="line">generateDisplacement();</div></pre></td></tr></table></figure>
+<p>Bit-Reverse Copy</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#version 300 es</span></div><div class="line"></div><div class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</div><div class="line"></div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevH;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDx;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDy;</div><div class="line"><span class="keyword">uniform</span> <span class="type">float</span> gN;</div><div class="line"></div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec2</span> H;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dx;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">2</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dy;</div><div class="line"></div><div class="line"><span class="type">void</span> main()</div><div class="line">&#123;</div><div class="line">	<span class="type">vec2</span> mn = <span class="built_in">floor</span>(<span class="built_in">gl_FragCoord</span>.xy);</div><div class="line">	<span class="type">float</span> revx = <span class="number">0.</span>;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="type">int</span>(gN); i &gt; <span class="number">1</span>; i /= <span class="number">2</span>)</div><div class="line">	&#123;</div><div class="line">		revx = revx * <span class="number">2.</span> + <span class="built_in">mod</span>(mn.x, <span class="number">2.</span>); mn.x = <span class="built_in">floor</span>(mn.x / <span class="number">2.</span>);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="type">vec2</span> tex = <span class="type">vec2</span>(revx, mn.y) / gN;</div><div class="line">	H = <span class="built_in">texture</span>(gPrevH, tex).rg;</div><div class="line">	Dx = <span class="built_in">texture</span>(gPrevDx, tex).rg;</div><div class="line">	Dy = <span class="built_in">texture</span>(gPrevDy, tex).rg;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>一次迭代DFT：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#version 300 es</span></div><div class="line"></div><div class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</div><div class="line"></div><div class="line"><span class="meta">#define PI 3.141592654</span></div><div class="line"></div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevH;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDx;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDy;</div><div class="line"><span class="keyword">uniform</span> <span class="type">float</span> gStep;</div><div class="line"><span class="keyword">uniform</span> <span class="type">float</span> gN;</div><div class="line"></div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec2</span> H;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">1</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dx;</div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">2</span>) <span class="keyword">out</span> <span class="type">vec2</span> Dy;</div><div class="line"></div><div class="line"><span class="type">vec2</span> complexMul(<span class="type">vec2</span> a, <span class="type">vec2</span> b)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">return</span> <span class="type">vec2</span>(a.x*b.x-a.y*b.y, a.x*b.y+a.y*b.x);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="type">void</span> main()</div><div class="line">&#123;</div><div class="line">	<span class="type">vec2</span> mn = <span class="built_in">floor</span>(<span class="built_in">gl_FragCoord</span>.xy);</div><div class="line">	<span class="type">float</span> k = <span class="built_in">mod</span>(mn.x, gStep * <span class="number">2.</span>);</div><div class="line">	<span class="type">float</span> theta = PI * k / gStep;</div><div class="line">	<span class="type">vec2</span> eo = <span class="type">vec2</span>(mn.x, mn.x + gStep) - <span class="built_in">step</span>(gStep, k) * gStep;</div><div class="line">	<span class="type">vec2</span> epos = <span class="type">vec2</span>(eo.x, mn.y) / gN;</div><div class="line">	<span class="type">vec2</span> opos = <span class="type">vec2</span>(eo.y, mn.y) / gN;</div><div class="line">	<span class="type">vec2</span> term = <span class="type">vec2</span>(<span class="built_in">cos</span>(theta), <span class="built_in">sin</span>(theta));</div><div class="line">	H = <span class="built_in">texture</span>(gPrevH, epos).rg + complexMul(<span class="built_in">texture</span>(gPrevH, opos).rg, term);</div><div class="line">	Dx = <span class="built_in">texture</span>(gPrevDx, epos).rg + complexMul(<span class="built_in">texture</span>(gPrevDx, opos).rg, term);</div><div class="line">	Dy = <span class="built_in">texture</span>(gPrevDy, epos).rg + complexMul(<span class="built_in">texture</span>(gPrevDy, opos).rg, term);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后合并三个channel到displacement map即可：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#version 300 es</span></div><div class="line"></div><div class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</div><div class="line"></div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevH;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDx;</div><div class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> gPrevDy;</div><div class="line"><span class="keyword">uniform</span> <span class="type">float</span> gN;</div><div class="line"></div><div class="line"><span class="keyword">layout</span> (<span class="keyword">location</span> = <span class="number">0</span>) <span class="keyword">out</span> <span class="type">vec3</span> Displacement;</div><div class="line"></div><div class="line"><span class="type">void</span> main()</div><div class="line">&#123;</div><div class="line">	<span class="type">vec2</span> mn = <span class="built_in">floor</span>(<span class="built_in">gl_FragCoord</span>.xy);</div><div class="line">	<span class="type">float</span> term = <span class="number">1.</span> - <span class="number">2.</span> * <span class="built_in">mod</span>(mn.x + mn.y, <span class="number">2.</span>);</div><div class="line">	<span class="type">vec2</span> tex = mn / gN;</div><div class="line">	<span class="type">float</span> H = term * <span class="built_in">texture</span>(gPrevH, tex).x;</div><div class="line">	<span class="type">float</span> Dx = term * <span class="built_in">texture</span>(gPrevDx, tex).x;</div><div class="line">	<span class="type">float</span> Dy = term * <span class="built_in">texture</span>(gPrevDy, tex).x;</div><div class="line">	Displacement = <span class="type">vec3</span>(Dx, Dy, H) * <span class="number">3e-4</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最终生成的displacement map如图：</p>
+<p><img src="/img/2018/5/18/displacement.png" alt=""></p>
+<p>实际绘制的高度场如图：</p>
+<p><img src="/img/2018/5/18/fftwave.png" alt=""></p>
+<h1 id="Normal"><a href="#Normal" class="headerlink" title="Normal"></a>Normal</h1><p>直接从displacement map上取样计算法线。</p>
+<p><img src="/img/2018/5/18/normal.jpg" alt=""></p>
+<p>$$<br>\vec u_1 = \vec u_0 + \vec D_{i+1, j} - \vec D_{i, j}<br>$$<br>$$<br>\vec v_1 = \vec v_0 + \vec D_{i, j+1} - \vec D_{i, j}<br>$$<br>$$<br>\vec N = \vec u_1 \times \vec v_1<br>$$</p>
+<p>其中$D$为displacement map，$u_0$ $v_0$为网格大小。</p>
+<p>原文中有推导出法线公式，但若按此公式计算需要六趟FFT，有些吃不消。故退而求其次，选择了上述方法。</p>
+<p>实际绘制的海面场景如图：</p>
+<p><img src="/img/2018/5/18/fftwave2.png" alt=""></p>
+<h1 id="Whitecap"><a href="#Whitecap" class="headerlink" title="Whitecap"></a>Whitecap</h1><p>参照论文Real-time animation and rendering of ocean whitecaps中的方法，使用雅各比行列式求出水平运动对水面的撕扯程度：</p>
+<p>$$<br>j(\vec p, t) = \left|\begin{array}{cccc}<br>    1 + \sum_i \frac {\partial u(\vec p, t)} {\partial x}  &amp;  \sum_i \frac {\partial u(\vec p, t)} {\partial y} \\<br>    \sum_i \frac {\partial u(\vec p, t)} {\partial y}  &amp; 1 + \sum_i \frac {\partial v(\vec p, t)} {\partial y}<br>\end{array}\right|<br>$$</p>
+<p>水面激起白沫的颜色与$j(\vec p t)$假定为线性关系，调参至美观，得到：</p>
+<p><img src="/img/2018/5/18/fft-whitecap.jpg" alt=""></p>
+<h1 id="Bump-map"><a href="#Bump-map" class="headerlink" title="Bump map"></a>Bump map</h1><p>增加聊胜于无的细节，添加Bump map后的绘制结果：</p>
+<p><img src="/img/2018/5/18/fft-bump-whitecap.jpg" alt=""></p>
+<p>调整色域、网格大小、修复模型后的绘制结果：</p>
+<p><img src="/img/2018/5/18/adjusted.jpg" alt=""></p>
+<h1 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering"></a>Filtering</h1><p>要扩展到无穷大海面，除了LOD问题外，还要解决采样的周期性问题。NV的slides表明在远处可使用柏林噪声与FFT波形混合，此处用sigmod函数（$f(x) = \frac 1 {1 + e^{-x}}$）做了两次混合。</p>
+<p>直接采样的法线，无Filter：</p>
+<p><img src="/img/2018/5/18/unfiltered.png" alt=""></p>
+<p>两次Sigmod Filter，FFT-&gt;perlin-&gt;$\hat z$：</p>
+<p><img src="/img/2018/5/18/sigmod-filter.png" alt=""></p>
+<p>最终的绘制结果基本令人满意。</p>
+<h1 id="Details"><a href="#Details" class="headerlink" title="Details"></a>Details</h1><ul>
+<li><p>texture的filter和wrap方式值得注意。如果设置的filter方式是LINEAR，则FFT采样时会拿到插值后的颜色值，导致FFT结果不正确。在实际海浪采样displacement map时，应选择warp方式为REPEAT，可以省去手动取模的麻烦。</p>
+</li>
+<li><p>GLSL ES3已经支持所有C语言的运算符（包括位运算）了。</p>
+</li>
+</ul>
+<p><a href="https://github.com/xlnx/bee" target="_blank" rel="external">Github repo</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://people.cs.clemson.edu/~jtessen/papers_files/course_slides2002.pdf" target="_blank" rel="external">Tessondorf - Simulating Ocean Water</a></li>
+<li><a href="http://developer.download.nvidia.com/assets/gamedev/files/sdk/11/OceanCS_Slides.pdf" target="_blank" rel="external">Nvidia - OceanCS slides</a></li>
+<li><a href="http://www.aholme.co.uk/GPU_FFT/Main.htm" target="_blank" rel="external">GPU FFT</a></li>
+<li><a href="http://users.ece.cmu.edu/~franzf/papers/fft-enc11.pdf" target="_blank" rel="external">Different FFT Algorithms</a></li>
+<li><a href="http://mc.stanford.edu/cgi-bin/images/7/75/SC08_FFT_on_GPUs.pdf" target="_blank" rel="external">High Performance Discrete Fourier Transforms on Graphics Processors</a></li>
+<li><a href="https://dl.acm.org/citation.cfm?id=2407761" target="_blank" rel="external">Real-time animation and rendering of ocean whitecaps</a></li>
+<li><a href="http://www.cnblogs.com/hehao98/p/8604163.html" target="_blank" rel="external">使用快速傅里叶变换加速波形计算</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/31670275" target="_blank" rel="external">实时水面模拟与渲染</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GL/" rel="tag"># GL</a>
+          
+            <a href="/tags/WebGL/" rel="tag"># WebGL</a>
+          
+            <a href="/tags/wave-generating/" rel="tag"># wave-generating</a>
+          
+            <a href="/tags/FFT/" rel="tag"># FFT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/16/三天不重构就浑身难受/" rel="next" title="三天不重构就浑身难受">
+                <i class="fa fa-chevron-left"></i> 三天不重构就浑身难受
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="KoishiChan" />
+            
+              <p class="site-author-name" itemprop="name">KoishiChan</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="http://feed43.com/koishi-rss.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/xlnx" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/KoishiChan/activities" target="_blank" title="知乎">
+                    
+                      <i class="fa fa-fw fa-globe"></i>知乎</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://www.pixiv.net/member.php?id=10949667" target="_blank" title="Pixiv">
+                    
+                      <i class="fa fa-fw fa-paint-brush"></i>Pixiv</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://osu.ppy.sh/u/10004931" target="_blank" title="Osu!">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Osu!</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://space.bilibili.com/21916586/#!/" target="_blank" title="Bilibili">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Bilibili</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.yuzhenyun.me/" title="yzyDavid" target="_blank">yzyDavid</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th3charlie.com/" title="TH3CHARLie" target="_blank">TH3CHARLie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Brief"><span class="nav-number">1.</span> <span class="nav-text">Brief</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Phillips-Spectrum"><span class="nav-number">2.</span> <span class="nav-text">Phillips Spectrum</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gaussian-Random-Numbers"><span class="nav-number">3.</span> <span class="nav-text">Gaussian Random Numbers</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Initial-Spectrum"><span class="nav-number">4.</span> <span class="nav-text">Initial Spectrum</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Displacement-Map"><span class="nav-number">5.</span> <span class="nav-text">Displacement Map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cooley–Tukey-FFT-GPU-Version"><span class="nav-number">6.</span> <span class="nav-text">Cooley–Tukey FFT - GPU Version</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Normal"><span class="nav-number">7.</span> <span class="nav-text">Normal</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Whitecap"><span class="nav-number">8.</span> <span class="nav-text">Whitecap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bump-map"><span class="nav-number">9.</span> <span class="nav-text">Bump map</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Filtering"><span class="nav-number">10.</span> <span class="nav-text">Filtering</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Details"><span class="nav-number">11.</span> <span class="nav-text">Details</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">12.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KoishiChan</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <!--<script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>-->
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+<script type="text/javascript" src="/js/src/affix.min.js?v=3.2.0"></script>
+
+
+  
+  <!--<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>-->
+<script type="text/javascript" src="/js/src/scrollspy.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <!--<link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">-->
+        <link rel="stylesheet" href="/css/gitment.min.css" type="text/css">
+        <!--<script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>-->
+        <script src="/js/src/gitment.min.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+      <style>
+        a.gitment-editor-footer-tip { display: none; }
+        .gitment-container.gitment-footer-container { display: none; }
+      </style>
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xlnx',
+            repo: 'xlnx.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '0be2e9fa7c1308ec4e7913e4a9fd3bfe66f4f192',
+            
+                client_id: '2fc64c66059dcd4d228d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+    <!--<script type="text/javascript" src="/js/src/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+  
+
+
+  
+
+  
+
+</body>
+</html>
