@@ -143,14 +143,14 @@
     <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
   </entry>
   <entry>
-    <title><![CDATA[tags]]></title>
-    <url>%2Ftags%2Findex.html</url>
-    <content type="text"></content>
-  </entry>
-  <entry>
     <title></title>
     <url>%2Fabout%2Fabout.js</url>
     <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[tags]]></title>
+    <url>%2Ftags%2Findex.html</url>
+    <content type="text"></content>
   </entry>
   <entry>
     <title><![CDATA[about KoishiChan]]></title>
