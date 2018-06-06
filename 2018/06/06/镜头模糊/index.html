@@ -72,7 +72,7 @@
 
 
 
-  <meta name="keywords" content="thoughts," />
+  <meta name="keywords" content="GL,offscreen,WebGL,pixel-retrieve," />
 
 
 
@@ -85,20 +85,22 @@
 
 
 
-<meta name="description" content="简要记录一下最近的情况吧。 开学阶段总是比较杂乱&amp;gt; &amp;lt;">
-<meta name="keywords" content="thoughts">
+<meta name="description" content="前言最近有一个新目标：实现潜望镜被海浪拍击后的镜头模糊效果。 基本思路是在屏幕上采样一个圆周，记录一下在水面和水下的比例$e$。当$e$有突变时，即可判定镜头与水面有相交，高斯模糊之即可。这样就有两个基本问题：  如何高效地从Frame Buffer中获取数据 如何判定一个点在水面以上">
+<meta name="keywords" content="GL,offscreen,WebGL,pixel-retrieve">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简要记录一下最近的情况">
-<meta property="og:url" content="http://yoursite.com/2018/03/18/简要记录一下最近的情况/index.html">
+<meta property="og:title" content="镜头模糊">
+<meta property="og:url" content="http://yoursite.com/2018/06/06/镜头模糊/index.html">
 <meta property="og:site_name" content="KoishiChan&#39;s space">
-<meta property="og:description" content="简要记录一下最近的情况吧。 开学阶段总是比较杂乱&amp;gt; &amp;lt;">
+<meta property="og:description" content="前言最近有一个新目标：实现潜望镜被海浪拍击后的镜头模糊效果。 基本思路是在屏幕上采样一个圆周，记录一下在水面和水下的比例$e$。当$e$有突变时，即可判定镜头与水面有相交，高斯模糊之即可。这样就有两个基本问题：  如何高效地从Frame Buffer中获取数据 如何判定一个点在水面以上">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/img/2018/3/19/phong.png">
-<meta property="og:updated_time" content="2018-05-18T05:34:13.920Z">
+<meta property="og:image" content="http://yoursite.com/img/2018/6/6/pbo.png">
+<meta property="og:image" content="http://yoursite.com/img/2018/6/6/periscope.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/6/6/blur.png">
+<meta property="og:updated_time" content="2018-06-06T05:27:13.602Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简要记录一下最近的情况">
-<meta name="twitter:description" content="简要记录一下最近的情况吧。 开学阶段总是比较杂乱&amp;gt; &amp;lt;">
-<meta name="twitter:image" content="http://yoursite.com/img/2018/3/19/phong.png">
+<meta name="twitter:title" content="镜头模糊">
+<meta name="twitter:description" content="前言最近有一个新目标：实现潜望镜被海浪拍击后的镜头模糊效果。 基本思路是在屏幕上采样一个圆周，记录一下在水面和水下的比例$e$。当$e$有突变时，即可判定镜头与水面有相交，高斯模糊之即可。这样就有两个基本问题：  如何高效地从Frame Buffer中获取数据 如何判定一个点在水面以上">
+<meta name="twitter:image" content="http://yoursite.com/img/2018/6/6/pbo.png">
 
 
 
@@ -128,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/18/简要记录一下最近的情况/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/06/镜头模糊/"/>
 
 
 
 
 
-  <title>简要记录一下最近的情况 | KoishiChan's space -  |thoughts|</title>
+  <title>镜头模糊 | KoishiChan's space -  |GL|offscreen|WebGL|pixel-retrieve|</title>
   
 
 
@@ -301,7 +303,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/18/简要记录一下最近的情况/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/镜头模糊/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KoishiChan">
@@ -318,7 +320,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">简要记录一下最近的情况</h1>
+          <h1 class="post-title" itemprop="name headline">镜头模糊</h1>
         
 
         <div class="post-meta">
@@ -330,8 +332,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-18T23:59:32+08:00">
-                2018-03-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T12:50:15+08:00">
+                2018-06-06
               </time>
             
 
@@ -349,8 +351,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/03/18/简要记录一下最近的情况/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/03/18/简要记录一下最近的情况/" itemprop="commentsCount"></span>
+                <a href="/2018/06/06/镜头模糊/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/06/镜头模糊/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -378,25 +380,47 @@
       
 
       
-        <p>简要记录一下最近的情况吧。</p>
-<p>开学阶段总是比较杂乱> &lt;</p>
-<a id="more"></a>
-<h1 id="SRTP定题"><a href="#SRTP定题" class="headerlink" title="SRTP定题"></a>SRTP定题</h1><p>基于VR的多人合作3D建模系统。</p>
-<p>有点头大，主要是精度问题。不过考虑到双手柄且手柄输入比鼠标多一个维度，感觉还具有一定的可实施性。<br>服务器的问题倒是好办。</p>
-<p>基本打算是这学期把VR部分基本搞出来，下学期上计网的同时去弄服务器，可以方便一些。</p>
-<h1 id="修改了Phong光照模型"><a href="#修改了Phong光照模型" class="headerlink" title="修改了Phong光照模型"></a>修改了Phong光照模型</h1><p>emm，其实很早就实现了，但是刚刚参考了Assimp和3Dmax光照部分相关参数，对原Phong模型进行了一些修正（原模型主要参考<a href="ogldev.co.uk">ogldev</a>）。<br>例如原Phong模型对specular的处理是：</p>
-<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Light = Ambient + Shadow * (Specular + Diffuse);</div><div class="line">FragColor = Color * Light;</div></pre></td></tr></table></figure>
-<p>这样当物体为纯黑表面时<code>FragColor</code>总为零。实际上，镜面反射和物体本身的颜色是无关的，将光照模型修改如下：</p>
-<figure class="highlight glsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Light = Ambient + Shadow * Diffuse;</div><div class="line">LightSpec = Shadow * Specular;</div><div class="line">FragColor = Color * Light + LightSpec;</div></pre></td></tr></table></figure>
-<p>用上述方法渲染得到的结果如下：<br><img src="/img/2018/3/19/phong.png" alt=""></p>
-<h1 id="近期TODO"><a href="#近期TODO" class="headerlink" title="近期TODO"></a>近期TODO</h1><ul>
-<li>SRTP草案，PPT</li>
-<li>SQTP相关事宜，外加两篇文章</li>
-<li>ADS：准备抢接下来的Project</li>
-<li>计组：MIPS汇编器/反汇编器</li>
-<li>实现抗锯齿，在Compute Shader中计算鼠标位置，实现骨骼动画。</li>
-<li>SQL：期中大程，期末大程，权衡用QT还是Java（</li>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近有一个新目标：实现潜望镜被海浪拍击后的镜头模糊效果。</p>
+<p>基本思路是在屏幕上采样一个圆周，记录一下在水面和水下的比例$e$。当$e$有突变时，即可判定镜头与水面有相交，高斯模糊之即可。这样就有两个基本问题：</p>
+<ul>
+<li>如何高效地从Frame Buffer中获取数据</li>
+<li>如何判定一个点在水面以上</li>
 </ul>
+<a id="more"></a>
+<h1 id="Pixel-Retrieve"><a href="#Pixel-Retrieve" class="headerlink" title="Pixel Retrieve"></a>Pixel Retrieve</h1><h2 id="Naive"><a href="#Naive" class="headerlink" title="Naive"></a>Naive</h2><p>首先想到了之前做鼠标检测的方法，直接用<code>glReadPixels</code>读Frame Buffer里的数据，于是我的fps从40掉到了15…</p>
+<p>这样做的问题是显而易见的。打开Chrome Dev Panel，发现<code>readPixels</code>等待GPU同步的时间占到每一帧的95%，这显然是无法容忍的。</p>
+<h2 id="Async"><a href="#Async" class="headerlink" title="Async"></a>Async</h2><p><img src="/img/2018/6/6/pbo.png" alt=""></p>
+<p><a href="">Demo</a>的测试结果如下：</p>
+<table>
+<thead>
+<tr>
+<th>Timing results</th>
+<th>readPixels (sync)</th>
+<th>readPixels (async) + getBufferSubData (sync)</th>
+<th>readPixels (async) + getBufferSubDataAsync</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>time in synchronous picking code</td>
+<td>3 ms</td>
+<td>3 ms</td>
+<td>0 ms</td>
+</tr>
+<tr>
+<td>pick triggered to render complete</td>
+<td>~3.5 ms</td>
+<td>~3.5 ms</td>
+<td>~6.5 ms</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">class</span> asyncutil &#123;</div><div class="line">	<span class="keyword">static</span> retrieve(N: <span class="built_in">number</span>, <span class="keyword">get</span>: (</div><div class="line">			index: <span class="built_in">number</span>, </div><div class="line">			collect: <span class="function">(<span class="params">data: <span class="built_in">any</span></span>) =&gt;</span> <span class="built_in">void</span></div><div class="line">		) =&gt; <span class="built_in">void</span>,</div><div class="line">		finish: (</div><div class="line">			data: <span class="built_in">any</span>[]</div><div class="line">		) =&gt; <span class="built_in">void</span></div><div class="line">	) &#123;</div><div class="line">		<span class="keyword">let</span> data = [];</div><div class="line">		<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i != N; ++i) &#123;</div><div class="line">			<span class="keyword">get</span>(i, <span class="function">(<span class="params">x: <span class="built_in">any</span></span>) =&gt;</span> &#123;</div><div class="line">				data[i] = x; --N &gt; <span class="number">0</span> || finish(data);</div><div class="line">			&#125;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> r = <span class="number">300</span>, t = <span class="number">16</span>;</div><div class="line">gl2.readBuffer(gl2.COLOR_ATTACHMENT1);</div><div class="line">asyncutil.retrieve(t, <span class="function">(<span class="params">i: <span class="built_in">number</span>, collect: (<span class="params">data</span>) =&gt; <span class="built_in">void</span></span>) =&gt;</span> &#123;</div><div class="line">	<span class="keyword">let</span> ret = <span class="keyword">new</span> PixelRetriver(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="number">1</span>));</div><div class="line">	gl2.readPixels(</div><div class="line">		<span class="number">600</span> + r*<span class="built_in">Math</span>.cos(<span class="number">2</span>*<span class="built_in">Math</span>.PI * i/t), </div><div class="line">		<span class="number">450</span> + r*<span class="built_in">Math</span>.sin(<span class="number">2</span>*<span class="built_in">Math</span>.PI * i/t), </div><div class="line">		<span class="number">1</span>, <span class="number">1</span>, gl2.RED, gl.FLOAT, <span class="number">0</span></div><div class="line">	);</div><div class="line">	ret.getDataAsync(<span class="function">(<span class="params">buffer</span>) =&gt;</span> collect(buffer[<span class="number">0</span>]));</div><div class="line">&#125;, <span class="function">(<span class="params">samples: <span class="built_in">any</span>[]</span>) =&gt;</span> &#123;</div><div class="line">	<span class="keyword">let</span> s = <span class="number">0</span>; <span class="keyword">for</span> (<span class="keyword">let</span> x of samples) s += x; sample(s / t);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.blurTime &gt; <span class="number">0</span>) &#123;</div><div class="line">	<span class="keyword">let</span> t = <span class="keyword">this</span>.swapBuffer; <span class="keyword">this</span>.swapBuffer = <span class="keyword">this</span>.worldBuffer; <span class="keyword">this</span>.worldBuffer = t;</div><div class="line">	<span class="keyword">this</span>.gaussBlur.setRadius(<span class="number">8</span> * <span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.blurTime));</div><div class="line">	<span class="keyword">this</span>.gaussBlur.render(<span class="keyword">this</span>.swapBuffer, <span class="keyword">this</span>.worldBuffer);</div><div class="line">	<span class="keyword">this</span>.blurTime -= Renderer.dt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>P.S. <code>WEBGL_get_buffer_sub_data_async</code>属于webgl draft extension，需要在chrome flags里添加<code>--enable-webgl-draft-extensions</code>。</p>
+<h1 id="Stencil-Buffer"><a href="#Stencil-Buffer" class="headerlink" title="Stencil Buffer"></a>Stencil Buffer</h1><h1 id="Gallery"><a href="#Gallery" class="headerlink" title="Gallery"></a>Gallery</h1><p><img src="/img/2018/6/6/periscope.jpg" alt=""></p>
+<p><img src="/img/2018/6/6/blur.png" alt=""></p>
 
       
     </div>
@@ -414,7 +438,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/thoughts/" rel="tag"># thoughts</a>
+            <a href="/tags/GL/" rel="tag"># GL</a>
+          
+            <a href="/tags/offscreen/" rel="tag"># offscreen</a>
+          
+            <a href="/tags/WebGL/" rel="tag"># WebGL</a>
+          
+            <a href="/tags/pixel-retrieve/" rel="tag"># pixel-retrieve</a>
           
         </div>
       
@@ -427,8 +457,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/02/27/水面LOD相关/" rel="next" title="水面LOD相关">
-                <i class="fa fa-chevron-left"></i> 水面LOD相关
+              <a href="/2018/05/30/我永远是小妹妹/" rel="next" title="我永远是小妹妹">
+                <i class="fa fa-chevron-left"></i> 我永远是小妹妹
               </a>
             
           </div>
@@ -436,10 +466,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/28/2018-March/" rel="prev" title="2018.March">
-                2018.March <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -631,7 +657,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SRTP定题"><span class="nav-number">1.</span> <span class="nav-text">SRTP定题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#修改了Phong光照模型"><span class="nav-number">2.</span> <span class="nav-text">修改了Phong光照模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#近期TODO"><span class="nav-number">3.</span> <span class="nav-text">近期TODO</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pixel-Retrieve"><span class="nav-number">2.</span> <span class="nav-text">Pixel Retrieve</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Naive"><span class="nav-number">2.1.</span> <span class="nav-text">Naive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Async"><span class="nav-number">2.2.</span> <span class="nav-text">Async</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stencil-Buffer"><span class="nav-number">3.</span> <span class="nav-text">Stencil Buffer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gallery"><span class="nav-number">4.</span> <span class="nav-text">Gallery</span></a></li></ol></div>
             
 
           </div>
@@ -1209,27 +1235,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-    <!--<script type="text/javascript" src="/js/src/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
   
 
 
