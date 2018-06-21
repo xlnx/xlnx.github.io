@@ -147,34 +147,2382 @@ module.exports = function(originalModule) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var glm_1 = __webpack_require__(/*! ./util/glm */ "./src/util/glm.js");
-var renderer_1 = __webpack_require__(/*! ./renderer/renderer */ "./src/renderer/renderer.ts");
-var scene_1 = __webpack_require__(/*! ./scene/scene */ "./src/scene/scene.ts");
-var viewport_1 = __webpack_require__(/*! ./scene/viewport */ "./src/scene/viewport.ts");
-var model_1 = __webpack_require__(/*! ./gl/model */ "./src/gl/model.ts");
-var modelObject_1 = __webpack_require__(/*! ./object/modelObject */ "./src/object/modelObject.ts");
-var lighting_1 = __webpack_require__(/*! ./techniques/lighting */ "./src/techniques/lighting.ts");
-var shadow_1 = __webpack_require__(/*! ./techniques/shadow */ "./src/techniques/shadow.ts");
-var renderer = new renderer_1.Renderer(document.body);
-var scene = new scene_1.default();
-var camera = scene.createViewport(new viewport_1.PerspectiveViewport()).get();
-camera.position = glm_1.glm.vec3(3, 0, 1.2);
-camera.target = glm_1.glm.vec3(-3, 0, -0.8);
-var light = scene.createCommunicator(new lighting_1.PointLight()).get();
-light.set("position", glm_1.glm.vec3(0, 0, 2));
-light.set("diffuseIntensity", 5);
-light.set("ambientIntensity", 0.7);
-var shadow = scene.createTechnique(new shadow_1.ShadowTechnique());
-renderer_1.gl.clearColor(0, 0, 0, 0);
-renderer_1.gl.clearDepth(1);
-var model = scene.createObject(new modelObject_1.default(model_1.default.create("clemson.json"))).get();
-// Model.create("black-bishop.json"))).get();
-model.scale(0.5);
-renderer_1.gl.enable(renderer_1.gl.DEPTH_TEST);
-renderer.dispatch("render", function () {
-    scene.render();
-});
-renderer.start();
+var game_1 = __webpack_require__(/*! ./game/game */ "./src/game/game.ts");
+new game_1.Game().start();
+
+
+/***/ }),
+
+/***/ "./src/game/2d/options.ts":
+/*!********************************!*\
+  !*** ./src/game/2d/options.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ../../techniques/postProcess */ "./src/techniques/postProcess.ts");
+var texture_1 = __webpack_require__(/*! ../../gl/texture */ "./src/gl/texture.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var Options = /** @class */ (function (_super) {
+    __extends(Options, _super);
+    function Options() {
+        var _this = _super.call(this, shader_1.Shader.create("options", false)) || this;
+        _this.bg = new texture_1.Texture2D({ component: renderer_1.gl.RGB });
+        return _this;
+    }
+    Options.prototype.beforeRender = function () {
+        this.bg.use("Image");
+    };
+    Options.prototype.afterRender = function () {
+        this.bg.unuse();
+    };
+    return Options;
+}(postProcess_1.PostProcess));
+exports.Options = Options;
+
+
+/***/ }),
+
+/***/ "./src/game/2d/periscreen.ts":
+/*!***********************************!*\
+  !*** ./src/game/2d/periscreen.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var rect_1 = __webpack_require__(/*! ../../techniques/rect */ "./src/techniques/rect.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var texture_1 = __webpack_require__(/*! ../../gl/texture */ "./src/gl/texture.ts");
+var PeriScreen = /** @class */ (function () {
+    function PeriScreen() {
+        this.rects = [];
+        this.launchers = [];
+        this.knobs = [];
+        this.indicators = [];
+        this.bg = new texture_1.Texture2D("./assets/periscope.png");
+        var w = renderer_1.Renderer.instance.canvas.width;
+        var h = renderer_1.Renderer.instance.canvas.height;
+        this.rects.push(new rect_1.Rect({
+            left: 0, top: 0, width: w, height: h,
+            tex: [0, 1, 1, 1, 1, 0.25, 0, 0.25]
+        }), new rect_1.Rect({
+            left: 1090 + 14, top: 582 + 42, width: 60, height: 60,
+            tex: [0.477, 0.182, 0.528, 0.182, 0.528, 0.131, 0.477, 0.131]
+        }), new rect_1.Rect({
+            left: 1090 - 109 + 14, top: 582 + 42, width: 60, height: 60,
+            tex: [0.477, 0.182 + 0.051, 0.528, 0.182 + 0.051, 0.528, 0.131 + 0.051, 0.477, 0.131 + 0.051]
+        }));
+        this.main = new rect_1.Rect({
+            left: 0, top: 0, width: w, height: h,
+            tex: [0.15, 0.95, 1.15, 0.95, 1.15, -0.05, 0.15, -0.05]
+        });
+        this.knobs = [
+            new rect_1.Rect({
+                left: 858 + 14, top: 572 + 42, width: 80, height: 80,
+                tex: [0.168, 0.103, 0.248, 0.103, 0.248, 0.033, 0.168, 0.033]
+            }),
+            new rect_1.Rect({
+                left: 858 + 14, top: 572 + 42, width: 80, height: 80,
+                tex: [0.168 + 0.086, 0.103, 0.248 + 0.086, 0.103, 0.248 + 0.086, 0.033, 0.168 + 0.086, 0.033]
+            }),
+            new rect_1.Rect({
+                left: 858 + 14, top: 572 + 42, width: 80, height: 80,
+                tex: [0.168 + 0.086 * 2, 0.103, 0.248 + 0.086 * 2, 0.103, 0.248 + 0.086 * 2, 0.033, 0.168 + 0.086 * 2, 0.033]
+            }),
+        ];
+        this.periscopeState(2);
+    }
+    PeriScreen.prototype.configureUboat = function (uboat) {
+        this.launchers = [];
+        var iu = 0, iv = 0;
+        for (var i in uboat.torpedoLauncher) {
+            var dx = 0.04285 * +i;
+            if (uboat.torpedoLauncher[i].orient[1] > 0) {
+                this.launchers.push(new rect_1.Rect({
+                    left: 976 + 14 + 49 * iu++, top: 420 + 42, width: 47, height: 47,
+                    tex: [0.168 + dx, 0.145, 0.21 + dx, 0.145, 0.21 + dx, 0.104, 0.168 + dx, 0.104]
+                }));
+            }
+            else {
+                this.launchers.push(new rect_1.Rect({
+                    left: 976 + 14 + 49 * iv++, top: 420 + 47 + 26 + 42, width: 47, height: 47,
+                    tex: [0.168 + dx, 0.145, 0.21 + dx, 0.145, 0.21 + dx, 0.104, 0.168 + dx, 0.104]
+                }));
+            }
+        }
+        this.indicator = new rect_1.Rect({
+            left: 780 + 14, top: 500 + 42, width: 22, height: 32,
+            tex: [0.459, 0.031, 0.48, 0.031, 0.48, 0, 0.459, 0]
+        });
+    };
+    PeriScreen.prototype.periscopeState = function (state) {
+        this.knob = this.knobs[state];
+    };
+    PeriScreen.prototype.indicatorState = function (state) {
+        this.indicator.displacement["+="](glm_1.glm.vec2(0, state * 2 * (508 - 374) / renderer_1.Renderer.instance.canvas.height));
+    };
+    PeriScreen.prototype.render = function (world) {
+        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+        renderer_1.gl.clear(renderer_1.gl.COLOR_BUFFER_BIT);
+        renderer_1.gl.enable(renderer_1.gl.BLEND);
+        renderer_1.gl.blendFunc(renderer_1.gl.SRC_ALPHA, renderer_1.gl.ONE_MINUS_SRC_ALPHA);
+        renderer_1.gl.depthMask(false);
+        world.use("Texture");
+        rect_1.Rect.bindShader();
+        this.main.render();
+        rect_1.Rect.unbindShader();
+        world.unuse();
+        this.bg.use("Texture");
+        rect_1.Rect.bindShader();
+        for (var i = 0; i != this.rects.length; ++i) {
+            this.rects[i].render();
+        }
+        for (var _i = 0, _a = this.launchers; _i < _a.length; _i++) {
+            var x = _a[_i];
+            x.render();
+        }
+        this.knob.render();
+        this.indicator.render();
+        rect_1.Rect.unbindShader();
+        this.bg.unuse();
+        renderer_1.gl.depthMask(true);
+        renderer_1.gl.disable(renderer_1.gl.BLEND);
+    };
+    return PeriScreen;
+}());
+exports.PeriScreen = PeriScreen;
+
+
+/***/ }),
+
+/***/ "./src/game/2d/splash.ts":
+/*!*******************************!*\
+  !*** ./src/game/2d/splash.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var postProcess_1 = __webpack_require__(/*! ../../techniques/postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var texture_1 = __webpack_require__(/*! ../../gl/texture */ "./src/gl/texture.ts");
+var Splash = /** @class */ (function (_super) {
+    __extends(Splash, _super);
+    function Splash(image) {
+        var _this = _super.call(this, shader_1.Shader.create("splash", false)) || this;
+        _this.bg = new texture_1.Texture2D("./assets/splash/" + image);
+        return _this;
+    }
+    Splash.prototype.beforeRender = function () {
+        renderer_1.gl.viewport(0, 0, renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height);
+        this.bg.use("Image");
+    };
+    Splash.prototype.afterRender = function () {
+        this.bg.unuse();
+    };
+    return Splash;
+}(postProcess_1.PostProcess));
+exports.Splash = Splash;
+
+
+/***/ }),
+
+/***/ "./src/game/camera/cameraBase.ts":
+/*!***************************************!*\
+  !*** ./src/game/camera/cameraBase.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var viewport_1 = __webpack_require__(/*! ../../gl/viewport */ "./src/gl/viewport.ts");
+var CameraBase = /** @class */ (function (_super) {
+    __extends(CameraBase, _super);
+    function CameraBase(left, top, width, height) {
+        var _this = _super.call(this, left, top, width, height) || this;
+        _this.carrier = null;
+        return _this;
+    }
+    CameraBase.prototype.tie = function (carrier) {
+        if (this.carrier) {
+            this.carrier.tie(null);
+        }
+        this.carrier = carrier;
+        if (carrier) {
+            this.locate(carrier.position);
+            carrier.tie(this);
+        }
+    };
+    return CameraBase;
+}(viewport_1.PerspectiveViewport));
+exports.CameraBase = CameraBase;
+
+
+/***/ }),
+
+/***/ "./src/game/camera/observer.ts":
+/*!*************************************!*\
+  !*** ./src/game/camera/observer.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var cameraBase_1 = __webpack_require__(/*! ./cameraBase */ "./src/game/camera/cameraBase.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+function clamp(x, min, max) {
+    return Math.max(min, Math.min(max, x));
+}
+var Observer = /** @class */ (function (_super) {
+    __extends(Observer, _super);
+    function Observer(left, top, width, height) {
+        var _this = _super.call(this, left, top, width, height) || this;
+        _this.threshord = 200;
+        _this.rModified = true;
+        _this.tModified = true;
+        _this.R = glm_1.glm.vec3(glm_1.glm.radians(0), glm_1.glm.radians(-15), glm_1.glm.radians(0));
+        _this.dist = 2;
+        _this.minDist = 2 * 1;
+        _this.maxDist = 2 * 2;
+        _this.prevx = 0;
+        _this.prevy = 0;
+        _this.isDragging = false;
+        _this.N = glm_1.glm.vec3(-1, 0, 0);
+        _this.Up = glm_1.glm.vec3(0, 0, 1);
+        return _this;
+    }
+    Observer.prototype.getCameraPosition = function () {
+        if (this.rModified || this.tModified || this.translateModified) {
+            this.updatePTrans();
+        }
+        return this.pos;
+    };
+    Object.defineProperty(Observer.prototype, "target", {
+        get: function () {
+            return glm_1.glm.vec3(0, 0, 0);
+        },
+        set: function (value) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Observer.prototype, "up", {
+        get: function () {
+            return glm_1.glm.vec3(0, 0, 0);
+        },
+        set: function (value) {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Observer.prototype.viewModified = function () {
+        return this.rModified || this.tModified || this.translateModified ||
+            this.rotateModified;
+    };
+    Observer.prototype.updatePTrans = function () {
+        if (this.rModified || this.tModified) {
+            if (this.rModified) {
+                this.rModified = false;
+                var sina = Math.sin(this.R.y - Math.PI / 2), sinz = Math.sin(this.R.z), cosa = Math.cos(this.R.y - Math.PI / 2), cosz = Math.cos(this.R.z), cosy = Math.cos(this.R.y), siny = Math.sin(this.R.y);
+                this.rTrans = glm_1.glm.mat4(-sina * cosz, -sinz, cosa * cosz, 0, -sina * sinz, cosz, cosa * sinz, 0, -cosa, 0, -sina, 0, 0, 0, 0, 1);
+                this.qTrans = glm_1.glm.mat4(cosy * cosz, cosy * sinz, -siny, 0, -sinz, cosz, 0, 0, siny * cosz, siny * sinz, cosy, 0, 0, 0, 0, 1);
+            }
+            if (this.tModified) {
+                this.tModified = false;
+                this.tTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -this.dist, 0, 0, 1);
+            }
+            this.pTrans = this.tTrans["*"](this.rTrans);
+        }
+        this.pos = this.P["+"](this.qTrans["*"](glm_1.glm.vec4(this.dist, 0, 0, 1)).xyz);
+    };
+    Observer.prototype.getView = function () {
+        if (this.viewModified()) {
+            if (this.rotateModified) {
+                this.rotateModified = false;
+                var U = glm_1.glm.normalize(glm_1.glm.cross(this.N, this.Up));
+                var V = glm_1.glm.cross(U, this.N);
+                this.rotateTrans = glm_1.glm.mat4(U.x, V.x, -this.N.x, 0, U.y, V.y, -this.N.y, 0, U.z, V.z, -this.N.z, 0, 0, 0, 0, 1);
+            }
+            if (this.translateModified || this.rModified || this.tModified) {
+                this.updatePTrans();
+                if (this.translateModified) {
+                    this.translateModified = false;
+                    this.translateTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -this.P.x, -this.P.y, -this.P.z, 1);
+                }
+                this.wTrans = this.pTrans["*"](this.translateTrans);
+            }
+            this.mTrans = this.rotateTrans["*"](this.wTrans);
+        }
+        return this.mTrans;
+    };
+    Observer.prototype.rotate = function (angle) {
+        this.R["+="](angle);
+        this.R.y = clamp(this.R.y, -Math.PI / 2, Math.PI / 2);
+        this.rModified = true;
+    };
+    Object.defineProperty(Observer.prototype, "rotation", {
+        set: function (angle) {
+            this.R = angle;
+            this.R.y = clamp(this.R.y, -Math.PI / 2, Math.PI / 2);
+            this.rModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Observer.prototype.zoom = function (fact) {
+        this.dist *= fact;
+        this.dist = clamp(this.dist, this.minDist, this.maxDist);
+        this.tModified = true;
+    };
+    Observer.prototype.bind = function () {
+        var _this = this;
+        this.mousewheel = renderer_1.Renderer.instance.dispatch("mousewheel", function (e) {
+            if (!renderer_1.Renderer.pause) {
+                var det = clamp(e.deltaY, -_this.threshord, _this.threshord);
+                det = det / (2 * _this.threshord) + 1;
+                _this.zoom(det);
+            }
+        });
+        this.mousemove = renderer_1.Renderer.instance.dispatch("mousemove", function (e) {
+            if (_this.isDragging) {
+                if (renderer_1.Renderer.pause) {
+                    _this.isDragging = false;
+                }
+                else {
+                    var c1 = renderer_1.Renderer.instance.canvas.height / Math.tan(_this.ffov / 2);
+                    var c2 = renderer_1.Renderer.instance.canvas.width;
+                    var h = 0.5 * Math.sqrt(c1 * c1 - c2 * c2);
+                    var dx1 = e.clientX - renderer_1.Renderer.instance.canvas.width / 2;
+                    var dx2 = _this.prevx - renderer_1.Renderer.instance.canvas.width / 2;
+                    var dy1 = e.clientY - renderer_1.Renderer.instance.canvas.height / 2;
+                    var dy2 = _this.prevy - renderer_1.Renderer.instance.canvas.height / 2;
+                    var thetax = Math.atan(dx1 / h) - Math.atan(dx2 / h);
+                    var thetay = Math.atan(dy1 / h) - Math.atan(dy2 / h);
+                    _this.rotate(glm_1.glm.vec3(0, -thetay, -thetax));
+                    _this.prevx = e.clientX;
+                    _this.prevy = e.clientY;
+                }
+            }
+        });
+        this.mouseup = renderer_1.Renderer.instance.dispatch("mouseup", function (e) {
+            _this.isDragging = false;
+        });
+        this.mousedown = renderer_1.Renderer.instance.dispatch("mousedown", function (e) {
+            _this.prevx = e.clientX;
+            _this.prevy = e.clientY;
+            _this.isDragging = true;
+        });
+    };
+    Observer.prototype.unbind = function () {
+        this.mousewheel.cancel();
+        this.mousemove.cancel();
+        this.mouseup.cancel();
+        this.mousedown.cancel();
+        this.prevx = 0;
+        this.prevy = 0;
+        this.isDragging = false;
+    };
+    Observer.prototype.locate = function (pos) {
+        this.position = pos;
+    };
+    return Observer;
+}(cameraBase_1.CameraBase));
+exports.Observer = Observer;
+
+
+/***/ }),
+
+/***/ "./src/game/camera/periscope.ts":
+/*!**************************************!*\
+  !*** ./src/game/camera/periscope.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var cameraBase_1 = __webpack_require__(/*! ./cameraBase */ "./src/game/camera/cameraBase.ts");
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var vessel_1 = __webpack_require__(/*! ../vessel/vessel */ "./src/game/vessel/vessel.ts");
+var Periscope = /** @class */ (function (_super) {
+    __extends(Periscope, _super);
+    function Periscope() {
+        var _this = _super.call(this) || this;
+        _this.prevx = 0;
+        _this.isDragging = false;
+        _this.diff = 0;
+        _this.zNear = 2e-2;
+        _this.fzFar = 8e2;
+        _this.fov = glm_1.glm.radians(28);
+        return _this;
+    }
+    Periscope.prototype.viewModified = function () {
+        return true;
+    };
+    Periscope.prototype.getView = function () {
+        return _super.prototype.getView.call(this)["*"](this.parent.getSpace());
+    };
+    Periscope.prototype.getCameraPosition = function () {
+        return this.parent.getTrival()["*"](glm_1.glm.vec4(_super.prototype.getCameraPosition.call(this), 1)).xyz;
+    };
+    Periscope.prototype.bind = function () {
+        var _this = this;
+        this.mousemove = renderer_1.Renderer.instance.dispatch("mousemove", function (e) {
+            if (_this.isDragging) {
+                if (renderer_1.Renderer.pause) {
+                    _this.isDragging = false;
+                }
+                else {
+                    var c1 = renderer_1.Renderer.instance.canvas.height / Math.tan(_this.ffov / 2);
+                    var c2 = renderer_1.Renderer.instance.canvas.width;
+                    var h = 0.5 * Math.sqrt(c1 * c1 - c2 * c2);
+                    var dx1 = e.clientX - renderer_1.Renderer.instance.canvas.width / 2;
+                    var dx2 = _this.prevx - renderer_1.Renderer.instance.canvas.width / 2;
+                    var thetax = Math.atan(dx1 / h) - Math.atan(dx2 / h);
+                    _this.rotate(glm_1.glm.vec3(0, 0, -thetax));
+                    _this.prevx = e.clientX;
+                }
+            }
+        });
+        this.mouseup = renderer_1.Renderer.instance.dispatch("mouseup", function (e) {
+            _this.isDragging = false;
+        });
+        this.mousedown = renderer_1.Renderer.instance.dispatch("mousedown", function (e) {
+            if ((e.clientX - 425 - 14) * (e.clientX - 425 - 14) + (e.clientY - 374 - 42) * (e.clientY - 374 - 42)
+                <= 325 * 325) {
+                _this.prevx = e.clientX;
+                _this.isDragging = true;
+            }
+        });
+    };
+    Periscope.prototype.unbind = function () {
+        this.mousedown.cancel();
+        this.mouseup.cancel();
+        this.mousemove.cancel();
+        this.prevx = 0;
+        this.isDragging = false;
+    };
+    Periscope.prototype.rise = function () {
+        this.risev = 1;
+    };
+    Periscope.prototype.down = function () {
+        this.risev = -1;
+    };
+    Periscope.prototype.stop = function () {
+        this.risev = 0;
+    };
+    Periscope.prototype.update = function () {
+        if (this.risev) {
+            var d = this.risev *
+                Periscope.speed * renderer_1.Renderer.dt;
+            this.diff += d;
+            var fix = this.checkRange();
+            this.diff += fix;
+            d += fix;
+            this.translate(glm_1.glm.vec3(0, 0, d));
+            return d / (Periscope.maxH - Periscope.minH);
+        }
+        return 0;
+    };
+    Periscope.prototype.checkRange = function () {
+        if (this.diff > Periscope.maxH) {
+            return Periscope.maxH - this.diff;
+        }
+        else if (this.diff < Periscope.minH) {
+            return Periscope.minH - this.diff;
+        }
+        else {
+            return 0;
+        }
+    };
+    Periscope.prototype.locate = function (pos) {
+    };
+    Periscope.prototype.configureUboat = function (uboat) {
+        this.parent = uboat;
+        this.diff = 0;
+        this.position = glm_1.glm.vec3(0, vessel_1.m2screen * 3.8, vessel_1.m2screen * 5);
+    };
+    Periscope.speed = .5 * vessel_1.m2screen;
+    Periscope.maxH = 5 * vessel_1.m2screen;
+    Periscope.minH = 0.;
+    return Periscope;
+}(cameraBase_1.CameraBase));
+exports.Periscope = Periscope;
+
+
+/***/ }),
+
+/***/ "./src/game/engine3d.ts":
+/*!******************************!*\
+  !*** ./src/game/engine3d.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var offscreen_1 = __webpack_require__(/*! ../gl/offscreen */ "./src/gl/offscreen.ts");
+var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
+var deferImage_1 = __webpack_require__(/*! ../techniques/deferImage */ "./src/techniques/deferImage.ts");
+var uv_1 = __webpack_require__(/*! ../techniques/uv */ "./src/techniques/uv.ts");
+var perlinWave_1 = __webpack_require__(/*! ../techniques/perlinWave */ "./src/techniques/perlinWave.ts");
+var ambientCube_1 = __webpack_require__(/*! ../techniques/ambientCube */ "./src/techniques/ambientCube.ts");
+var skybox_1 = __webpack_require__(/*! ../object/skybox */ "./src/object/skybox.ts");
+var communicator_1 = __webpack_require__(/*! ../gl/communicator */ "./src/gl/communicator.ts");
+var render_1 = __webpack_require__(/*! ./render */ "./src/game/render.ts");
+var vessel_1 = __webpack_require__(/*! ./vessel/vessel */ "./src/game/vessel/vessel.ts");
+var ocean_1 = __webpack_require__(/*! ../object/ocean */ "./src/object/ocean.ts");
+var FFTWave_1 = __webpack_require__(/*! ../techniques/FFTWave */ "./src/techniques/FFTWave.ts");
+var phillips_1 = __webpack_require__(/*! ../techniques/phillips */ "./src/techniques/phillips.ts");
+var decodeImage_1 = __webpack_require__(/*! ../techniques/decodeImage */ "./src/techniques/decodeImage.ts");
+var normal_1 = __webpack_require__(/*! ../techniques/normal */ "./src/techniques/normal.ts");
+var transformFeedback_1 = __webpack_require__(/*! ../gl/transformFeedback */ "./src/gl/transformFeedback.ts");
+var smoke_1 = __webpack_require__(/*! ./vessel/smoke */ "./src/game/vessel/smoke.ts");
+var gaussian_1 = __webpack_require__(/*! ../techniques/gaussian */ "./src/techniques/gaussian.ts");
+var async_1 = __webpack_require__(/*! ../util/async */ "./src/util/async.ts");
+var explode_1 = __webpack_require__(/*! ./vessel/explode */ "./src/game/vessel/explode.ts");
+var Engine3d = /** @class */ (function () {
+    function Engine3d() {
+        this.communicators = new communicator_1.Communicators();
+        this.global = new communicator_1.Communicator("Global", false);
+        this.mainImage = new texture_1.Texture2D({ component: renderer_1.gl.RGBA, type: renderer_1.gl.FLOAT });
+        this.bumpImage = new texture_1.Texture2D("./assets/bump.jpg");
+        this.normalTypeImage = new texture_1.Texture2D({ component: renderer_1.gl.RGBA, type: renderer_1.gl.FLOAT });
+        this.extraImage = new texture_1.Texture2D({ component: renderer_1.gl2.RGBA, type: renderer_1.gl.FLOAT });
+        this.uvImage = new texture_1.Texture2D({ component: renderer_1.gl.RGB });
+        this.perlinImage = new texture_1.Texture2D({ component: renderer_1.gl2.RGBA, type: renderer_1.gl.FLOAT, filter: renderer_1.gl.LINEAR, wrap: renderer_1.gl.REPEAT }, 256, 256);
+        this.phillipsImage = new texture_1.Texture2D({ component: renderer_1.gl2.RG, type: renderer_1.gl.FLOAT, filter: renderer_1.gl.NEAREST, wrap: renderer_1.gl.CLAMP_TO_EDGE }, 256, 256);
+        this.normalJImage = new texture_1.Texture2D({ component: renderer_1.gl2.RGBA, type: renderer_1.gl.FLOAT, filter: renderer_1.gl.LINEAR, wrap: renderer_1.gl.REPEAT }, 256, 256);
+        this.smokeImage = new texture_1.Texture2D({ component: renderer_1.gl.RGBA, type: renderer_1.gl.UNSIGNED_BYTE });
+        this.gaussianImage = new texture_1.Texture2D({ component: renderer_1.gl2.RGBA, type: renderer_1.gl.FLOAT, filter: renderer_1.gl.NEAREST, wrap: renderer_1.gl.REPEAT });
+        this.stencialBuffer = new texture_1.Texture2D({ component: renderer_1.gl2.RED, type: renderer_1.gl.FLOAT, filter: renderer_1.gl.NEAREST, wrap: renderer_1.gl.CLAMP_TO_EDGE });
+        // private stencialBuffer = new RenderBuffer(gl.UNSIGNED_BYTE);
+        this.foamImage = new texture_1.Texture2D("./assets/foam01.png");
+        this.offscreen = new offscreen_1.Offscreen();
+        this.suboffscreen = new offscreen_1.Offscreen();
+        this.transformFeedback = new transformFeedback_1.TransformFeedback();
+        this.ambient = new ambientCube_1.AmbientCube();
+        this.main = new render_1.GameRenderer();
+        this.uv = new uv_1.UV();
+        this.perlin = new perlinWave_1.PerlinWave();
+        this.defer = new deferImage_1.DeferImage();
+        this.decode = new decodeImage_1.DecodeImage();
+        this.phillips = new phillips_1.Phillips();
+        this.fftWave = new FFTWave_1.FFTWave(this.phillipsImage);
+        this.normal = new normal_1.Normal();
+        this.gaussian = new gaussian_1.Gaussian();
+        this.skybox = new skybox_1.Skybox();
+        this.ocean = new ocean_1.Ocean();
+        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+        renderer_1.gl.viewport(0, 0, this.phillipsImage.width, this.phillipsImage.height);
+        this.offscreen.bind();
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.phillipsImage);
+        this.phillips.render();
+        this.offscreen.unbind();
+        renderer_1.gl.enable(renderer_1.gl.DEPTH_TEST);
+        renderer_1.gl.viewport(0, 0, renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height);
+        this.offscreen.bind();
+        this.offscreen.set(renderer_1.gl.DEPTH_ATTACHMENT, new offscreen_1.RenderBuffer(renderer_1.gl.DEPTH_COMPONENT16));
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.gaussianImage);
+        this.gaussian.render();
+        this.offscreen.unbind();
+        this.global.init({
+            LightDir: {
+                type: "vec3",
+                init: glm_1.glm.vec3(0, 0, 1)
+            }
+        });
+        this.communicators.add(this.global);
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 required.";
+        }
+    }
+    Engine3d.prototype.render = function (vessels, explodes, target, sample) {
+        var _this = this;
+        // set gl state
+        renderer_1.gl.clearColor(0, 0, 0, 0);
+        renderer_1.gl.clearDepth(1);
+        // reder ambient cube - offscreen
+        this.ambient.render();
+        this.gaussianImage.use("Gaussian");
+        this.fftWave.render();
+        this.gaussianImage.unuse();
+        // render main image into mainImage
+        this.offscreen.bind();
+        renderer_1.gl.viewport(0, 0, 256, 256);
+        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+        this.suboffscreen.bind();
+        this.suboffscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.perlinImage);
+        this.perlin.render();
+        this.suboffscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.normalJImage);
+        this.fftWave.texture.use("Displacement");
+        this.normal.render();
+        this.fftWave.texture.unuse();
+        this.suboffscreen.unbind();
+        renderer_1.gl.enable(renderer_1.gl.DEPTH_TEST);
+        this.communicators.use();
+        this.global.set("LightDir", this.ambient.lightDir);
+        this.main.viewport.use();
+        renderer_1.gl.clearColor(.0, .0, .0, -1e8);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT0, this.mainImage);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT1, this.normalTypeImage);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT2, this.extraImage);
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl2.COLOR_ATTACHMENT0,
+            renderer_1.gl2.COLOR_ATTACHMENT1,
+            renderer_1.gl2.COLOR_ATTACHMENT2
+        ]);
+        renderer_1.gl.clear(renderer_1.gl.COLOR_BUFFER_BIT | renderer_1.gl.DEPTH_BUFFER_BIT);
+        vessel_1.Vessel.bindShader();
+        vessels.visit(function (e) {
+            e.get().render(_this.main.viewport);
+        });
+        vessel_1.Vessel.unbindShader();
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl2.NONE,
+            renderer_1.gl2.COLOR_ATTACHMENT1,
+            renderer_1.gl2.COLOR_ATTACHMENT2
+        ]);
+        this.fftWave.texture.use("Displacement");
+        this.normalJImage.use("NormalJ");
+        this.bumpImage.use("Bump");
+        this.perlinImage.use("Perlin");
+        this.ocean.bindShader();
+        this.ocean.render(this.main.viewport);
+        this.ocean.unbindShader();
+        this.perlinImage.unuse();
+        this.bumpImage.unuse();
+        this.normalJImage.unuse();
+        this.fftWave.texture.unuse();
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl2.COLOR_ATTACHMENT0,
+            renderer_1.gl2.NONE,
+            renderer_1.gl2.COLOR_ATTACHMENT2
+        ]);
+        this.ambient.texture.use("Ambient");
+        this.skybox.bindShader();
+        this.skybox.render(this.main.viewport);
+        this.skybox.unbindShader();
+        this.ambient.texture.unuse();
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT0, this.smokeImage);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT1, null);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT2, null);
+        renderer_1.gl.clearColor(.0, .0, .0, .0);
+        renderer_1.gl.clear(renderer_1.gl.COLOR_BUFFER_BIT);
+        renderer_1.gl.enable(renderer_1.gl.BLEND);
+        renderer_1.gl.blendFunc(renderer_1.gl.SRC_ALPHA, renderer_1.gl.ONE);
+        renderer_1.gl.depthMask(false);
+        this.transformFeedback.bind();
+        this.gaussianImage.use("Gaussian");
+        smoke_1.Smoke.bindShader();
+        vessels.visit(function (e) {
+            var parent = e.get();
+            for (var _i = 0, _a = parent.smokes; _i < _a.length; _i++) {
+                var s = _a[_i];
+                s.render(_this.main.viewport);
+            }
+        });
+        smoke_1.Smoke.unbindShader();
+        explode_1.Explode.bindShader();
+        explodes.visit(function (e) {
+            var f = e.get();
+            f.render(_this.main.viewport);
+        });
+        explode_1.Explode.unbindShader();
+        this.gaussianImage.unuse();
+        // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        // this.foamImage.use("Foam");
+        // Foam.bindShader();
+        // 	vessels.visit((e: ulist_elem<Vessel>) => {
+        // 		e.get().foam.render(this.main.viewport);
+        // 	});
+        // Foam.unbindShader();
+        // this.foamImage.unuse();
+        this.transformFeedback.unbind();
+        renderer_1.gl.depthMask(true);
+        renderer_1.gl.disable(renderer_1.gl.BLEND);
+        this.main.viewport.unuse();
+        // end world pass
+        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, target);
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT1, this.stencialBuffer);
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl.COLOR_ATTACHMENT0,
+            renderer_1.gl2.COLOR_ATTACHMENT1
+        ]);
+        // main renderer
+        this.mainImage.use("Image");
+        this.normalTypeImage.use("NormalType");
+        this.extraImage.use("Extra");
+        this.ambient.texture.use("Ambient");
+        this.smokeImage.use("Smoke");
+        this.main.render();
+        // this.uv.render();
+        this.smokeImage.unuse();
+        this.ambient.texture.unuse();
+        this.extraImage.unuse();
+        this.normalTypeImage.unuse();
+        this.mainImage.unuse();
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl.COLOR_ATTACHMENT0
+        ]);
+        if (sample) {
+            var r_1 = 300, t_1 = 16;
+            renderer_1.gl2.readBuffer(renderer_1.gl2.COLOR_ATTACHMENT1);
+            async_1.default.retrieve(t_1, function (i, collect) {
+                var ret = new offscreen_1.PixelRetriver(new Float32Array(1));
+                renderer_1.gl2.readPixels(600 + r_1 * Math.cos(2 * Math.PI * i / t_1), 450 + r_1 * Math.sin(2 * Math.PI * i / t_1), 1, 1, renderer_1.gl2.RED, renderer_1.gl.FLOAT, 0);
+                ret.getDataAsync(function (buffer) { return collect(buffer[0]); });
+            }, function (samples) {
+                var s = 0;
+                for (var _i = 0, samples_1 = samples; _i < samples_1.length; _i++) {
+                    var x = samples_1[_i];
+                    s += x;
+                }
+                sample(s / t_1);
+            });
+        }
+        this.offscreen.set(renderer_1.gl2.COLOR_ATTACHMENT1, null);
+        // this.debugWindow(this.stencialBuffer, false, 0);
+        // this.debugWindow(this.normalTypeImage, true, 1);
+        // this.debugWindow(this.extraImage, false, 2);
+        this.communicators.unuse();
+        this.offscreen.unbind();
+    };
+    Engine3d.prototype.debugWindow = function (texture, normalize, index) {
+        var w = index % 3;
+        var h = Math.floor(index / 3);
+        renderer_1.gl.viewport(renderer_1.Renderer.instance.canvas.width / 3 * w, renderer_1.Renderer.instance.canvas.height / 3 * h, renderer_1.Renderer.instance.canvas.width / 3, renderer_1.Renderer.instance.canvas.height / 3);
+        texture.use("Image");
+        if (normalize)
+            this.decode.render();
+        else
+            this.defer.render();
+        texture.unuse();
+        renderer_1.gl.viewport(0, 0, renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height);
+    };
+    Engine3d.prototype.setCamera = function (camera) {
+        if (this.main.viewport) {
+            this.main.viewport.unbind();
+        }
+        this.main.viewport = camera;
+        camera.bind();
+    };
+    return Engine3d;
+}());
+exports.Engine3d = Engine3d;
+
+
+/***/ }),
+
+/***/ "./src/game/game.ts":
+/*!**************************!*\
+  !*** ./src/game/game.ts ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var ulist_1 = __webpack_require__(/*! ../util/ulist */ "./src/util/ulist.ts");
+var observer_1 = __webpack_require__(/*! ./camera/observer */ "./src/game/camera/observer.ts");
+var vessel_1 = __webpack_require__(/*! ./vessel/vessel */ "./src/game/vessel/vessel.ts");
+var submarine_1 = __webpack_require__(/*! ./vessel/submarine */ "./src/game/vessel/submarine.ts");
+var engine3d_1 = __webpack_require__(/*! ./engine3d */ "./src/game/engine3d.ts");
+var splash_1 = __webpack_require__(/*! ./2d/splash */ "./src/game/2d/splash.ts");
+var communicator_1 = __webpack_require__(/*! ../gl/communicator */ "./src/gl/communicator.ts");
+var options_1 = __webpack_require__(/*! ./2d/options */ "./src/game/2d/options.ts");
+var offscreen_1 = __webpack_require__(/*! ../gl/offscreen */ "./src/gl/offscreen.ts");
+var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
+var gaussBlur_1 = __webpack_require__(/*! ../techniques/gaussBlur */ "./src/techniques/gaussBlur.ts");
+var periscope_1 = __webpack_require__(/*! ./camera/periscope */ "./src/game/camera/periscope.ts");
+var torpedo_1 = __webpack_require__(/*! ./vessel/torpedo */ "./src/game/vessel/torpedo.ts");
+var deferImage_1 = __webpack_require__(/*! ../techniques/deferImage */ "./src/techniques/deferImage.ts");
+var periscreen_1 = __webpack_require__(/*! ./2d/periscreen */ "./src/game/2d/periscreen.ts");
+var explode_1 = __webpack_require__(/*! ./vessel/explode */ "./src/game/vessel/explode.ts");
+var mission_1 = __webpack_require__(/*! ./mission */ "./src/game/mission.ts");
+function inRect(x, y, x0, y0, x1, y1) {
+    return x >= x0 && x < x1 && y >= y0 && y < y1;
+}
+function hit(t, v) {
+    var x = glm_1.glm.inverse(v.getTrans())["*"](t).xy;
+    if (x.y < v.collider[1] ||
+        x.y > v.collider[v.collider.length - 1]) {
+        return false;
+    }
+    var l = 0, r = (v.collider.length >> 1) - 1;
+    while (r - l > 1) {
+        var m = (l + r) >> 1;
+        if (x.y >= v.collider[(m << 1) | 1]) {
+            l = m;
+        }
+        else {
+            r = m;
+        }
+    }
+    if (l == (v.collider.length >> 1) - 1) {
+        l -= 1;
+    }
+    var lam = (x.y - v.collider[(l << 1) + 1]) /
+        (v.collider[(l << 1) + 3] - v.collider[(l << 1) + 1]);
+    var z = (1 - lam) * v.collider[(l << 1) + 0] +
+        lam * v.collider[(l << 1) + 2];
+    return Math.abs(x.x) <= z;
+}
+var Game = /** @class */ (function () {
+    function Game() {
+        this.renderer = new renderer_1.Renderer(document.body);
+        this.viewports = {
+            observe: new observer_1.Observer(),
+            follow: new observer_1.Observer(),
+            periscope: new periscope_1.Periscope()
+        };
+        this.vessels = new ulist_1.ulist();
+        this.explodes = new ulist_1.ulist();
+        this.prevDisplayMode = undefined;
+        this.displayMode = "menu";
+        this.renderOption = false;
+        this.inGame = false;
+        this.blurTime = 0;
+        this.prevr = 1;
+        this.engine3d = new engine3d_1.Engine3d();
+        this.splash = new splash_1.Splash("loading.png");
+        this.options = new options_1.Options();
+        this.periscreen = new periscreen_1.PeriScreen();
+        this.defer = new deferImage_1.DeferImage();
+        this.queryObjects = [];
+        this.offscreen = new offscreen_1.Offscreen();
+        this.gaussBlur = new gaussBlur_1.GaussBlur();
+        this.worldBuffer = new texture_1.Texture2D({ component: renderer_1.gl.RGB });
+        this.swapBuffer = new texture_1.Texture2D({ component: renderer_1.gl.RGB });
+        this.screenBuffer = new texture_1.Texture2D({ component: renderer_1.gl.RGB });
+        new communicator_1.Communicators().use();
+        this.beginBattle(mission_1.missions[".narvik"]);
+    }
+    Game.prototype.start = function () {
+        var _this = this;
+        this.renderer.dispatch("render", function () {
+            var callbacks = {
+                "3d": function () {
+                    _this.engine3d.render(_this.vessels, _this.explodes, _this.screenBuffer);
+                    renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+                    _this.screenBuffer.use("Image");
+                    _this.defer.render();
+                    _this.screenBuffer.unuse();
+                },
+                "periscope": function () {
+                    _this.engine3d.render(_this.vessels, _this.explodes, _this.worldBuffer, function (r) {
+                        if (Math.abs(_this.prevr - r) > 0.2) {
+                            _this.blurTime = 2.5;
+                        }
+                        _this.prevr = r;
+                    });
+                    _this.offscreen.bind();
+                    if (_this.blurTime > 0) {
+                        var t = _this.swapBuffer;
+                        _this.swapBuffer = _this.worldBuffer;
+                        _this.worldBuffer = t;
+                        _this.gaussBlur.setRadius(12 * Math.sqrt(_this.blurTime));
+                        _this.gaussBlur.render(_this.swapBuffer, _this.worldBuffer);
+                        _this.blurTime -= renderer_1.Renderer.dt;
+                    }
+                    _this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, _this.screenBuffer);
+                    _this.periscreen.render(_this.worldBuffer);
+                    _this.offscreen.unbind();
+                    renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+                    _this.screenBuffer.use("Image");
+                    _this.defer.render();
+                    _this.screenBuffer.unuse();
+                },
+                "menu": function () {
+                    // this.engine3d.render(this.vessels); 
+                },
+                "map": function () {
+                },
+                "splash": function () {
+                    _this.splash.render();
+                },
+                "options": function () {
+                    if (_this.renderOption) {
+                        _this.renderOption = false;
+                        // this.engine3d.render(this.vessels, this.worldBuffer);
+                        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+                        _this.offscreen.bind();
+                        _this.gaussBlur.setRadius(10);
+                        _this.gaussBlur.render(_this.screenBuffer, _this.options.bg);
+                        _this.offscreen.unbind();
+                    }
+                    _this.options.render();
+                }
+            };
+            callbacks[_this.displayMode]();
+            if (_this.inGame && _this.displayMode != "options") {
+                var d = _this.viewports.periscope.update();
+                _this.periscreen.indicatorState(d);
+                _this.explodes.visit(function (e) {
+                    if (!e.get().checkRange()) {
+                        e.remove();
+                    }
+                });
+                _this.updateVessels();
+            }
+        });
+        this.renderer.start();
+    };
+    Game.prototype.updateVessels = function () {
+        var _this = this;
+        this.vessels.visit(function (e) {
+            var v = e.get();
+            if (v instanceof torpedo_1.Torpedo) {
+                var torpedo = v;
+                var tpos_1 = torpedo.getTrans()["*"](glm_1.glm.vec4(0, torpedo.collider[3], 0, 1));
+                var ves_1 = null;
+                _this.vessels.visit(function (e) {
+                    var v = e.get();
+                    if (v instanceof vessel_1.Vessel && !(v instanceof torpedo_1.Torpedo)
+                        && !(v instanceof submarine_1.Submarine)) {
+                        if (hit(tpos_1, v)) {
+                            ves_1 = v;
+                        }
+                    }
+                });
+                if (ves_1) {
+                    _this.explodes.push(new explode_1.Explode(torpedo.position.xy));
+                    e.remove();
+                }
+                else if (torpedo.checkRange()) {
+                    v.update();
+                }
+                else {
+                    e.remove();
+                }
+            }
+            else {
+                v.update();
+            }
+        });
+    };
+    Game.prototype.spawnVessel = function (className, opt) {
+        if (opt === void 0) { opt = {}; }
+        this.queryObjects.push(className);
+        var self = this;
+        new vessel_1.Vessel(className, function (v) {
+            self.vessels.push(v);
+            // console.log(opt);
+            if ("position" in opt) {
+                v.position = glm_1.glm.vec3(-opt.position[0], -opt.position[1], 0)["*"](vessel_1.m2screen);
+            }
+            if ("target" in opt) {
+                v.speedAngle = opt.target;
+            }
+            if ("speed" in opt) {
+                v.initSpeed = opt.speed;
+            }
+            self.queryObjects.splice(self.queryObjects.indexOf(className), 1);
+            self.checkLoadingFinish();
+        });
+        // clemson.speed = 35.5;
+    };
+    Game.prototype.resetUboat = function (className, opt) {
+        if (opt === void 0) { opt = {}; }
+        this.queryObjects.push(className);
+        var self = this;
+        new submarine_1.Submarine(className, function (v) {
+            self.uboat = v;
+            self.vessels.push(self.uboat);
+            if ("depth" in opt) {
+                v.position = v.position["+"](glm_1.glm.vec3(0, 0, -opt.depth)["*"](vessel_1.m2screen));
+            }
+            if ("target" in opt) {
+                v.speedAngle = opt.target;
+            }
+            if ("speed" in opt) {
+                v.initSpeed = opt.speed;
+            }
+            self.queryObjects.splice(self.queryObjects.indexOf(className), 1);
+            self.checkLoadingFinish();
+            self.viewports.periscope.configureUboat(v);
+            self.periscreen.configureUboat(v);
+        });
+    };
+    Game.prototype.spawnTorpedo = function (className, launcher) {
+        var _this = this;
+        var self = this;
+        new torpedo_1.Torpedo(className, function (v) {
+            var x = self.uboat.torpedoLauncher[launcher];
+            var p = glm_1.glm.vec4(x.position[0], x.position[1], x.position[2], 1);
+            var m = _this.uboat.getTrans();
+            v.position = m["*"](p).xyz;
+            v.speed = _this.uboat.speed * 1.5;
+            v.targetSpeed = 1;
+            var u = glm_1.glm.vec4(x.orient[0], x.orient[1], x.orient[2], 0);
+            v.orient = glm_1.glm.normalize(m["*"](u).xy);
+            self.vessels.push(v);
+        });
+    };
+    Game.prototype.checkLoadingFinish = function () {
+        if (!this.queryObjects.length) {
+            this.finishLoading();
+        }
+    };
+    Game.prototype.setMode = function (mode) {
+        if (this.displayMode == "periscope" && mode != "periscope") {
+            this.viewports.periscope.stop();
+        }
+        switch (mode) {
+            case "free":
+                {
+                    this.displayMode = "3d";
+                    this.engine3d.setCamera(this.viewports.observe);
+                    this.viewports.observe.tie(this.uboat);
+                }
+                break;
+            case "gun":
+                {
+                    this.displayMode = "3d";
+                    this.engine3d.setCamera(this.viewports.follow);
+                }
+                break;
+            case "map":
+                {
+                    this.displayMode = "map";
+                }
+                break;
+            case "turm":
+                {
+                    this.displayMode = "3d";
+                    this.engine3d.setCamera(this.viewports.follow);
+                }
+                break;
+            case "periscope":
+                {
+                    this.displayMode = "periscope";
+                    this.engine3d.setCamera(this.viewports.periscope);
+                }
+                break;
+            default: {
+                throw "unknown mode: " + mode;
+            }
+        }
+    };
+    Game.prototype.beginBattle = function (opt) {
+        if (opt === void 0) { opt = {}; }
+        this.displayMode = "splash";
+        this.queryObjects = [];
+        for (var _i = 0, _a = opt.sea; _i < _a.length; _i++) {
+            var x = _a[_i];
+            this.spawnVessel(x.className, {
+                position: x.position,
+                target: x.target,
+                speed: x.speed
+            });
+        }
+        this.resetUboat(opt.uboat.className, {
+            target: opt.uboat.target,
+            speed: opt.uboat.speed,
+            depth: opt.uboat.depth
+        });
+        renderer_1.Renderer.timescale = 1;
+        this.engine3d.ambient.setTime(opt.ambient.time);
+    };
+    Game.prototype.finishLoading = function () {
+        var _this = this;
+        this.battleKeys = renderer_1.Renderer.instance.dispatch("keydown", function (e) {
+            if (_this.displayMode != "options" || e.key.toLowerCase() == "escape") {
+                var lookup = {
+                    "f3": _this.setMode.bind(_this, "periscope"),
+                    "f4": _this.setMode.bind(_this, "turm"),
+                    "f5": _this.setMode.bind(_this, "map"),
+                    "f10": _this.setMode.bind(_this, "gun"),
+                    "f12": _this.setMode.bind(_this, "free"),
+                    "`": function () { return _this.uboat.targetSpeed = 0; },
+                    "1": function () { return _this.uboat.targetSpeed = 1 / 5; },
+                    "2": function () { return _this.uboat.targetSpeed = 1 / 3; },
+                    "3": function () { return _this.uboat.targetSpeed = 1 / 2; },
+                    "4": function () { return _this.uboat.targetSpeed = 3 / 4; },
+                    "5": function () { return _this.uboat.targetSpeed = 1; },
+                    "6": function () { return _this.uboat.targetSpeed = -1 / 6; },
+                    "7": function () { return _this.uboat.targetSpeed = -1 / 4; },
+                    "8": function () { return _this.uboat.targetSpeed = -1 / 2; },
+                    "9": function () { return _this.uboat.targetSpeed = -3 / 4; },
+                    "q": function () { if (!e.repeat)
+                        _this.uboat.diveSignal(-1); },
+                    "w": function () { if (!e.repeat)
+                        _this.uboat.diveSignal(0); },
+                    "e": function () { if (!e.repeat)
+                        _this.uboat.diveSignal(1); },
+                    "a": function () { if (!e.repeat)
+                        _this.uboat.rudderSignal(-1); },
+                    "s": function () { if (!e.repeat)
+                        _this.uboat.rudderSignal(0); },
+                    "d": function () { if (!e.repeat)
+                        _this.uboat.rudderSignal(1); },
+                    "z": function () { return _this.spawnTorpedo("TII_G7e", 0); },
+                    "escape": function () {
+                        if (_this.displayMode != "options") {
+                            _this.prevDisplayMode = _this.displayMode;
+                            _this.displayMode = "options";
+                            _this.renderOption = true;
+                            renderer_1.Renderer.pauseClock();
+                        }
+                        else {
+                            _this.displayMode = _this.prevDisplayMode;
+                            renderer_1.Renderer.continueClock();
+                        }
+                    }
+                };
+                if (e.key.toLowerCase() in lookup) {
+                    lookup[e.key.toLowerCase()]();
+                }
+            }
+        });
+        this.battleKeysUp = renderer_1.Renderer.instance.dispatch("keyup", function (e) {
+            if (_this.displayMode != "options") {
+                var lookup = {
+                    "q": function () { return _this.uboat.diveSignal(-1); },
+                    "w": function () { return _this.uboat.diveSignal(0); },
+                    "e": function () { return _this.uboat.diveSignal(1); },
+                    "a": function () { return _this.uboat.rudderSignal(-1); },
+                    "s": function () { return _this.uboat.rudderSignal(0); },
+                    "d": function () { return _this.uboat.rudderSignal(1); }
+                };
+                if (e.key.toLowerCase() in lookup) {
+                    lookup[e.key.toLowerCase()]();
+                }
+            }
+        });
+        this.battleMouses = renderer_1.Renderer.instance.dispatch("mousedown", function (e) {
+            switch (_this.displayMode) {
+                case "periscope":
+                    {
+                        // console.log(e.clientX, e.clientY);
+                        if (inRect(e.clientX, e.clientY, 858 + 14, 572 + 42, 938 + 14, 612 + 42)) {
+                            _this.viewports.periscope.rise();
+                            _this.periscreen.periscopeState(1);
+                        }
+                        else if (inRect(e.clientX, e.clientY, 858 + 14, 612 + 42, 938 + 14, 652 + 42)) {
+                            _this.viewports.periscope.down();
+                            _this.periscreen.periscopeState(0);
+                        }
+                    }
+                    break;
+            }
+        });
+        this.battleMousesUp = renderer_1.Renderer.instance.dispatch("mouseup", function (e) {
+            switch (_this.displayMode) {
+                case "periscope":
+                    {
+                        _this.viewports.periscope.stop();
+                        _this.periscreen.periscopeState(2);
+                    }
+                    break;
+            }
+        });
+        this.inGame = true;
+        this.setMode("free");
+    };
+    Game.prototype.endBattle = function () {
+        this.inGame = false;
+        this.vessels.clear();
+        this.uboat = null;
+        this.battleKeys.cancel();
+        this.battleKeysUp.cancel();
+        this.battleMouses.cancel();
+        this.battleMousesUp.cancel();
+    };
+    return Game;
+}());
+exports.Game = Game;
+
+
+/***/ }),
+
+/***/ "./src/game/mission.ts":
+/*!*****************************!*\
+  !*** ./src/game/mission.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var missions = {
+    bismark: {
+        sea: [{
+                className: "bismark",
+                position: [1350, 180],
+                target: 0,
+                speed: 0.1
+            }, {
+                className: "hipper",
+                position: [-270, -420],
+                target: -90,
+                speed: 0.15
+            }, {
+                className: "hipper",
+                position: [-320, -800],
+                target: -84,
+                speed: 0.15
+            }, {
+                className: "clemson",
+                position: [-800, -320],
+                target: -90,
+                speed: 0.12
+            }, {
+                className: "clemson",
+                position: [-760, -800],
+                target: -84,
+                speed: 0.12
+            }],
+        uboat: {
+            className: "7c",
+            target: -90,
+            speed: 0,
+            depth: 8
+        },
+        ambient: {
+            time: 9
+        }
+    },
+    narvik: {
+        sea: [{
+                className: "illustrious",
+                position: [-1000, -1300],
+                target: 180,
+                speed: 0.2
+            }, {
+                className: "hipper",
+                position: [-900, -900],
+                target: 180,
+                speed: 0.2
+            }, {
+                className: "clemson",
+                position: [-100, -1150],
+                target: 180,
+                speed: 0.2
+            }, {
+                className: "clemson",
+                position: [-1000, -1650],
+                target: 183,
+                speed: 0.2
+            }, {
+                className: "clemson",
+                position: [-1650, -1300],
+                target: 180,
+                speed: 0.2
+            }],
+        uboat: {
+            className: "7c",
+            target: 110,
+            speed: 0,
+            depth: 8
+        },
+        ambient: {
+            time: 12.5
+        }
+    },
+    test: {
+        sea: [{
+                className: "clemson",
+                position: [0, 0],
+                target: 90,
+                speed: 0
+            }],
+        uboat: {
+            className: "7c",
+            target: 91,
+            speed: 0,
+            depth: 0
+        },
+        ambient: {
+            time: 8
+        }
+    },
+    ".narvik": {
+        sea: [{
+                className: "illustrious",
+                position: [-100, -300],
+                target: 180,
+                speed: 0.2
+            }, {
+                className: "hipper",
+                position: [0, 100],
+                target: 180,
+                speed: 0.2
+            }, {
+                className: "clemson",
+                position: [800, -150],
+                target: 180,
+                speed: 0.2
+            }],
+        uboat: {
+            className: "7c",
+            target: 110,
+            speed: 0,
+            depth: 8
+        },
+        ambient: {
+            time: 7
+        }
+    }
+};
+exports.missions = missions;
+
+
+/***/ }),
+
+/***/ "./src/game/render.ts":
+/*!****************************!*\
+  !*** ./src/game/render.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ../techniques/postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var GameRenderer = /** @class */ (function (_super) {
+    __extends(GameRenderer, _super);
+    function GameRenderer() {
+        var _this = _super.call(this, shader_1.Shader.create("game", false)) || this;
+        _this.gP = shader_1.Shader.uniform("mat4", "gP");
+        _this.gV = shader_1.Shader.uniform("mat4", "gV");
+        _this.gIVP = shader_1.Shader.uniform("mat4", "gIVP");
+        _this.gCameraWorldPos = shader_1.Shader.uniform("vec3", "gCameraWorldPos");
+        _this.viewport = null;
+        return _this;
+    }
+    GameRenderer.prototype.beforeRender = function () {
+        this.gP.set(this.viewport.getPers());
+        this.gV.set(this.viewport.getView());
+        this.gIVP.set(glm_1.glm.inverse(this.viewport.getTrans()));
+        this.gCameraWorldPos.set(this.viewport.getCameraPosition());
+    };
+    return GameRenderer;
+}(postProcess_1.PostProcess));
+exports.GameRenderer = GameRenderer;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/component.ts":
+/*!**************************************!*\
+  !*** ./src/game/vessel/component.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var object_1 = __webpack_require__(/*! ../../object/object */ "./src/object/object.ts");
+var Component = /** @class */ (function (_super) {
+    __extends(Component, _super);
+    function Component(parent) {
+        var _this = _super.call(this) || this;
+        _this.parent = parent;
+        return _this;
+    }
+    Component.prototype.getTrans = function () {
+        return this.parent.getTrans();
+    };
+    return Component;
+}(object_1.default));
+exports.Component = Component;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/explode.ts":
+/*!************************************!*\
+  !*** ./src/game/vessel/explode.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var object_1 = __webpack_require__(/*! ../../object/object */ "./src/object/object.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var transformFeedback_1 = __webpack_require__(/*! ../../gl/transformFeedback */ "./src/gl/transformFeedback.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var Explode = /** @class */ (function (_super) {
+    __extends(Explode, _super);
+    function Explode(position) {
+        var _this = _super.call(this) || this;
+        _this.speed = 2.0;
+        _this.lifetime = 14;
+        _this.time = 14 - 0.1;
+        _this.gDt = shader_1.Shader.uniform("float", "gDt");
+        _this.gOrigin = shader_1.Shader.uniform("vec3", "gOrigin");
+        _this.gLifetime = shader_1.Shader.uniform("float", "gLifetime");
+        _this.gSpeed = shader_1.Shader.uniform("float", "gSpeed");
+        _this.gIP = shader_1.Shader.uniform("mat4", "gIP");
+        Explode.shader || (Explode.shader = shader_1.Shader.create("explode", false, [
+            "WorldPos",
+            "Lifetime",
+            "Velocity",
+            "Acceleration",
+            "GroupId",
+            "InstanceId",
+            "StartTime"
+        ]));
+        var attrs = new transformFeedback_1.TransformAttrs([{
+                name: "WorldPos",
+                type: renderer_1.gl.FLOAT,
+                size: 4
+            }, {
+                name: "Lifetime",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }, {
+                name: "Velocity",
+                type: renderer_1.gl.FLOAT,
+                size: 3
+            }, {
+                name: "Acceleration",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }, {
+                name: "GroupId",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }, {
+                name: "InstanceId",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }, {
+                name: "StartTime",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }]);
+        _this.pos = glm_1.glm.vec3(position, 0.01);
+        var ntracks = 16;
+        var nparticles = 10;
+        for (var i = 0; i != ntracks; ++i) {
+            for (var j = 0; j != nparticles; ++j) {
+                attrs.push({
+                    WorldPos: [1e8, 1e8, 0, 1],
+                    Lifetime: [_this.lifetime],
+                    Velocity: [0, 0, 0],
+                    Acceleration: [0],
+                    GroupId: [i],
+                    InstanceId: [nparticles - j],
+                    StartTime: [renderer_1.Renderer.time]
+                });
+            }
+        }
+        _this.tao = new transformFeedback_1.TAO(attrs);
+        return _this;
+    }
+    Explode.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.gDt.set(renderer_1.Renderer.dt);
+        this.gOrigin.set(this.pos);
+        this.gLifetime.set(this.lifetime);
+        this.gSpeed.set(this.speed);
+        this.gIP.set(glm_1.glm.inverse(viewport.getPers()));
+        this.tao.bind();
+        this.tao.draw();
+        this.tao.unbind();
+        this.tao.swap();
+    };
+    Explode.prototype.checkRange = function () {
+        this.time -= renderer_1.Renderer.dt;
+        return this.time > 0;
+    };
+    Explode.bindShader = function () {
+        !Explode.shader || Explode.shader.use();
+    };
+    Explode.unbindShader = function () {
+        !Explode.shader || Explode.shader.unuse();
+    };
+    return Explode;
+}(object_1.default));
+exports.Explode = Explode;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/foam.ts":
+/*!*********************************!*\
+  !*** ./src/game/vessel/foam.ts ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var component_1 = __webpack_require__(/*! ./component */ "./src/game/vessel/component.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var transformFeedback_1 = __webpack_require__(/*! ../../gl/transformFeedback */ "./src/gl/transformFeedback.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var texture_1 = __webpack_require__(/*! ../../gl/texture */ "./src/gl/texture.ts");
+var Foam = /** @class */ (function (_super) {
+    __extends(Foam, _super);
+    function Foam(opts, parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.texture = new texture_1.Texture2D("./assets/foam.png");
+        _this.gDt = shader_1.Shader.uniform("float", "gDt");
+        _this.gLifetime = shader_1.Shader.uniform("float", "gLifetime");
+        _this.gOrigin = shader_1.Shader.uniform("vec2", "gOrigin");
+        _this.gOutline = shader_1.Shader.uniform("int", "gOutline");
+        Foam.shader = Foam.shader || shader_1.Shader.create("foam", false, [
+            "WorldPos", "Offset", "Lifetime"
+        ]);
+        var attrs = new transformFeedback_1.TransformAttrs([{
+                name: "WorldPos",
+                type: renderer_1.gl.FLOAT,
+                size: 4
+            }, {
+                name: "Offset",
+                type: renderer_1.gl.FLOAT,
+                size: 2
+            }, {
+                name: "Lifetime",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }]);
+        _this.origin = glm_1.glm.vec2(opts.position[0], opts.position[1]);
+        _this.lifetime = opts.lifetime;
+        console.log(_this.lifetime);
+        for (var i = 0; i != opts.count; ++i) {
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [-0.7, 0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [0.7, 0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [-0.7, -0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [0.7, 0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [-0.7, -0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Offset: [0.7, -0.7],
+                Lifetime: [i / opts.count * _this.lifetime],
+            });
+        }
+        _this.tao = new transformFeedback_1.TAO(attrs);
+        return _this;
+    }
+    Foam.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.gDt.set(renderer_1.Renderer.dt);
+        this.gOrigin.set(this.origin);
+        this.gLifetime.set(this.lifetime);
+        var tex = texture_1.Texture2D.genChannel();
+        renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + tex);
+        this.gOutline.set(tex);
+        renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, this.texture.handle);
+        this.tao.bind();
+        this.tao.draw(renderer_1.gl.TRIANGLES);
+        this.tao.unbind();
+        renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, null);
+        texture_1.Texture2D.restoreChannel(tex);
+        this.tao.swap();
+    };
+    Foam.bindShader = function () {
+        !Foam.shader || Foam.shader.use();
+    };
+    Foam.unbindShader = function () {
+        !Foam.shader || Foam.shader.unuse();
+    };
+    return Foam;
+}(component_1.Component));
+exports.Foam = Foam;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/smoke.ts":
+/*!**********************************!*\
+  !*** ./src/game/vessel/smoke.ts ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var transformFeedback_1 = __webpack_require__(/*! ../../gl/transformFeedback */ "./src/gl/transformFeedback.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var component_1 = __webpack_require__(/*! ./component */ "./src/game/vessel/component.ts");
+var texture_1 = __webpack_require__(/*! ../../gl/texture */ "./src/gl/texture.ts");
+var Smoke = /** @class */ (function (_super) {
+    __extends(Smoke, _super);
+    function Smoke(opts, parent) {
+        var _this = _super.call(this, parent) || this;
+        _this.gDt = shader_1.Shader.uniform("float", "gDt");
+        _this.gOrigin = shader_1.Shader.uniform("vec3", "gOrigin");
+        _this.gVelocity = shader_1.Shader.uniform("vec3", "gVelocity");
+        _this.gUp = shader_1.Shader.uniform("vec3", "gUp");
+        _this.gLifetime = shader_1.Shader.uniform("float", "gLifetime");
+        _this.gScatter = shader_1.Shader.uniform("float", "gScatter");
+        _this.gSmoke = shader_1.Shader.uniform("int", "gSmoke");
+        _this.gColor = shader_1.Shader.uniform("vec3", "gColor");
+        _this.gOpacity = shader_1.Shader.uniform("float", "gOpacity");
+        Smoke.shader = Smoke.shader || shader_1.Shader.create("smoke", false, [
+            "WorldPos", "Lifetime", "Velocity"
+        ]);
+        // console.log(opts);
+        var attrs = new transformFeedback_1.TransformAttrs([{
+                name: "WorldPos",
+                type: renderer_1.gl.FLOAT,
+                size: 4
+            }, {
+                name: "Lifetime",
+                type: renderer_1.gl.FLOAT,
+                size: 1
+            }, {
+                name: "Velocity",
+                type: renderer_1.gl.FLOAT,
+                size: 3
+            }]);
+        _this.origin = glm_1.glm.vec3(opts.position[0], opts.position[1], opts.position[2]);
+        _this.lifetime = opts.lifetime;
+        _this.velocity = parent.getTrans()["*"](glm_1.glm.vec4(opts.velocity[0], opts.velocity[1], opts.velocity[2], 0)).xyz;
+        _this.up = glm_1.glm.vec3(opts.up[0], opts.up[1], opts.up[2]);
+        _this.scatter = opts.scatter;
+        _this.color = glm_1.glm.vec3(opts.color[0], opts.color[1], opts.color[2])["/"](255);
+        _this.opacity = opts.opacity;
+        _this.texture = new texture_1.Texture2D("./assets/" + opts.texture + ".png");
+        for (var i = 0; i != opts.count; ++i) {
+            attrs.push({
+                WorldPos: [1e8, 1e8, 0, 1],
+                Lifetime: [i / opts.count * _this.lifetime],
+                Velocity: opts.velocity
+            });
+        }
+        _this.tao = new transformFeedback_1.TAO(attrs);
+        return _this;
+    }
+    Smoke.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.gDt.set(renderer_1.Renderer.dt);
+        this.gOrigin.set(this.origin);
+        this.gLifetime.set(this.lifetime);
+        this.gScatter.set(this.scatter);
+        this.gVelocity.set(this.velocity);
+        this.gColor.set(this.color);
+        this.gUp.set(this.up);
+        this.gOpacity.set(this.opacity);
+        var tex = texture_1.Texture2D.genChannel();
+        // this.texture.use("Smoke");
+        renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + tex);
+        this.gSmoke.set(tex);
+        renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, this.texture.handle);
+        this.tao.bind();
+        this.tao.draw();
+        this.tao.unbind();
+        renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, null);
+        texture_1.Texture2D.restoreChannel(tex);
+        this.tao.swap();
+    };
+    Smoke.bindShader = function () {
+        !Smoke.shader || Smoke.shader.use();
+    };
+    Smoke.unbindShader = function () {
+        !Smoke.shader || Smoke.shader.unuse();
+    };
+    return Smoke;
+}(component_1.Component));
+exports.Smoke = Smoke;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/submarine.ts":
+/*!**************************************!*\
+  !*** ./src/game/vessel/submarine.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var vessel_1 = __webpack_require__(/*! ./vessel */ "./src/game/vessel/vessel.ts");
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var Submarine = /** @class */ (function (_super) {
+    __extends(Submarine, _super);
+    function Submarine() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.fdepth = 0;
+        _this.fdiveSpeed = 0;
+        _this.fdiveState = 0;
+        _this.fdiveStop = false;
+        _this.frudderState = 0;
+        _this.frudderMiddle = false;
+        return _this;
+    }
+    Object.defineProperty(Submarine.prototype, "torpedoLauncher", {
+        get: function () {
+            return this.ftorpedoLauncher;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Submarine.prototype, "diveSpeed", {
+        get: function () {
+            return this.fdiveSpeed / vessel_1.m2screen;
+        },
+        set: function (meters) {
+            this.fdiveSpeed = vessel_1.m2screen * meters;
+            if (Math.abs(this.fdiveSpeed) > this.fmaxDiveSpeed) {
+                this.fdiveSpeed = Math.sign(this.fdiveSpeed) * this.fmaxDiveSpeed;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Submarine.prototype.processProperty = function (data) {
+        _super.prototype.processProperty.call(this, data);
+        this.fmaxDiveSpeed = data.dive.maxSpeed * vessel_1.m2screen;
+        this.fdiveAccelerate = data.dive.accelerate;
+        this.ftorpedoLauncher = data.torpedo.launchers;
+    };
+    Submarine.prototype.diveStop = function () {
+        if (this.fdiveSpeed != 0) {
+            var sgn = Math.sign(this.fdiveSpeed);
+            this.diveSpeed -= sgn * renderer_1.Renderer.dt * this.fdiveAccelerate;
+            if (Math.sign(this.fdiveSpeed) != sgn) {
+                this.fdiveSpeed = 0;
+            }
+        }
+    };
+    Submarine.prototype.diveUp = function () {
+        this.diveSpeed -= renderer_1.Renderer.dt * this.fdiveAccelerate;
+    };
+    Submarine.prototype.diveDown = function () {
+        this.diveSpeed += renderer_1.Renderer.dt * this.fdiveAccelerate;
+    };
+    Submarine.prototype.updateState = function () {
+        if (this.frudderMiddle) {
+            this.rudderMiddle();
+        }
+        else
+            switch (this.frudderState) {
+                case 3:
+                case 2:
+                    this.rudderLeft();
+                    break;
+                case 1:
+                case 4:
+                    this.rudderRight();
+                    break;
+            }
+        if (this.fdiveStop) {
+            this.diveStop();
+        }
+        else
+            switch (this.fdiveState) {
+                case 3:
+                case 2:
+                    this.diveUp();
+                    break;
+                case 1:
+                case 4:
+                    this.diveDown();
+                    break;
+            }
+        _super.prototype.updateState.call(this);
+    };
+    Submarine.prototype.updatePosition = function () {
+        if (this.fdiveSpeed || this.fspeed) {
+            var diff = glm_1.glm.vec3(this.fspeedVec["*"](this.fspeed * renderer_1.Renderer.dt), -this.fdiveSpeed * renderer_1.Renderer.dt);
+            this.translate(diff);
+            if (this.position.z > 0) {
+                this.fdiveSpeed = 0;
+                this.position.z = 0;
+            }
+            if (this.camera) {
+                this.camera.position = this.camera.position["+"](diff);
+            }
+        }
+    };
+    Submarine.prototype.rudderSignal = function (signal) {
+        if (signal) {
+            switch (this.frudderState) {
+                case 0:
+                    this.frudderState = signal == 1 ? 1 : 2;
+                    break;
+                case 1:
+                    this.frudderState = signal == 1 ? 0 : 3;
+                    break;
+                case 2:
+                    this.frudderState = signal == 1 ? 4 : 0;
+                    break;
+                case 3:
+                case 4:
+                    this.frudderState = signal == 1 ? 2 : 1;
+                    break;
+            }
+        }
+        else {
+            this.frudderMiddle = !this.frudderMiddle;
+        }
+    };
+    Submarine.prototype.diveSignal = function (signal) {
+        if (signal) {
+            switch (this.fdiveState) {
+                case 0:
+                    this.fdiveState = signal == 1 ? 1 : 2;
+                    break;
+                case 1:
+                    this.fdiveState = signal == 1 ? 0 : 3;
+                    break;
+                case 2:
+                    this.fdiveState = signal == 1 ? 4 : 0;
+                    break;
+                case 3:
+                case 4:
+                    this.fdiveState = signal == 1 ? 2 : 1;
+                    break;
+            }
+        }
+        else {
+            this.fdiveStop = !this.fdiveStop;
+        }
+    };
+    return Submarine;
+}(vessel_1.Vessel));
+exports.Submarine = Submarine;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/torpedo.ts":
+/*!************************************!*\
+  !*** ./src/game/vessel/torpedo.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var vessel_1 = __webpack_require__(/*! ./vessel */ "./src/game/vessel/vessel.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var Torpedo = /** @class */ (function (_super) {
+    __extends(Torpedo, _super);
+    function Torpedo() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Object.defineProperty(Torpedo.prototype, "orient", {
+        set: function (velocity) {
+            this.fspeedVec = velocity;
+            this.rotate(glm_1.glm.vec3(0, 0, -Math.PI * .5 + Math.atan2(velocity.y, velocity.x)));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Torpedo.prototype.processProperty = function (data) {
+        _super.prototype.processProperty.call(this, data);
+        this.flifeTime = data.lifetime;
+    };
+    Torpedo.prototype.updateState = function () {
+        _super.prototype.updateState.call(this);
+        this.flifeTime -= renderer_1.Renderer.dt;
+    };
+    Torpedo.prototype.jitter = function () {
+        //
+    };
+    Object.defineProperty(Torpedo.prototype, "lifetime", {
+        get: function () {
+            return this.flifeTime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Torpedo.prototype.checkRange = function () {
+        this.flifeTime -= renderer_1.Renderer.dt;
+        return this.flifeTime > 0;
+    };
+    return Torpedo;
+}(vessel_1.Vessel));
+exports.Torpedo = Torpedo;
+
+
+/***/ }),
+
+/***/ "./src/game/vessel/vessel.ts":
+/*!***********************************!*\
+  !*** ./src/game/vessel/vessel.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var object_1 = __webpack_require__(/*! ../../object/object */ "./src/object/object.ts");
+var model_1 = __webpack_require__(/*! ../../gl/model */ "./src/gl/model.ts");
+var glm_1 = __webpack_require__(/*! ../../util/glm */ "./src/util/glm.js");
+var xhr_1 = __webpack_require__(/*! ../../util/xhr */ "./src/util/xhr.ts");
+var shader_1 = __webpack_require__(/*! ../../gl/shader */ "./src/gl/shader.ts");
+var smoke_1 = __webpack_require__(/*! ./smoke */ "./src/game/vessel/smoke.ts");
+var renderer_1 = __webpack_require__(/*! ../../renderer/renderer */ "./src/renderer/renderer.ts");
+var foam_1 = __webpack_require__(/*! ./foam */ "./src/game/vessel/foam.ts");
+var m2screen = .1 * .5;
+exports.m2screen = m2screen;
+var knots2mpers = 0.514444;
+exports.knots2mpers = knots2mpers;
+var EPS = .01;
+var VesselBase = /** @class */ (function (_super) {
+    __extends(VesselBase, _super);
+    function VesselBase() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.fspeed = 0;
+        _this.fspeedVec = glm_1.glm.vec2(0, 1);
+        _this.fspeedAngle = glm_1.glm.radians(0);
+        _this.frudderOrient = 0;
+        _this.fdtSpeed = -1;
+        _this.foriginalSpeed = 0;
+        _this.ftargetSpeed = 0;
+        _this.camera = null;
+        return _this;
+    }
+    Object.defineProperty(VesselBase.prototype, "speedAngle", {
+        get: function () {
+            return glm_1.glm.degree(this.fspeedAngle);
+        },
+        set: function (degree) {
+            this.fspeedAngle = glm_1.glm.radians(degree);
+            this.fspeedVec = glm_1.glm.vec2(Math.cos(this.fspeedAngle), Math.sin(this.fspeedAngle));
+            this.rotateIdentity();
+            this.rotate(glm_1.glm.vec3(0, 0, glm_1.glm.radians(degree - 90)));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VesselBase.prototype, "speed", {
+        get: function () {
+            return this.fspeed / knots2mpers / m2screen;
+        },
+        set: function (knots) {
+            this.fspeed = m2screen * knots * knots2mpers;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VesselBase.prototype, "initSpeed", {
+        set: function (perc) {
+            this.foriginalSpeed = this.ftargetSpeed = this.fspeed = perc * this.fmaxSpeed;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VesselBase.prototype, "targetSpeed", {
+        set: function (perc) {
+            this.fdtSpeed = 0;
+            this.foriginalSpeed = this.fspeed;
+            this.ftargetSpeed = perc * this.fmaxSpeed;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VesselBase.prototype, "rudderOrient", {
+        get: function () {
+            return this.frudderOrient;
+        },
+        set: function (orient) {
+            this.frudderOrient = orient;
+            if (Math.abs(this.frudderOrient) > this.fmaxRudderOrient) {
+                this.frudderOrient = Math.sign(this.frudderOrient) * this.fmaxRudderOrient;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    VesselBase.prototype.rudderRight = function () {
+        this.rudderOrient += renderer_1.Renderer.dt * this.frudderSpeed;
+    };
+    VesselBase.prototype.rudderLeft = function () {
+        this.rudderOrient -= renderer_1.Renderer.dt * this.frudderSpeed;
+    };
+    VesselBase.prototype.rudderMiddle = function () {
+        if (this.frudderOrient != 0) {
+            var sgn = Math.sign(this.frudderOrient);
+            this.rudderOrient -= sgn * renderer_1.Renderer.dt * this.frudderSpeed;
+            if (Math.sign(this.frudderOrient) != sgn) {
+                this.frudderOrient = 0;
+            }
+        }
+    };
+    VesselBase.prototype.updateState = function () {
+        if (this.fdtSpeed >= 0) {
+            // console.log(this.fdtSpeed);
+            this.fdtSpeed += renderer_1.Renderer.dt;
+            this.fspeed = (this.ftargetSpeed - this.foriginalSpeed) *
+                Math.tanh(this.fdtSpeed / 5. * Math.sqrt(Math.abs(this.ftargetSpeed - this.foriginalSpeed))) +
+                this.foriginalSpeed;
+            if (Math.abs(this.fspeed - this.ftargetSpeed) < EPS) {
+                this.fspeed = this.ftargetSpeed;
+                this.fdtSpeed = -1;
+            }
+        }
+        if (this.frudderOrient && this.fspeed) {
+            var theta = -this.fspeed / this.fmaxSpeed * .1 * this.frudderOrient * renderer_1.Renderer.dt;
+            var sinv = Math.sin(theta);
+            var cosv = Math.cos(theta);
+            this.fspeedVec = glm_1.glm.vec2(this.fspeedVec.x * cosv - this.fspeedVec.y * sinv, this.fspeedVec.x * sinv + this.fspeedVec.y * cosv);
+            this.rotate(glm_1.glm.vec3(0, 0, theta));
+        }
+    };
+    VesselBase.prototype.updatePosition = function () {
+        if (this.fspeed) {
+            var diff = glm_1.glm.vec3(this.fspeedVec["*"](this.fspeed * renderer_1.Renderer.dt), 0);
+            this.translate(diff);
+            if (this.camera) {
+                this.camera.position = this.camera.position["+"](diff);
+            }
+        }
+    };
+    VesselBase.prototype.jitter = function () {
+        this.rotateIdentity(glm_1.glm.vec3(1, 0, 1));
+        this.rotate(glm_1.glm.vec3(0, Math.sin(renderer_1.Renderer.time * this.fjitterCycle) * this.fjitterAngle, 0));
+    };
+    VesselBase.prototype.update = function () {
+        // console.log(this);
+        this.updateState();
+        this.jitter();
+        this.updatePosition();
+    };
+    VesselBase.prototype.tie = function (camera) {
+        this.camera = camera;
+    };
+    return VesselBase;
+}(object_1.default));
+var Vessel = /** @class */ (function (_super) {
+    __extends(Vessel, _super);
+    function Vessel(name, callback) {
+        var _this = _super.call(this) || this;
+        // private wao: VAO;
+        _this.smokes = [];
+        _this.collider = [];
+        _this.scale(.5);
+        var self = _this;
+        if (name in Vessel.properties) {
+            self.processProperty(Vessel.properties[name]);
+        }
+        else {
+            xhr_1.default.getAsync(Vessel.modelPath + name + "/property.json", "text", function (err, data) {
+                data = JSON.parse(data);
+                Vessel.properties[name] = data;
+                self.processProperty(data);
+            });
+        }
+        _this.foam = new foam_1.Foam({
+            lifetime: 5,
+            count: 50,
+            position: [0, -3.1]
+        }, _this);
+        Vessel.shader = Vessel.shader || shader_1.Shader.create("vessel", false);
+        Vessel.wrapper = Vessel.wrapper || shader_1.Shader.create("wrapper", false);
+        if (callback == undefined) {
+            _this.model = model_1.default.create(Vessel.modelPath + name + "/", name + ".json");
+        }
+        else {
+            model_1.default.create(Vessel.modelPath + name + "/", name + ".json", function (v) {
+                self.model = v;
+                callback(self);
+            });
+        }
+        return _this;
+    }
+    Vessel.prototype.processProperty = function (data) {
+        this.fmaxSpeed = m2screen * knots2mpers * data.maxSpeed;
+        if ("jitter" in data) {
+            this.fjitterAngle = glm_1.glm.radians(data.jitter.angle);
+            this.fjitterCycle = Math.PI * 2 / data.jitter.cycle;
+        }
+        if ("rudder" in data) {
+            this.fmaxRudderOrient = data.rudder.maxOrient;
+            this.frudderSpeed = data.rudder.speed;
+        }
+        if ("particleGenerator" in data) {
+            for (var _i = 0, _a = data.particleGenerator; _i < _a.length; _i++) {
+                var emitter = _a[_i];
+                this.smokes.push(new smoke_1.Smoke(emitter, this));
+            }
+        }
+        if ("collider" in data) {
+            this.collider = data.collider;
+            // let attrs = new VertexAttrs(["pos3"]);
+            // for (let i = 0; i < data.collider.length - 2; i += 2) {
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		-0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		-0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		-0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		-0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i], 
+            // 		data.collider[i + 1],
+            // 		-0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		0.25
+            // 	] });
+            // 	attrs.push({ pos3: [
+            // 		-data.collider[i + 2], 
+            // 		data.collider[i + 3],
+            // 		-0.25
+            // 	] });
+            // }
+            // this.wao = new VAO(attrs);
+        }
+    };
+    Vessel.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.model.render();
+        // Vessel.unbindShader();
+        // !Vessel.wrapper || (() => {
+        // 	Vessel.wrapper.use();
+        // 	this.setBasicUniforms(viewport);
+        // 	if (this.wao) {
+        // 		this.wao.bind();
+        // 			this.wao.draw();
+        // 		this.wao.unbind();
+        // 	}
+        // 	Vessel.wrapper.unuse();
+        // }) ();
+        // Vessel.bindShader();
+    };
+    Vessel.bindShader = function () {
+        !Vessel.shader || Vessel.shader.use();
+    };
+    Vessel.unbindShader = function () {
+        !Vessel.shader || Vessel.shader.unuse();
+    };
+    Vessel.modelPath = "./assets/";
+    Vessel.properties = {};
+    return Vessel;
+}(VesselBase));
+exports.Vessel = Vessel;
 
 
 /***/ }),
@@ -235,7 +2583,7 @@ var EBO = /** @class */ (function (_super) {
         renderer_1.gl.bindBuffer(renderer_1.gl.ELEMENT_ARRAY_BUFFER, null);
     };
     EBO.prototype.data = function (data) {
-        renderer_1.gl.bufferData(renderer_1.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(data), renderer_1.gl.STATIC_DRAW);
+        renderer_1.gl.bufferData(renderer_1.gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(data), renderer_1.gl.STATIC_DRAW);
     };
     return EBO;
 }(BufferBase));
@@ -286,6 +2634,85 @@ var RBO = /** @class */ (function (_super) {
     return RBO;
 }(BufferBase));
 exports.RBO = RBO;
+var PDBO = /** @class */ (function (_super) {
+    __extends(PDBO, _super);
+    function PDBO() {
+        var _this = this;
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 is not supported";
+        }
+        _this = _super.call(this, renderer_1.gl2.createBuffer()) || this;
+        return _this;
+    }
+    PDBO.prototype.bind = function () {
+        renderer_1.gl2.bindBuffer(renderer_1.gl2.PIXEL_PACK_BUFFER, this.handle);
+    };
+    PDBO.prototype.unbind = function () {
+        renderer_1.gl2.bindBuffer(renderer_1.gl2.PIXEL_PACK_BUFFER, null);
+    };
+    PDBO.prototype.data = function (bytelength) {
+        renderer_1.gl.bufferData(renderer_1.gl2.PIXEL_PACK_BUFFER, bytelength, renderer_1.gl2.STATIC_READ);
+    };
+    return PDBO;
+}(BufferBase));
+exports.PDBO = PDBO;
+var PUBO = /** @class */ (function (_super) {
+    __extends(PUBO, _super);
+    function PUBO() {
+        var _this = this;
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 is not supported";
+        }
+        _this = _super.call(this, renderer_1.gl2.createBuffer()) || this;
+        return _this;
+    }
+    PUBO.prototype.bind = function () {
+        renderer_1.gl2.bindBuffer(renderer_1.gl2.PIXEL_UNPACK_BUFFER, this.handle);
+    };
+    PUBO.prototype.unbind = function () {
+        renderer_1.gl2.bindBuffer(renderer_1.gl2.PIXEL_UNPACK_BUFFER, null);
+    };
+    return PUBO;
+}(BufferBase));
+exports.PUBO = PUBO;
+var TBO = /** @class */ (function () {
+    function TBO() {
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 required.";
+        }
+        this.handle0 = renderer_1.gl2.createBuffer();
+        this.handle1 = renderer_1.gl2.createBuffer();
+    }
+    TBO.prototype.bind = function () {
+        renderer_1.gl.bindBuffer(renderer_1.gl.ARRAY_BUFFER, this.handle0);
+        renderer_1.gl2.bindBufferBase(renderer_1.gl2.TRANSFORM_FEEDBACK_BUFFER, 0, this.handle1);
+    };
+    TBO.prototype.unbind = function () {
+        renderer_1.gl2.bindBufferBase(renderer_1.gl2.TRANSFORM_FEEDBACK_BUFFER, 0, null);
+        renderer_1.gl.bindBuffer(renderer_1.gl.ARRAY_BUFFER, null);
+    };
+    TBO.prototype.data = function (data) {
+        renderer_1.gl.bufferData(renderer_1.gl.ARRAY_BUFFER, 4 * data.length, renderer_1.gl2.DYNAMIC_COPY);
+        this.unbind();
+        this.swap();
+        this.bind();
+        renderer_1.gl.bufferData(renderer_1.gl.ARRAY_BUFFER, new Float32Array(data), renderer_1.gl2.DYNAMIC_COPY);
+    };
+    TBO.prototype.swap = function () {
+        var h = this.handle1;
+        this.handle1 = this.handle0;
+        this.handle0 = h;
+    };
+    Object.defineProperty(TBO.prototype, "handle", {
+        get: function () {
+            return this.handle0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return TBO;
+}());
+exports.TBO = TBO;
 
 
 /***/ }),
@@ -318,14 +2745,18 @@ var Communicator = /** @class */ (function () {
         if (this.array) {
             for (var key in this.data) {
                 // console.log(key, this.data[key].data);
-                this.data[key].uniform.subscribe(index).set(this.data[key].data);
+                this.data[key].uniform.subscribe(index).set("set" in
+                    this.data[key] ? this.data[key].set(this.data[key].data) :
+                    this.data[key].data);
             }
             return true;
         }
         else {
             for (var key in this.data) {
                 // console.log(key, this.data[key].data);
-                this.data[key].uniform.set(this.data[key].data);
+                this.data[key].uniform.set("set" in
+                    this.data[key] ? this.data[key].set(this.data[key].data) :
+                    this.data[key].data);
             }
             return false;
         }
@@ -338,21 +2769,47 @@ var Communicator = /** @class */ (function () {
             throw "communicator key does not match any: " + key;
         }
     };
+    Communicator.prototype.get = function (key) {
+        if (key in this.data) {
+            return this.data[key].data;
+        }
+        else {
+            throw "communicator key does not match any: " + key;
+        }
+    };
     Communicator.prototype.init = function (uniforms) {
         if (this.array) {
             for (var name_1 in uniforms) {
-                this.data[name_1] = {
-                    data: uniforms[name_1].init,
-                    uniform: shader_1.Shader.uniform(uniforms[name_1].type, "g" + this.type + "_" + name_1 + "[]")
-                };
+                if ("set" in uniforms[name_1]) {
+                    this.data[name_1] = {
+                        data: uniforms[name_1].init,
+                        set: uniforms[name_1].set,
+                        uniform: shader_1.Shader.uniform(uniforms[name_1].type, "g" + this.type + "_" + name_1 + "[]")
+                    };
+                }
+                else {
+                    this.data[name_1] = {
+                        data: uniforms[name_1].init,
+                        uniform: shader_1.Shader.uniform(uniforms[name_1].type, "g" + this.type + "_" + name_1 + "[]")
+                    };
+                }
             }
         }
         else {
             for (var name_2 in uniforms) {
-                this.data[name_2] = {
-                    data: uniforms[name_2].init,
-                    uniform: shader_1.Shader.uniform(uniforms[name_2].type, "g" + this.type)
-                };
+                if ("set" in uniforms[name_2]) {
+                    this.data[name_2] = {
+                        data: uniforms[name_2].init,
+                        set: uniforms[name_2].set,
+                        uniform: shader_1.Shader.uniform(uniforms[name_2].type, "g" + name_2)
+                    };
+                }
+                else {
+                    this.data[name_2] = {
+                        data: uniforms[name_2].init,
+                        uniform: shader_1.Shader.uniform(uniforms[name_2].type, "g" + name_2)
+                    };
+                }
             }
         }
     };
@@ -364,26 +2821,49 @@ var Communicators = /** @class */ (function () {
     function Communicators() {
         this.data = new ulist_1.ulist();
     }
-    Communicators.prototype.invoke = function () {
+    Communicators.prototype.invoke = function (validate) {
+        if (validate == undefined) {
+            validate = function () { return true; };
+        }
         var map = {};
         this.data.visit(function (e) {
             var communicator = e.get();
-            if (!(communicator.type in map)) {
-                map[communicator.type] = 0;
+            if (communicator.array) {
+                if (validate(communicator)) {
+                    if (!(communicator.type in map)) {
+                        map[communicator.type] = 0;
+                    }
+                    if (communicator.invoke(map[communicator.type])) {
+                        map[communicator.type]++;
+                    }
+                }
             }
-            if (communicator.invoke(map[communicator.type])) {
-                map[communicator.type]++;
+            else {
+                if (validate(communicator)) {
+                    communicator.invoke(0);
+                }
             }
         });
         for (var type in map) {
             Communicator.counters[type].set(map[type]);
         }
     };
+    Communicators.invoke = function () {
+        if (Communicators.current) {
+            Communicators.current.invoke(Communicators.communicators[Communicators.communicators.length - 1].check);
+        }
+    };
     Communicators.prototype.add = function (communicator) {
         return this.data.push(communicator);
     };
-    Communicators.prototype.use = function () {
-        Communicators.communicators.push(this);
+    Communicators.prototype.use = function (validate) {
+        if (validate == undefined) {
+            validate = function () { return true; };
+        }
+        Communicators.communicators.push({
+            com: this,
+            check: validate
+        });
     };
     Communicators.prototype.unuse = function () {
         if (Communicators.communicators.length) {
@@ -393,7 +2873,7 @@ var Communicators = /** @class */ (function () {
     Object.defineProperty(Communicators, "current", {
         get: function () {
             if (Communicators.communicators.length > 0) {
-                return Communicators.communicators[Communicators.communicators.length - 1];
+                return Communicators.communicators[Communicators.communicators.length - 1].com;
             }
             else {
                 return null;
@@ -422,72 +2902,108 @@ exports.Communicators = Communicators;
 Object.defineProperty(exports, "__esModule", { value: true });
 var texture_1 = __webpack_require__(/*! ./texture */ "./src/gl/texture.ts");
 var shader_1 = __webpack_require__(/*! ./shader */ "./src/gl/shader.ts");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
 var textureType = {
-    0x1: "Diffuse",
-    0x2: "Specular",
-    0x3: "Ambient",
-    0x4: "Emissive",
-    0x5: "Height",
-    0x6: "Normals",
-    0x7: "Shininess",
-    0x8: "Opacity",
-    0x9: "Displacement",
-    0xa: "Lightmap",
-    0xb: "Reflection"
+    0x1: "MatDiffuse",
+    0x2: "MatSpecular",
+    0x3: "MatAmbient",
+    0x4: "MatEmissive",
+    0x5: "MatHeight",
+    0x6: "MatNormals",
+    0x7: "MatShininess",
+    0x8: "MatOpacity",
+    0x9: "MatDisplacement",
+    0xa: "MatLightmap",
+    0xb: "MatReflection"
 };
 var Material = /** @class */ (function () {
-    function Material(data, path) {
-        if (path === void 0) { path = Material.materialPath; }
+    function Material(values) {
         this.textures = {};
         this.attributes = [];
-        for (var _i = 0, _a = data.properties; _i < _a.length; _i++) {
-            var prop = _a[_i];
-            var _b = prop.key.substring(1).split('.'), key = _b[0], attr = _b[1];
-            if (key in Material.keymap) {
-                if (attr in Material.keymap[key]) {
-                    Material.keymap[key][attr](this, prop, path);
-                }
-            }
+        if (values != undefined) {
+            this.addProperties(values);
         }
     }
     Material.prototype.use = function () {
-        var i = 0;
-        for (var loc in this.textures) {
-            this.textures[loc].texture.invoke(i);
-            this.textures[loc].uniform.set(i);
-            i += 1;
+        for (var name_1 in this.textures) {
+            this.textures[name_1].channel = texture_1.Texture.genChannel();
+            renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + this.textures[name_1].channel);
+            renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, this.textures[name_1].texture.handle);
+            shader_1.Shader.uniform("int", "g" + name_1).set(this.textures[name_1].channel);
+            // console.log("g" + name, this.textures[name].channel);
+            // this.textures[name].use(name);
         }
         for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
             var attr = _a[_i];
             attr.uniform.set(attr.value);
         }
     };
+    Material.prototype.unuse = function () {
+        for (var name_2 in this.textures) {
+            // gl.activeTexture(gl.TEXTURE0 + this.textures[name].channel);
+            renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, null);
+            texture_1.Texture.restoreChannel(this.textures[name_2].channel);
+            // this.textures[name].unuse();
+        }
+    };
+    Material.prototype.addProperties = function (values) {
+        for (var key in values) {
+            if (key in Material.lookup) {
+                Material.lookup[key](this, values[key]);
+            }
+        }
+    };
+    Material.createFromModel = function (data, path) {
+        if (path === void 0) { path = Material.materialPath; }
+        var self = new Material();
+        for (var _i = 0, _a = data.properties; _i < _a.length; _i++) {
+            var prop = _a[_i];
+            var _b = prop.key.substring(1).split('.'), key = _b[0], attr = _b[1];
+            if (key in Material.keymap) {
+                if (attr in Material.keymap[key]) {
+                    Material.keymap[key][attr](self, prop, path);
+                }
+            }
+        }
+        return self;
+    };
     Material.materialPath = "./materials/";
     Material.keymap = {
         mat: {
             shininess: function (self, prop) {
-                self.attributes.push({
-                    value: prop.value,
-                    uniform: shader_1.Shader.uniform("float", "gSpecularPower")
-                });
+                Material.lookup.specularPower(self, prop.value);
             },
             shinpercent: function (self, prop) {
-                self.attributes.push({
-                    value: prop.value,
-                    uniform: shader_1.Shader.uniform("float", "gSpecularIntensity")
-                });
+                Material.lookup.specularIntensity(self, prop.value);
             }
         },
         tex: {
             file: function (self, prop, path) {
                 if (prop.semantic in textureType) {
                     console.log(textureType[prop.semantic]);
-                    self.textures[prop.semantic] = {
+                    self.textures[textureType[prop.semantic]] = {
                         texture: new texture_1.Texture2D(path + prop.value),
-                        uniform: shader_1.Shader.uniform("int", "g" + textureType[prop.semantic])
+                        channel: undefined
                     };
                 }
             }
+        }
+    };
+    Material.lookup = {
+        specularPower: function (self, value) {
+            self.attributes.push({
+                value: value,
+                uniform: shader_1.Shader.uniform("float", "gSpecularPower")
+            });
+        },
+        specularIntensity: function (self, value) {
+            self.attributes.push({
+                value: value,
+                uniform: shader_1.Shader.uniform("float", "gSpecularIntensity")
+            });
+        },
+        texture: function (self, value) {
+            // 
         }
     };
     return Material;
@@ -553,19 +3069,38 @@ var vertexAttrMap = {
     texturecoords: "tex2"
 };
 var Model = /** @class */ (function () {
-    function Model(name) {
+    function Model(path, name, callback) {
+        var _this = this;
         this.mesh = {};
-        name = Model.modelPath + name;
-        var scene = assets_1.default.import(name);
-        for (var _i = 0, _a = scene.meshes; _i < _a.length; _i++) {
-            var m = _a[_i];
-            if (!(m.materialindex in this.mesh)) {
-                this.mesh[m.materialindex] = {
-                    material: new material_1.default(scene.materials[m.materialindex], Model.modelPath),
-                    mesh: []
-                };
+        name = path + name;
+        if (callback == undefined) {
+            var scene = assets_1.default.import(name);
+            for (var _i = 0, _a = scene.meshes; _i < _a.length; _i++) {
+                var m = _a[_i];
+                if (!(m.materialindex in this.mesh)) {
+                    this.mesh[m.materialindex] = {
+                        material: material_1.default.createFromModel(scene.materials[m.materialindex], path),
+                        mesh: []
+                    };
+                }
+                this.mesh[m.materialindex].mesh.push(Model.createMesh(m));
             }
-            this.mesh[m.materialindex].mesh.push(Model.createMesh(m));
+        }
+        else {
+            var self_1 = this;
+            assets_1.default.importAsync(name, function (scene) {
+                for (var _i = 0, _a = scene.meshes; _i < _a.length; _i++) {
+                    var m = _a[_i];
+                    if (!(m.materialindex in self_1.mesh)) {
+                        self_1.mesh[m.materialindex] = {
+                            material: material_1.default.createFromModel(scene.materials[m.materialindex], path),
+                            mesh: []
+                        };
+                    }
+                    self_1.mesh[m.materialindex].mesh.push(Model.createMesh(m));
+                }
+                callback(_this);
+            });
         }
     }
     Model.prototype.render = function () {
@@ -575,13 +3110,27 @@ var Model = /** @class */ (function () {
                 var m = _a[_i];
                 m.render();
             }
+            this.mesh[i].material.unuse();
         }
     };
-    Model.create = function (name) {
-        if (!(name in Model.models)) {
-            Model.models[name] = new Model(name);
+    Model.create = function (path, name, callback) {
+        if (callback == undefined) {
+            if (!(name in Model.models)) {
+                Model.models[name] = new Model(path, name);
+            }
+            return Model.models[name];
         }
-        return Model.models[name];
+        else {
+            if (!(name in Model.models)) {
+                new Model(path, name, function (v) {
+                    Model.models[name] = v;
+                    callback(v);
+                });
+            }
+            else {
+                callback(Model.models[name]);
+            }
+        }
     };
     Model.createMesh = function (mesh) {
         var attrs = [];
@@ -604,11 +3153,145 @@ var Model = /** @class */ (function () {
         }
         return new mesh_1.default(vs, indices);
     };
-    Model.modelPath = "./assets/";
     Model.models = {};
     return Model;
 }());
 exports.default = Model;
+
+
+/***/ }),
+
+/***/ "./src/gl/offscreen.ts":
+/*!*****************************!*\
+  !*** ./src/gl/offscreen.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var buffer_1 = __webpack_require__(/*! ../gl/buffer */ "./src/gl/buffer.ts");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+// class SingleChannelFBRB {
+// 	private rbo = new RBO();
+// 	private dbo = new RBO();
+// 	private fbo = new FBO();
+// 	constructor() {
+// 		this.fbo.bind();
+// 			this.rbo.bind();
+// 				if (gl2) {
+// 					gl.renderbufferStorage(gl.RENDERBUFFER, gl2.R32F, 
+// 						Renderer.instance.canvas.width, Renderer.instance.canvas.height);
+// 				} else {
+// 					gl.renderbufferStorage(gl.RENDERBUFFER, gl2.RGB, 
+// 						Renderer.instance.canvas.width, Renderer.instance.canvas.height);
+// 				}
+// 				this.fbo.setRenderBuffer(this.rbo, gl.COLOR_ATTACHMENT0);
+// 			this.rbo.unbind();
+// 			this.dbo.bind();
+// 				gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT,
+// 					Renderer.instance.canvas.width, Renderer.instance.canvas.height);
+// 				this.fbo.setRenderBuffer(this.dbo, gl.DEPTH_ATTACHMENT);
+// 			this.dbo.unbind();
+// 		this.fbo.unbind();
+// 	}
+// 	bind() {
+// 		this.fbo.bind();
+// 	}
+// 	unbind() {
+// 		this.rbo.bind();
+// 	}
+// }
+var RenderBuffer = /** @class */ (function () {
+    function RenderBuffer(component, width, height) {
+        this.type = "renderbuffer";
+        this.rbo = new buffer_1.RBO();
+        if (width == undefined) {
+            width = renderer_1.Renderer.instance.canvas.width;
+            height = renderer_1.Renderer.instance.canvas.height;
+        }
+        this.rbo.bind();
+        renderer_1.gl.renderbufferStorage(renderer_1.gl.RENDERBUFFER, component, width, height);
+        this.rbo.unbind();
+    }
+    return RenderBuffer;
+}());
+exports.RenderBuffer = RenderBuffer;
+var PixelRetriver = /** @class */ (function () {
+    function PixelRetriver(pixels) {
+        this.pixels = pixels;
+        this.type = "pixelRetriever";
+        this.pbo = new buffer_1.PDBO();
+        if (!renderer_1.Renderer.require("WEBGL_get_buffer_sub_data_async")) {
+            throw "extension WEBGL_get_buffer_sub_data_async not supported";
+        }
+        this.pbo.bind();
+        this.pbo.data(pixels.byteLength);
+    }
+    PixelRetriver.prototype.getData = function () {
+        renderer_1.gl2.getBufferSubData(renderer_1.gl2.PIXEL_PACK_BUFFER, 0, this.pixels, 0, 0);
+    };
+    PixelRetriver.prototype.getDataAsync = function (callback) {
+        var _this = this;
+        // console.log(ext.getBufferSubDataAsync);
+        renderer_1.ext["WEBGL_get_buffer_sub_data_async"].getBufferSubDataAsync(renderer_1.gl2.PIXEL_PACK_BUFFER, 0, this.pixels, 0, 0).
+            then(function (buffer) {
+            renderer_1.gl.deleteBuffer(_this.pbo.handle);
+            callback(buffer);
+        });
+    };
+    return PixelRetriver;
+}());
+exports.PixelRetriver = PixelRetriver;
+var Offscreen = /** @class */ (function () {
+    function Offscreen() {
+        this.fbo = new buffer_1.FBO();
+    }
+    Offscreen.prototype.set = function (channel, second, face) {
+        if (second == null) {
+            renderer_1.gl.framebufferTexture2D(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.TEXTURE_2D, null, 0);
+        }
+        else if (second.type == "renderbuffer") {
+            var renderbuffer = second;
+            renderer_1.gl.framebufferRenderbuffer(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.RENDERBUFFER, renderbuffer.rbo.handle);
+        }
+        else {
+            var texture = second;
+            switch (texture.type) {
+                case renderer_1.gl.TEXTURE_2D:
+                    {
+                        renderer_1.gl.framebufferTexture2D(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.TEXTURE_2D, texture.handle, 0);
+                    }
+                    break;
+                case renderer_1.gl.TEXTURE_CUBE_MAP:
+                    {
+                        renderer_1.gl.framebufferTexture2D(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.TEXTURE_CUBE_MAP_POSITIVE_X + face, texture.handle, 0);
+                    }
+                    break;
+            }
+        }
+    };
+    Offscreen.prototype.bind = function () {
+        this.fbo.bind();
+        Offscreen.offscreens.push(this.fbo);
+    };
+    Offscreen.prototype.unbind = function () {
+        if (Offscreen.offscreens.length) {
+            Offscreen.offscreens.pop();
+            this.fbo.unbind();
+            if (Offscreen.offscreens.length) {
+                Offscreen.offscreens[Offscreen.offscreens.length - 1].bind();
+            }
+        }
+    };
+    Offscreen.prototype.check = function () {
+        this.fbo.check();
+    };
+    Offscreen.offscreens = [];
+    return Offscreen;
+}());
+exports.Offscreen = Offscreen;
 
 
 /***/ }),
@@ -694,7 +3377,7 @@ var Uniform = /** @class */ (function () {
     Uniform.prototype.set = function (value) {
         try {
             if (!this.isArray) {
-                this.setter(renderer_1.gl.getUniformLocation(Shader.current.handle, this.name), value);
+                this.setter(renderer_1.gl.getUniformLocation(Shader.current(), this.name), value);
             }
             else {
                 throw 1;
@@ -721,42 +3404,47 @@ var Uniform = /** @class */ (function () {
 }());
 exports.Uniform = Uniform;
 var Shader = /** @class */ (function () {
-    function Shader(vsfilename, fsfilename) {
-        this.handle = renderer_1.gl.createProgram();
+    function Shader(vsfilename, fsfilename, specify, varyings) {
+        this.specify = specify;
+        this.partial = {};
         vsfilename = Shader.shaderPath + (renderer_1.gl2 ? "gl2/" : "gl/") + vsfilename;
         fsfilename = Shader.shaderPath + (renderer_1.gl2 ? "gl2/" : "gl/") + fsfilename;
-        // console.log(vsfilename);
-        // console.log(fsfilename);
-        var vs = Shader.compileShader(xhr_1.default.getSync(vsfilename), renderer_1.gl.VERTEX_SHADER);
-        var fs = Shader.compileShader(xhr_1.default.getSync(fsfilename), renderer_1.gl.FRAGMENT_SHADER);
-        renderer_1.gl.bindAttribLocation(this.handle, 0, "Position");
-        renderer_1.gl.bindAttribLocation(this.handle, 1, "Color");
-        renderer_1.gl.bindAttribLocation(this.handle, 2, "Normal");
-        renderer_1.gl.bindAttribLocation(this.handle, 3, "Tangent");
-        renderer_1.gl.bindAttribLocation(this.handle, 4, "Bitangent");
-        renderer_1.gl.bindAttribLocation(this.handle, 5, "TexCoord");
-        renderer_1.gl.bindAttribLocation(this.handle, 6, "BoneIndex");
-        renderer_1.gl.bindAttribLocation(this.handle, 7, "BoneWeight");
-        renderer_1.gl.attachShader(this.handle, vs);
-        renderer_1.gl.attachShader(this.handle, fs);
-        renderer_1.gl.linkProgram(this.handle);
-        if (!renderer_1.gl.getProgramParameter(this.handle, renderer_1.gl.LINK_STATUS)) {
-            throw renderer_1.gl.getProgramInfoLog(this.handle);
+        this.vert = Shader.compileShader(xhr_1.default.getSync(vsfilename), renderer_1.gl.VERTEX_SHADER);
+        this.frag = Shader.compileShader(xhr_1.default.getSync(fsfilename), renderer_1.gl.FRAGMENT_SHADER);
+        this.handle = Shader.createProgram(this.vert, this.frag, varyings);
+        if (specify) {
+            for (var label in Shader.requirements) {
+                this.partial[label] = Shader.createProgram("vert" in Shader.requirements[label] ? Shader.requirements[label].vert : this.vert, "frag" in Shader.requirements[label] ? Shader.requirements[label].frag : this.frag);
+            }
         }
     }
     Shader.prototype.use = function () {
-        Shader.current = this;
-        renderer_1.gl.useProgram(this.handle);
-        if (communicator_1.Communicators.current) {
-            communicator_1.Communicators.current.invoke();
+        Shader.stack.push(this);
+        if (this.specify && Shader.partials.length) {
+            renderer_1.gl.useProgram(this.partial[Shader.partials[Shader.partials.length - 1]]);
         }
+        else {
+            renderer_1.gl.useProgram(this.handle);
+        }
+        communicator_1.Communicators.invoke();
     };
     Shader.prototype.unuse = function () {
-        Shader.current = null;
-        if (Shader.current && communicator_1.Communicators.current) {
-            communicator_1.Communicators.current.invoke();
+        if (Shader.stack.length) {
+            Shader.stack.pop();
         }
-        renderer_1.gl.useProgram(Shader.current);
+        if (Shader.stack.length) {
+            var self_1 = Shader.stack[Shader.stack.length - 1];
+            if (self_1.specify && Shader.partials.length) {
+                renderer_1.gl.useProgram(self_1.partial[Shader.partials[Shader.partials.length - 1]]);
+            }
+            else {
+                renderer_1.gl.useProgram(self_1.handle);
+            }
+            communicator_1.Communicators.invoke();
+        }
+        else {
+            renderer_1.gl.useProgram(null);
+        }
     };
     Shader.uniform = function (valueType, name) {
         var p = name.indexOf("[]");
@@ -765,6 +3453,28 @@ var Shader = /** @class */ (function () {
         }
         else {
             return new Uniform(name, valueType, false);
+        }
+    };
+    Shader.require = function (list) {
+        for (var label in list) {
+            if (!(label in Shader.requirements)) {
+                var data = {};
+                if ("frag" in list[label]) {
+                    var fsfilename = Shader.shaderPath + (renderer_1.gl2 ? "gl2/" : "gl/") + list[label].frag + ".frag";
+                    data.frag = Shader.compileShader(xhr_1.default.getSync(fsfilename), renderer_1.gl.FRAGMENT_SHADER);
+                }
+                if ("vert" in list[label]) {
+                    var vsfilename = Shader.shaderPath + (renderer_1.gl2 ? "gl2/" : "gl/") + list[label].vert + ".vert";
+                    data.vert = Shader.compileShader(xhr_1.default.getSync(vsfilename), renderer_1.gl.VERTEX_SHADER);
+                }
+                // console.log(data);
+                Shader.requirements[label] = data;
+                for (var id in Shader.shaders) {
+                    if (Shader.shaders[id].specify) {
+                        Shader.shaders[id].partial[label] = Shader.createProgram("vert" in data ? data.vert : Shader.shaders[id].vert, "frag" in data ? data.frag : Shader.shaders[id].frag);
+                    }
+                }
+            }
         }
     };
     Shader.compileShader = function (source, type) {
@@ -776,32 +3486,64 @@ var Shader = /** @class */ (function () {
         }
         return shader;
     };
-    Shader.create = function (name) {
+    Shader.create = function (name, specify, varyings) {
         if (!(name in Shader.shaders)) {
-            Shader.shaders[name] = new Shader(name + ".vs", name + ".fs");
+            Shader.shaders[name] = new Shader(name + ".vert", name + ".frag", specify, varyings);
         }
         return Shader.shaders[name];
     };
-    Object.defineProperty(Shader, "current", {
-        get: function () {
-            return Shader.stack.length ? Shader.stack[Shader.stack.length - 1] : null;
-        },
-        set: function (value) {
-            if (value != null) {
-                Shader.stack.push(value);
+    Shader.current = function () {
+        if (!Shader.stack.length) {
+            return null;
+        }
+        else {
+            if (Shader.stack[Shader.stack.length - 1].specify && Shader.partials.length) {
+                return Shader.stack[Shader.stack.length - 1].partial[Shader.partials[Shader.partials.length - 1]];
             }
             else {
-                if (Shader.stack.length) {
-                    Shader.stack.pop();
-                }
+                return Shader.stack[Shader.stack.length - 1].handle;
             }
-        },
-        enumerable: true,
-        configurable: true
-    });
+        }
+    };
+    Shader.specify = function (label) {
+        this.partials.push(label);
+    };
+    Shader.unspecify = function () {
+        if (this.partials.length) {
+            this.partials.pop();
+        }
+    };
+    Shader.createProgram = function (vert, frag, varyings) {
+        var program = renderer_1.gl.createProgram();
+        renderer_1.gl.bindAttribLocation(program, 0, "Position");
+        renderer_1.gl.bindAttribLocation(program, 1, "Color");
+        renderer_1.gl.bindAttribLocation(program, 2, "Normal");
+        renderer_1.gl.bindAttribLocation(program, 3, "Tangent");
+        renderer_1.gl.bindAttribLocation(program, 4, "Bitangent");
+        renderer_1.gl.bindAttribLocation(program, 5, "TexCoord");
+        renderer_1.gl.bindAttribLocation(program, 6, "BoneIndex");
+        renderer_1.gl.bindAttribLocation(program, 7, "BoneWeight");
+        renderer_1.gl.attachShader(program, vert);
+        renderer_1.gl.attachShader(program, frag);
+        if (varyings) {
+            if (!renderer_1.gl2)
+                throw "webgl 2.0 required.";
+            for (var i = 0; i != varyings.length; ++i) {
+                varyings[i] += "_next";
+            }
+            renderer_1.gl2.transformFeedbackVaryings(program, varyings, renderer_1.gl2.INTERLEAVED_ATTRIBS);
+        }
+        renderer_1.gl.linkProgram(program);
+        if (!renderer_1.gl.getProgramParameter(program, renderer_1.gl.LINK_STATUS)) {
+            throw renderer_1.gl.getProgramInfoLog(program);
+        }
+        return program;
+    };
     Shader.shaderPath = "./shaders/";
     Shader.stack = [];
     Shader.shaders = {};
+    Shader.requirements = {};
+    Shader.partials = [];
     return Shader;
 }());
 exports.Shader = Shader;
@@ -830,14 +3572,79 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var communicator_1 = __webpack_require__(/*! ./communicator */ "./src/gl/communicator.ts");
+var TextureCommunicator = /** @class */ (function (_super) {
+    __extends(TextureCommunicator, _super);
+    function TextureCommunicator(name, channel) {
+        var _this = _super.call(this, "Texture", false) || this;
+        var map = {};
+        map[name] = {
+            type: "int",
+            init: channel
+        };
+        _this.init(map);
+        return _this;
+    }
+    return TextureCommunicator;
+}(communicator_1.Communicator));
+var channelLookup = [
+    false, false, false, false, false, false, false, false
+];
+function getChannel() {
+    for (var i = 0; i != channelLookup.length; ++i) {
+        if (!channelLookup[i]) {
+            channelLookup[i] = true;
+            return i;
+        }
+    }
+    throw "texture channels run out";
+}
+function restoreChannel(channel) {
+    channelLookup[channel] = false;
+}
+var TextureSpec = /** @class */ (function () {
+    function TextureSpec() {
+    }
+    return TextureSpec;
+}());
+;
+var TextureSpecFile = /** @class */ (function () {
+    function TextureSpecFile() {
+    }
+    return TextureSpecFile;
+}());
+;
 var Texture = /** @class */ (function () {
     function Texture(type) {
         this.type = type;
         this.handle = renderer_1.gl.createTexture();
     }
-    Texture.prototype.invoke = function (channel) {
-        renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + channel);
-        this.bind();
+    Texture.prototype.use = function (name) {
+        if (Texture.channels[name] == undefined) {
+            this.name = name;
+            this.channel = getChannel();
+            Texture.channels[name] = communicator_1.Communicators.current.add(new TextureCommunicator(name, this.channel));
+            renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + this.channel);
+            renderer_1.gl.bindTexture(this.type, this.handle);
+        }
+        else {
+            throw "channel " + name + " has already bound a texture";
+        }
+    };
+    Texture.prototype.unuse = function () {
+        if (Texture.channels[this.name] != undefined) {
+            // gl.activeTexture(gl.TEXTURE0 + this.channel);
+            renderer_1.gl.bindTexture(this.type, null);
+            Texture.channels[this.name].remove();
+            restoreChannel(this.channel);
+            Texture.channels[this.name] = undefined;
+        }
+    };
+    Texture.genChannel = function () {
+        return getChannel();
+    };
+    Texture.restoreChannel = function (channel) {
+        restoreChannel(channel);
     };
     Texture.prototype.bind = function () {
         renderer_1.gl.bindTexture(this.type, this.handle);
@@ -845,6 +3652,7 @@ var Texture = /** @class */ (function () {
     Texture.prototype.unbind = function () {
         renderer_1.gl.bindTexture(this.type, null);
     };
+    Texture.channels = {};
     return Texture;
 }());
 exports.Texture = Texture;
@@ -854,26 +3662,59 @@ var Texture2D = /** @class */ (function (_super) {
         var _this = _super.call(this, renderer_1.gl.TEXTURE_2D) || this;
         if (typeof first == "string") {
             var filename = first;
-            var usemipmap_1 = second == undefined ? true : second;
+            var opts = second == undefined ? {} : second;
+            var usemipmap_1 = opts.mipmap == undefined ? true : opts.mipmap;
+            var component_1 = opts.component || renderer_1.gl.RGBA;
+            var internalComponent_1 = component_1;
+            var type_1 = opts.type || renderer_1.gl.UNSIGNED_BYTE;
+            if (type_1 == renderer_1.gl.FLOAT) {
+                if (renderer_1.gl2) {
+                    if (!renderer_1.Renderer.require(["EXT_color_buffer_float",
+                        "OES_texture_float_linear"])) {
+                        throw "floating point textures not supported.";
+                    }
+                    switch (component_1) {
+                        case renderer_1.gl2.RED:
+                            internalComponent_1 = renderer_1.gl2.R32F;
+                            break;
+                        case renderer_1.gl2.RG:
+                            internalComponent_1 = renderer_1.gl2.RG32F;
+                            break;
+                        case renderer_1.gl.RGB:
+                            internalComponent_1 = renderer_1.gl2.RGB32F;
+                            break;
+                        case renderer_1.gl.RGBA:
+                            internalComponent_1 = renderer_1.gl2.RGBA32F;
+                            break;
+                        default: throw "unknown internal format.";
+                    }
+                }
+                else {
+                    if (!renderer_1.Renderer.require(["OES_texture_float",
+                        "OES_texture_float_linear"])) {
+                        throw "floating point textures not supported.";
+                    }
+                }
+            }
+            var filter_1 = opts.filter || renderer_1.gl.LINEAR;
+            var wrap_1 = opts.wrap || renderer_1.gl.REPEAT;
             _this.bind();
-            renderer_1.gl.texImage2D(_this.type, 0, renderer_1.gl.RGBA, 1, 1, 0, renderer_1.gl.RGBA, renderer_1.gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+            renderer_1.gl.texImage2D(_this.type, 0, internalComponent_1, 1, 1, 0, component_1, type_1, null);
             _this.unbind();
             var img_1 = new Image();
             img_1.onload = function () {
                 _this.bind();
                 renderer_1.gl.pixelStorei(renderer_1.gl.UNPACK_FLIP_Y_WEBGL, true);
-                renderer_1.gl.texImage2D(_this.type, 0, renderer_1.gl.RGBA, renderer_1.gl.RGBA, renderer_1.gl.UNSIGNED_BYTE, img_1);
-                // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-                // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-                renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_WRAP_S, renderer_1.gl.REPEAT);
-                renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_WRAP_T, renderer_1.gl.REPEAT);
-                renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_MAG_FILTER, renderer_1.gl.LINEAR);
+                renderer_1.gl.texImage2D(_this.type, 0, internalComponent_1, component_1, type_1, img_1);
+                renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_S, wrap_1);
+                renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_T, wrap_1);
+                renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MAG_FILTER, filter_1);
                 if (usemipmap_1) {
                     renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, renderer_1.gl.LINEAR_MIPMAP_LINEAR);
                     renderer_1.gl.generateMipmap(_this.type);
                 }
                 else {
-                    renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, renderer_1.gl.LINEAR);
+                    renderer_1.gl.texParameteri(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, filter_1);
                 }
                 _this.unbind();
                 _this.w = img_1.width;
@@ -882,7 +3723,59 @@ var Texture2D = /** @class */ (function (_super) {
             img_1.src = filename;
         }
         else {
-            var component = first;
+            var opts = first == undefined ? {} : first;
+            var component = opts.component || renderer_1.gl.RGBA;
+            var internalComponent = component;
+            var type = opts.type || renderer_1.gl.UNSIGNED_BYTE;
+            if (type == renderer_1.gl.FLOAT) {
+                if (renderer_1.gl2) {
+                    if (!renderer_1.Renderer.require(["EXT_color_buffer_float",
+                        "OES_texture_float_linear"])) {
+                        throw "floating point textures not supported.";
+                    }
+                    switch (component) {
+                        case renderer_1.gl2.RED:
+                            internalComponent = renderer_1.gl2.R32F;
+                            break;
+                        case renderer_1.gl2.RG:
+                            internalComponent = renderer_1.gl2.RG32F;
+                            break;
+                        case renderer_1.gl.RGB:
+                            internalComponent = renderer_1.gl2.RGB32F;
+                            break;
+                        case renderer_1.gl.RGBA:
+                            internalComponent = renderer_1.gl2.RGBA32F;
+                            break;
+                        case renderer_1.gl.DEPTH_COMPONENT:
+                            internalComponent = renderer_1.gl2.DEPTH_COMPONENT32F;
+                            break;
+                        default: throw "unknown internal format.";
+                    }
+                }
+                else {
+                    if (!renderer_1.Renderer.require(["OES_texture_float",
+                        "OES_texture_float_linear"])) {
+                        throw "floating point textures not supported.";
+                    }
+                }
+            }
+            else if (type == renderer_1.gl.UNSIGNED_SHORT) {
+                if (renderer_1.gl2) {
+                    if (component == renderer_1.gl.DEPTH_COMPONENT) {
+                        internalComponent = renderer_1.gl2.DEPTH_COMPONENT16;
+                    }
+                    else {
+                        throw "unknown internal format.";
+                    }
+                }
+                else {
+                    if (!renderer_1.Renderer.require(["WEBGL_depth_texture"])) {
+                        throw "depth texture not supported.";
+                    }
+                }
+            }
+            var filter = opts.filter || renderer_1.gl.LINEAR;
+            var wrap = opts.wrap || renderer_1.gl.CLAMP_TO_EDGE;
             _this.w = second;
             _this.h = third;
             if (second == undefined) {
@@ -890,25 +3783,11 @@ var Texture2D = /** @class */ (function (_super) {
                 _this.h = renderer_1.Renderer.instance.canvas.height;
             }
             _this.bind();
-            switch (component) {
-                case renderer_1.gl.DEPTH_COMPONENT:
-                    {
-                        renderer_1.gl.texImage2D(_this.type, 0, component, _this.w, _this.h, 0, component, renderer_1.gl.FLOAT, null);
-                    }
-                    break;
-                default:
-                    {
-                        renderer_1.gl.texImage2D(_this.type, 0, component, _this.w, _this.h, 0, component, renderer_1.gl.UNSIGNED_BYTE, null);
-                    }
-                    break;
-            }
-            // } else {
-            // 	gl.texImage2D(this.type, 0, component, 1, 1, 0, component, gl.FLOAT, null);
-            // }
-            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, renderer_1.gl.LINEAR);
-            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MAG_FILTER, renderer_1.gl.LINEAR);
-            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_S, renderer_1.gl.CLAMP_TO_EDGE);
-            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_T, renderer_1.gl.CLAMP_TO_EDGE);
+            renderer_1.gl.texImage2D(_this.type, 0, internalComponent, _this.w, _this.h, 0, component, type, null);
+            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, filter);
+            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MAG_FILTER, filter);
+            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_S, wrap);
+            renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_T, wrap);
             _this.unbind();
         }
         return _this;
@@ -932,12 +3811,44 @@ var Texture2D = /** @class */ (function (_super) {
 exports.Texture2D = Texture2D;
 var TextureCube = /** @class */ (function (_super) {
     __extends(TextureCube, _super);
-    function TextureCube(component, width, height) {
+    function TextureCube(opts, width, height) {
         var _this = _super.call(this, renderer_1.gl.TEXTURE_CUBE_MAP) || this;
         if (width == undefined) {
             width = height = renderer_1.Renderer.instance.canvas.height;
         }
         _this.bind();
+        var component = opts.component || renderer_1.gl.RGBA;
+        var type = opts.type || renderer_1.gl.UNSIGNED_BYTE;
+        var internalComponent = component;
+        if (type == renderer_1.gl.FLOAT) {
+            if (renderer_1.gl2) {
+                if (!renderer_1.Renderer.require(["EXT_color_buffer_float",
+                    "OES_texture_float_linear"])) {
+                    throw "floating point textures not supported.";
+                }
+                switch (component) {
+                    case renderer_1.gl2.RED:
+                        internalComponent = renderer_1.gl2.R32F;
+                        break;
+                    case renderer_1.gl2.RG:
+                        internalComponent = renderer_1.gl2.RG32F;
+                        break;
+                    case renderer_1.gl.RGB:
+                        internalComponent = renderer_1.gl2.RGB32F;
+                        break;
+                    case renderer_1.gl.RGBA:
+                        internalComponent = renderer_1.gl2.RGBA32F;
+                        break;
+                    default: throw "unknown internal format.";
+                }
+            }
+            else {
+                if (!renderer_1.Renderer.require(["OES_texture_float",
+                    "OES_texture_float_linear"])) {
+                    throw "floating point textures not supported.";
+                }
+            }
+        }
         renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MIN_FILTER, renderer_1.gl.LINEAR);
         renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_MAG_FILTER, renderer_1.gl.LINEAR);
         renderer_1.gl.texParameterf(_this.type, renderer_1.gl.TEXTURE_WRAP_S, renderer_1.gl.CLAMP_TO_EDGE);
@@ -946,7 +3857,7 @@ var TextureCube = /** @class */ (function (_super) {
             renderer_1.gl.texParameterf(_this.type, renderer_1.gl2.TEXTURE_WRAP_R, renderer_1.gl.CLAMP_TO_EDGE);
         }
         for (var i = 0; i != 6; ++i) {
-            renderer_1.gl.texImage2D(renderer_1.gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, component, width, height, 0, component, renderer_1.gl.UNSIGNED_BYTE, null);
+            renderer_1.gl.texImage2D(renderer_1.gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalComponent, width, height, 0, component, type, null);
         }
         _this.unbind();
         return _this;
@@ -954,6 +3865,160 @@ var TextureCube = /** @class */ (function (_super) {
     return TextureCube;
 }(Texture));
 exports.TextureCube = TextureCube;
+
+
+/***/ }),
+
+/***/ "./src/gl/transformFeedback.ts":
+/*!*************************************!*\
+  !*** ./src/gl/transformFeedback.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var buffer_1 = __webpack_require__(/*! ./buffer */ "./src/gl/buffer.ts");
+var TAO = /** @class */ (function () {
+    function TAO(attr) {
+        this.tbo = new buffer_1.TBO();
+        this.attrs = attr.attrs;
+        this.attrSize = attr.attrSize;
+        this.numVertices = attr.vertices.length / attr.component;
+        this.tbo.bind();
+        this.tbo.data(attr.vertices);
+        this.tbo.unbind();
+    }
+    TAO.prototype.bind = function () {
+        this.tbo.bind();
+        for (var _i = 0, _a = this.attrs; _i < _a.length; _i++) {
+            var x = _a[_i];
+            renderer_1.gl.enableVertexAttribArray(x.index);
+            // console.log(x.index, x.size, x.type, false, this.attrSize, x.offset);
+            renderer_1.gl.vertexAttribPointer(x.index, x.size, x.type, false, this.attrSize, x.offset);
+        }
+    };
+    TAO.prototype.unbind = function () {
+        for (var _i = 0, _a = this.attrs; _i < _a.length; _i++) {
+            var x = _a[_i];
+            renderer_1.gl.disableVertexAttribArray(x.index);
+        }
+        this.tbo.unbind();
+    };
+    TAO.prototype.draw = function (mode, first, count) {
+        if (first === void 0) { first = undefined; }
+        if (count === void 0) { count = undefined; }
+        if (mode == undefined) {
+            mode = renderer_1.gl.POINTS;
+        }
+        renderer_1.gl2.beginTransformFeedback(mode);
+        if (first != undefined) {
+            renderer_1.gl.drawArrays(mode, first, count);
+        }
+        else {
+            renderer_1.gl.drawArrays(mode, 0, this.numVertices);
+        }
+        renderer_1.gl2.endTransformFeedback();
+    };
+    TAO.prototype.swap = function () {
+        this.tbo.swap();
+    };
+    return TAO;
+}());
+exports.TAO = TAO;
+var TransformAttrType = /** @class */ (function () {
+    function TransformAttrType() {
+    }
+    return TransformAttrType;
+}());
+var TransformAttrs = /** @class */ (function () {
+    function TransformAttrs(attrNames) {
+        this.attrNames = attrNames;
+        this.attrs = [];
+        this.attrSize = 0;
+        this.vertices = [];
+        this.component = 0;
+        this.attrLookup = {};
+        var offset = 0;
+        for (var i in attrNames) {
+            var attr = {
+                index: null,
+                type: null,
+                size: null,
+                offset: null
+            };
+            attr.index = +i;
+            attr.type = attrNames[i].type;
+            attr.size = attrNames[i].size;
+            attr.offset = offset;
+            offset += attr.size * TransformAttrs.getSize(attr.type);
+            this.attrs.push(attr);
+            this.attrLookup[attrNames[i].name] = attr;
+            this.component += attr.size;
+        }
+        this.attrSize = offset;
+    }
+    TransformAttrs.prototype.push = function (vertex) {
+        for (var _i = 0, _a = this.attrNames; _i < _a.length; _i++) {
+            var x = _a[_i];
+            if (x.name in vertex) {
+                this.vertices = this.vertices.concat(vertex[x.name]);
+            }
+            else {
+                throw "lack of vertex attribute: " + x;
+            }
+        }
+    };
+    TransformAttrs.prototype.set = function (type, vs) {
+        var i = 0;
+        for (var _i = 0, _a = this.attrNames; _i < _a.length; _i++) {
+            var x = _a[_i];
+            if (x.name == type)
+                break;
+            i += this.attrLookup[x.name].size;
+        }
+        var dt = this.attrLookup[type].size;
+        for (var j = 0; j < vs.length; j += dt) {
+            for (var k = 0; k != dt; ++k) {
+                this.vertices[i + k] = vs[j + k];
+            }
+            i += this.component;
+        }
+    };
+    TransformAttrs.getSize = function (type) {
+        switch (type) {
+            case renderer_1.gl.FLOAT: return 4;
+            case renderer_1.gl.BYTE:
+            case renderer_1.gl.UNSIGNED_BYTE: return 1;
+            case renderer_1.gl.SHORT:
+            case renderer_1.gl.UNSIGNED_SHORT: return 2;
+            case renderer_1.gl.INT:
+            case renderer_1.gl.UNSIGNED_INT: return 4;
+            default: throw "unknown type";
+        }
+    };
+    return TransformAttrs;
+}());
+exports.TransformAttrs = TransformAttrs;
+var TransformFeedback = /** @class */ (function () {
+    function TransformFeedback() {
+        this.vbo = new buffer_1.TBO();
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 required.";
+        }
+        this.handle = renderer_1.gl2.createTransformFeedback();
+    }
+    TransformFeedback.prototype.bind = function () {
+        renderer_1.gl2.bindTransformFeedback(renderer_1.gl2.TRANSFORM_FEEDBACK, this.handle);
+    };
+    TransformFeedback.prototype.unbind = function () {
+        renderer_1.gl2.bindTransformFeedback(renderer_1.gl2.TRANSFORM_FEEDBACK, null);
+    };
+    return TransformFeedback;
+}());
+exports.TransformFeedback = TransformFeedback;
 
 
 /***/ }),
@@ -1023,7 +4088,7 @@ var VAO = /** @class */ (function () {
         if (first === void 0) { first = undefined; }
         if (count === void 0) { count = undefined; }
         if (this.ebo) {
-            renderer_1.gl.drawElements(renderer_1.gl.TRIANGLES, this.numIndices, renderer_1.gl.UNSIGNED_SHORT, 0);
+            renderer_1.gl.drawElements(renderer_1.gl.TRIANGLES, this.numIndices, renderer_1.gl.UNSIGNED_INT, 0);
         }
         else {
             if (mode != undefined) {
@@ -1116,10 +4181,10 @@ exports.VertexAttrs = VertexAttrs;
 
 /***/ }),
 
-/***/ "./src/object/modelObject.ts":
-/*!***********************************!*\
-  !*** ./src/object/modelObject.ts ***!
-  \***********************************/
+/***/ "./src/gl/viewport.ts":
+/*!****************************!*\
+  !*** ./src/gl/viewport.ts ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1136,23 +4201,640 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var object_1 = __webpack_require__(/*! ../scene/object */ "./src/scene/object.ts");
-var ModelObj = /** @class */ (function (_super) {
-    __extends(ModelObj, _super);
-    function ModelObj(model) {
-        var _this = _super.call(this) || this;
-        _this.model = model;
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var Viewport = /** @class */ (function () {
+    function Viewport(left, top, width, height) {
+        this.left = left;
+        this.top = top;
+        this.width = width;
+        this.height = height;
+        this.N = glm_1.glm.vec3(0, 1, 0);
+        this.P = glm_1.glm.vec3(0, 0, 0);
+        this.Up = glm_1.glm.vec3(0, 0, 1);
+        this.rotateModified = true;
+        this.translateModified = true;
+        if (left != undefined) {
+            // gl.viewport(left, top, width, height);
+        }
+        else {
+            this.left = 0;
+            this.top = 0;
+            this.width = renderer_1.Renderer.instance.canvas.width;
+            this.height = renderer_1.Renderer.instance.canvas.height;
+        }
+    }
+    Object.defineProperty(Viewport.prototype, "target", {
+        get: function () {
+            return this.N;
+        },
+        set: function (target) {
+            this.N = glm_1.glm.normalize(target);
+            this.rotateModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Viewport.prototype, "up", {
+        get: function () {
+            return this.Up;
+        },
+        set: function (up) {
+            this.Up = glm_1.glm.normalize(up);
+            this.rotateModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Viewport.prototype.rotate = function (angle) {
+        this.N = glm_1.glm.rotate(angle.z, this.Up)["*"](glm_1.glm.vec4(this.N, 0)).xyz;
+        var U = glm_1.glm.cross(this.N, this.Up);
+        this.N = glm_1.glm.rotate(angle.y, U)["*"](glm_1.glm.vec4(this.N, 0)).xyz;
+        this.Up = glm_1.glm.rotate(angle.x, this.N)["*"](glm_1.glm.vec4(this.Up, 0)).xyz;
+        this.rotateModified = true;
+    };
+    Viewport.prototype.translate = function (diff) {
+        var U = glm_1.glm.normalize(glm_1.glm.cross(this.N, this.Up));
+        var V = glm_1.glm.cross(U, this.N);
+        this.P["+="](this.N["*"](diff.x)["+"](U["*"](-diff.y))["+"](V["*"](diff.z)));
+        this.translateModified = true;
+    };
+    Object.defineProperty(Viewport.prototype, "position", {
+        get: function () {
+            return this.P;
+        },
+        set: function (position) {
+            this.P = position;
+            this.translateModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Viewport.prototype.getCameraPosition = function () {
+        return this.P;
+    };
+    Viewport.prototype.getView = function () {
+        if (this.translateModified || this.rotateModified) {
+            if (this.translateModified) {
+                this.translateModified = false;
+                this.translateTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -this.P.x, -this.P.y, -this.P.z, 1);
+            }
+            if (this.rotateModified) {
+                this.rotateModified = false;
+                var U = glm_1.glm.normalize(glm_1.glm.cross(this.N, this.Up));
+                var V = glm_1.glm.cross(U, this.N);
+                this.rotateTrans = glm_1.glm.mat4(U.x, V.x, -this.N.x, 0, U.y, V.y, -this.N.y, 0, U.z, V.z, -this.N.z, 0, 0, 0, 0, 1);
+            }
+            this.trans = this.rotateTrans["*"](this.translateTrans);
+        }
+        return this.trans;
+    };
+    Viewport.prototype.getTrans = function () {
+        return this.getView();
+    };
+    Viewport.prototype.use = function () {
+        Viewport.viewports.push(this);
+        renderer_1.gl.viewport(this.left, this.top, this.width, this.height);
+    };
+    Viewport.prototype.unuse = function () {
+        if (Viewport.viewports.length) {
+            Viewport.viewports.pop();
+            if (Viewport.viewports.length) {
+                var self_1 = Viewport.viewports[Viewport.viewports.length - 1];
+                renderer_1.gl.viewport(self_1.left, self_1.top, self_1.width, self_1.height);
+            }
+        }
+    };
+    Viewport.prototype.viewModified = function () {
+        return this.translateModified || this.rotateModified;
+    };
+    Viewport.prototype.modified = function () {
+        return this.viewModified();
+    };
+    Viewport.viewports = [];
+    return Viewport;
+}());
+exports.Viewport = Viewport;
+var PerspectiveViewport = /** @class */ (function (_super) {
+    __extends(PerspectiveViewport, _super);
+    function PerspectiveViewport(left, top, width, height) {
+        var _this = _super.call(this, left, top, width, height) || this;
+        _this.perspectiveModified = true;
+        _this.ffov = glm_1.glm.radians(45);
+        _this.fzNear = 2e-2;
+        _this.fzFar = 8e2;
+        _this.fwhratio = _this.width / _this.height;
         return _this;
     }
-    ModelObj.prototype.render = function (viewport, shader) {
-        shader.use();
-        this.setViewMatrices(viewport);
-        this.model.render();
-        shader.unuse();
+    PerspectiveViewport.prototype.getPers = function () {
+        if (this.persModified()) {
+            this.perspectiveModified = false;
+            this.perspectiveTrans = glm_1.glm.perspective(this.ffov, this.fwhratio, this.fzNear, this.fzFar);
+        }
+        return this.perspectiveTrans;
     };
-    return ModelObj;
+    PerspectiveViewport.prototype.getTrans = function () {
+        if (this.modified()) {
+            this.viewportTrans = this.getPers()["*"](this.getView());
+        }
+        return this.viewportTrans;
+    };
+    Object.defineProperty(PerspectiveViewport.prototype, "whratio", {
+        get: function () {
+            return this.fwhratio;
+        },
+        set: function (value) {
+            this.fwhratio = value;
+            this.perspectiveModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PerspectiveViewport.prototype, "fov", {
+        get: function () {
+            return this.ffov;
+        },
+        set: function (angle) {
+            this.ffov = angle;
+            this.perspectiveModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PerspectiveViewport.prototype, "zNear", {
+        get: function () {
+            return this.fzNear;
+        },
+        set: function (z) {
+            this.fzNear = z;
+            this.perspectiveModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PerspectiveViewport.prototype, "zFar", {
+        get: function () {
+            return this.fzFar;
+        },
+        set: function (z) {
+            this.fzFar = z;
+            this.perspectiveModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    PerspectiveViewport.prototype.persModified = function () {
+        return this.perspectiveModified;
+    };
+    PerspectiveViewport.prototype.modified = function () {
+        return this.viewModified() || this.persModified();
+    };
+    return PerspectiveViewport;
+}(Viewport));
+exports.PerspectiveViewport = PerspectiveViewport;
+
+
+/***/ }),
+
+/***/ "./src/object/object.ts":
+/*!******************************!*\
+  !*** ./src/object/object.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var ObjBase = /** @class */ (function () {
+    function ObjBase() {
+        this.P = glm_1.glm.vec3(0, 0, 0);
+        this.S = glm_1.glm.vec3(1, 1, 1);
+        this.R = glm_1.glm.vec3(0, 0, 0);
+        this.translateModified = true;
+        this.scaleModified = true;
+        this.rotateModified = true;
+    }
+    ObjBase.prototype.scaleIdentity = function () {
+        this.S = glm_1.glm.vec3(1, 1, 1);
+        this.scaleModified = true;
+    };
+    ObjBase.prototype.scale = function (factor) {
+        this.S["*="](factor);
+        this.scaleModified = true;
+    };
+    Object.defineProperty(ObjBase.prototype, "scaleFactor", {
+        set: function (factor) {
+            if (typeof factor == "number") {
+                this.S = glm_1.glm.vec3(factor, factor, factor);
+            }
+            else {
+                this.S = factor;
+            }
+            this.scaleModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ObjBase.prototype.translateIdentity = function () {
+        this.P = glm_1.glm.vec3(0, 0, 0);
+        this.translateModified = true;
+    };
+    ObjBase.prototype.translate = function (diff) {
+        this.P["+="](diff);
+        this.translateModified = true;
+    };
+    Object.defineProperty(ObjBase.prototype, "position", {
+        get: function () {
+            return this.P;
+        },
+        set: function (pos) {
+            this.P = pos;
+            this.translateModified = true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ObjBase.prototype.rotateIdentity = function (mask) {
+        if (mask) {
+            this.R = this.R["*"](mask);
+        }
+        else {
+            this.R = glm_1.glm.vec3(0, 0, 0);
+        }
+        this.rotateModified = true;
+    };
+    ObjBase.prototype.rotate = function (angle) {
+        this.R["+="](angle);
+        this.rotateModified = true;
+    };
+    ObjBase.prototype.updateTrans = function () {
+        if (this.translateModified || this.scaleModified || this.rotateModified) {
+            if (this.translateModified) {
+                this.translateModified = false;
+                this.translateTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, this.P.x, this.P.y, this.P.z, 1);
+            }
+            if (this.rotateModified) {
+                this.rotateModified = false;
+                var sinx = Math.sin(this.R.x), siny = Math.sin(this.R.y), sinz = Math.sin(this.R.z), cosx = Math.cos(this.R.x), cosy = Math.cos(this.R.y), cosz = Math.cos(this.R.z), sycz = siny * cosz, sysz = siny * sinz;
+                this.rotateTrans = glm_1.glm.mat4(cosz * cosy, sinz * cosy, siny, 0, -cosx * sinz - sinx * sycz, cosx * cosz - sinx * sysz, sinx * cosy, 0, sinx * sinz - cosx * sycz, -sinx * cosz - cosx * sysz, cosx * cosy, 0, 0, 0, 0, 1);
+            }
+            if (this.scaleModified) {
+                this.scaleModified = false;
+                this.scaleTrans = glm_1.glm.mat4(this.S.x, 0, 0, 0, 0, this.S.y, 0, 0, 0, 0, this.S.z, 0, 0, 0, 0, 1);
+            }
+            this.ntrans = this.translateTrans["*"](this.rotateTrans);
+            this.trans = this.ntrans["*"](this.scaleTrans);
+            this.itrans = glm_1.glm.inverse(this.ntrans);
+        }
+    };
+    ObjBase.prototype.getTrans = function () {
+        this.updateTrans();
+        return this.trans;
+    };
+    ObjBase.prototype.getSpace = function () {
+        this.updateTrans();
+        return this.itrans;
+    };
+    ObjBase.prototype.getTrival = function () {
+        this.updateTrans();
+        return this.ntrans;
+    };
+    return ObjBase;
+}());
+var Obj = /** @class */ (function (_super) {
+    __extends(Obj, _super);
+    function Obj() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.defaultShader = null;
+        return _this;
+    }
+    Obj.prototype.setBasicUniforms = function (viewport) {
+        Obj.gWVP.set(viewport.getTrans()["*"](this.getTrans()));
+        Obj.gWorld.set(this.getTrans());
+        Obj.gWV.set(viewport.getView()["*"](this.getTrans()));
+        Obj.gV.set(viewport.getView());
+        Obj.gVP.set(viewport.getTrans());
+        Obj.gCameraWorldPos.set(viewport.getCameraPosition());
+        Obj.gTime.set(renderer_1.Renderer.time);
+    };
+    Obj.prototype.bindShader = function () {
+        if (this.defaultShader) {
+            this.defaultShader.use();
+        }
+    };
+    Obj.prototype.unbindShader = function () {
+        if (this.defaultShader) {
+            this.defaultShader.unuse();
+        }
+    };
+    Obj.gWVP = shader_1.Shader.uniform("mat4", "gWVP");
+    Obj.gWorld = shader_1.Shader.uniform("mat4", "gWorld");
+    Obj.gV = shader_1.Shader.uniform("mat4", "gV");
+    Obj.gWV = shader_1.Shader.uniform("mat4", "gWV");
+    Obj.gVP = shader_1.Shader.uniform("mat4", "gVP");
+    Obj.gCameraWorldPos = shader_1.Shader.uniform("vec3", "gCameraWorldPos");
+    Obj.gTime = shader_1.Shader.uniform("float", "gTime");
+    return Obj;
+}(ObjBase));
+exports.default = Obj;
+
+
+/***/ }),
+
+/***/ "./src/object/ocean.ts":
+/*!*****************************!*\
+  !*** ./src/object/ocean.ts ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var terrain_1 = __webpack_require__(/*! ./terrain */ "./src/object/terrain.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var Ocean = /** @class */ (function (_super) {
+    __extends(Ocean, _super);
+    function Ocean() {
+        var _this = _super.call(this, 8, 64, 0.005) || this;
+        _this.gN = shader_1.Shader.uniform("float", "gN");
+        _this.defaultShader = shader_1.Shader.create("ocean", true);
+        var M = 64, w = 0.005 * (1 << 8), W = w * M / 2;
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos2"]);
+        var indices = [];
+        var pos2 = [];
+        var ipos = 0;
+        var dx = [1, 1, -1, -1], dy = [1, 0, 1, 0];
+        var y = -W;
+        while (M >>= 2) {
+            for (var j = 0; j < 4; ++j) {
+                for (var x_1 = -W; x_1 < W; x_1 += 4 * w) {
+                    pos2[ipos + 0] = x_1 + 0 * w;
+                    pos2[ipos + 1] = y - 0 * w;
+                    pos2[ipos + 2] = x_1 + 1 * w;
+                    pos2[ipos + 3] = y - 0 * w;
+                    pos2[ipos + 4] = x_1 + 2 * w;
+                    pos2[ipos + 5] = y - 0 * w;
+                    pos2[ipos + 6] = x_1 + 3 * w;
+                    pos2[ipos + 7] = y - 0 * w;
+                    pos2[ipos + 8] = x_1 + 4 * w;
+                    pos2[ipos + 9] = y - 0 * w;
+                    pos2[ipos + 10] = x_1 + 0 * w;
+                    pos2[ipos + 11] = y - 1 * w;
+                    pos2[ipos + 12] = x_1 + 4 * w;
+                    pos2[ipos + 13] = y - 1 * w;
+                    if (dy[j]) {
+                        for (var k = 0; k < 14; k += 2) {
+                            pos2[ipos + k + 1] *= dx[j];
+                        }
+                    }
+                    else {
+                        for (var k = 0; k < 14; k += 2) {
+                            var t = pos2[ipos + k + 1] * dx[j];
+                            pos2[ipos + k + 1] = pos2[ipos + k + 0];
+                            pos2[ipos + k + 0] = t;
+                        }
+                    }
+                    var p_1 = ipos >> 1;
+                    indices.push(p_1 + 0, p_1 + 1, p_1 + 5, p_1 + 1, p_1 + 2, p_1 + 5, p_1 + 2, p_1 + 6, p_1 + 5, p_1 + 2, p_1 + 3, p_1 + 6, p_1 + 3, p_1 + 4, p_1 + 6);
+                    ipos += 14;
+                }
+            }
+            var x_2 = -W;
+            var fx = [1, 1, -1, -1], fy = [1, -1, 1, -1];
+            for (var i = 0; i < 4; ++i) {
+                pos2[ipos + 0] = x_2 - 0 * w;
+                pos2[ipos + 1] = y - 0 * w;
+                pos2[ipos + 2] = x_2 - 0 * w;
+                pos2[ipos + 3] = y - 1 * w;
+                pos2[ipos + 4] = y - 0 * w;
+                pos2[ipos + 5] = x_2 - 0 * w;
+                pos2[ipos + 6] = y - 1 * w;
+                pos2[ipos + 7] = x_2 - 0 * w;
+                for (var k = 0; k < 8; k += 2) {
+                    pos2[ipos + k + 0] *= fx[i];
+                    pos2[ipos + k + 1] *= fy[i];
+                }
+                var p_2 = ipos >> 1;
+                indices.push(p_2 + 0, p_2 + 1, p_2 + 2, p_2 + 1, p_2 + 2, p_2 + 3);
+                ipos += 8;
+            }
+            y -= w;
+            w *= 4;
+        }
+        var x = -W, inf = 5e4;
+        pos2[ipos + 0] = -inf;
+        pos2[ipos + 1] = -inf;
+        pos2[ipos + 2] = inf;
+        pos2[ipos + 3] = -inf;
+        pos2[ipos + 4] = inf;
+        pos2[ipos + 5] = inf;
+        pos2[ipos + 6] = -inf;
+        pos2[ipos + 7] = inf;
+        pos2[ipos + 8] = x;
+        pos2[ipos + 9] = y;
+        pos2[ipos + 10] = -x;
+        pos2[ipos + 11] = y;
+        pos2[ipos + 12] = -x;
+        pos2[ipos + 13] = -y;
+        pos2[ipos + 14] = x;
+        pos2[ipos + 15] = -y;
+        pos2[ipos + 16] = y;
+        pos2[ipos + 17] = x;
+        pos2[ipos + 18] = -y;
+        pos2[ipos + 19] = x;
+        pos2[ipos + 20] = -y;
+        pos2[ipos + 21] = -x;
+        pos2[ipos + 22] = y;
+        pos2[ipos + 23] = -x;
+        var p = ipos >> 1;
+        indices.push(p + 0, p + 4, p + 8, p + 0, p + 4, p + 5, p + 1, p + 5, p + 0, p + 1, p + 5, p + 9, p + 1, p + 9, p + 10, p + 1, p + 10, p + 2, p + 2, p + 6, p + 10, p + 2, p + 6, p + 7, p + 2, p + 3, p + 7, p + 3, p + 0, p + 8, p + 3, p + 7, p + 11, p + 3, p + 8, p + 11);
+        vertices.set("pos2", pos2);
+        _this.vao = new vertexAttrs_1.VAO(vertices, indices);
+        return _this;
+    }
+    Ocean.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.gN.set(256);
+        this.mesh.bind();
+        this.mesh.draw();
+        this.mesh.unbind();
+        this.vao.bind();
+        this.vao.draw();
+        this.vao.unbind();
+    };
+    return Ocean;
+}(terrain_1.Terrain));
+exports.Ocean = Ocean;
+
+
+/***/ }),
+
+/***/ "./src/object/skybox.ts":
+/*!******************************!*\
+  !*** ./src/object/skybox.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var object_1 = __webpack_require__(/*! ./object */ "./src/object/object.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var Skybox = /** @class */ (function (_super) {
+    __extends(Skybox, _super);
+    function Skybox() {
+        var _this = _super.call(this) || this;
+        _this.isSkybox = true;
+        _this.defaultShader = shader_1.Shader.create("skybox", false);
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos3"]);
+        var t = 4.2e2;
+        vertices.set("pos3", [
+            -t, -t, -t, -t, -t, t, -t, t, -t, -t, t, t,
+            t, -t, -t, t, -t, t, t, t, -t, t, t, t
+        ]);
+        _this.vao = new vertexAttrs_1.VAO(vertices, [
+            0, 1, 2, 1, 3, 2, 1, 7, 3, 1, 5, 7, 1, 0, 4,
+            1, 4, 5, 3, 7, 6, 3, 6, 2, 0, 2, 6, 0, 6, 4,
+            5, 4, 6, 5, 6, 7
+        ]);
+        return _this;
+    }
+    Skybox.prototype.render = function (viewport) {
+        this.setBasicUniforms(viewport);
+        this.vao.bind();
+        this.vao.draw();
+        this.vao.unbind();
+    };
+    return Skybox;
 }(object_1.default));
-exports.default = ModelObj;
+exports.Skybox = Skybox;
+
+
+/***/ }),
+
+/***/ "./src/object/terrain.ts":
+/*!*******************************!*\
+  !*** ./src/object/terrain.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var object_1 = __webpack_require__(/*! ./object */ "./src/object/object.ts");
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var Terrain = /** @class */ (function (_super) {
+    __extends(Terrain, _super);
+    function Terrain(C, M, w0) {
+        var _this = _super.call(this) || this;
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos2"]);
+        var indices = [];
+        var w = w0;
+        var offset = 0;
+        var line = M * 2 + 1;
+        var e = M;
+        var b = M;
+        var pos2 = [];
+        pos2.length = C * (2 * M + 1) * (2 * M + 1) * 2;
+        var ipos = 0;
+        for (var k = 0; k != C; ++k) {
+            for (var i = -M; i <= M; ++i) {
+                for (var j = -M; j <= M; ++j) {
+                    pos2[ipos++] = j * w;
+                    pos2[ipos++] = i * w;
+                }
+            }
+            for (var i = 1; i != line - 2; ++i) {
+                for (var j = 1; j != line - 2; ++j) {
+                    if (i < e || i >= b || j < e || j >= b) {
+                        var lt_1 = offset + i * line + j;
+                        indices.push(lt_1, lt_1 + 1, lt_1 + line + 1, lt_1, lt_1 + line + 1, lt_1 + line);
+                    }
+                }
+            }
+            for (var j = 2; j < line - 2; j += 2) {
+                var lt_2 = offset + 0 * line + j;
+                indices.push(lt_2, lt_2 + line, lt_2 + line - 1, lt_2, lt_2 + line + 1, lt_2 + line, lt_2, lt_2 + 2, lt_2 + 1 + line);
+            }
+            for (var j = 2; j < line - 2; j += 2) {
+                var lt_3 = offset + (line - 1) * line + j;
+                indices.push(lt_3, lt_3 - line - 1, lt_3 - line, lt_3, lt_3 - line, lt_3 - line + 1, lt_3, lt_3 + 1 - line, lt_3 + 2);
+            }
+            for (var i = 2; i < line - 2; i += 2) {
+                var lt_4 = offset + i * line + 0;
+                indices.push(lt_4, lt_4 + 1 - line, lt_4 + 1, lt_4, lt_4 + 1, lt_4 + 1 + line, lt_4, lt_4 + 1 + line, lt_4 + 2 * line);
+            }
+            for (var i = 2; i < line - 2; i += 2) {
+                var lt_5 = offset + i * line + (line - 1);
+                indices.push(lt_5, lt_5 - 1, lt_5 - 1 - line, lt_5, lt_5 - 1 + line, lt_5 - 1, lt_5, lt_5 + 2 * line, lt_5 - 1 + line);
+            }
+            var lt = offset;
+            indices.push(lt, lt + 2, lt + 1 + line, lt, lt + 1 + line, lt + 2 * line);
+            lt = offset + (line - 1);
+            indices.push(lt, lt - 1 + line, lt + 2 * line);
+            lt = offset + line * (line - 1);
+            indices.push(lt, lt + 1 - line, lt + 2);
+            w *= 2;
+            offset += (M * 2 + 1) * (M * 2 + 1);
+            e = M / 2;
+            b = 3 * M / 2;
+        }
+        vertices.set("pos2", pos2);
+        _this.mesh = new vertexAttrs_1.VAO(vertices, indices);
+        return _this;
+    }
+    return Terrain;
+}(object_1.default));
+exports.Terrain = Terrain;
 
 
 /***/ }),
@@ -1211,6 +4893,8 @@ var gl;
 exports.gl = gl;
 var gl2;
 exports.gl2 = gl2;
+var ext = {};
+exports.ext = ext;
 var RenderEvent = /** @class */ (function () {
     function RenderEvent(elem) {
         this.elem = elem;
@@ -1226,6 +4910,10 @@ var Renderer = /** @class */ (function () {
         this.fps = 0;
         this.events = new events_1.EventList();
         this.renderers = new ulist_1.ulist();
+        this.ftime = 0;
+        this.fltime = 0;
+        this.fprevTick = undefined;
+        this.fpause = false;
         if (Renderer.context != null) {
             throw "Multiple WebGL contexts not supported.";
         }
@@ -1289,25 +4977,110 @@ var Renderer = /** @class */ (function () {
     Renderer.prototype.start = function () {
         this.animationRequest = window.requestAnimationFrame(this.render.bind(this));
     };
+    Object.defineProperty(Renderer, "time", {
+        get: function () {
+            return Renderer.instance.ftime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Renderer, "prevTime", {
+        get: function () {
+            return Renderer.instance.fltime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Renderer, "dt", {
+        get: function () {
+            return Renderer.instance.ftime - Renderer.instance.fltime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Renderer.resetClock = function () {
+        Renderer.instance.ftime = 0;
+        Renderer.instance.fltime = 0;
+    };
+    Renderer.pauseClock = function () {
+        Renderer.instance.fpause = true;
+    };
+    Renderer.continueClock = function () {
+        Renderer.instance.fpause = false;
+    };
+    Object.defineProperty(Renderer, "pause", {
+        get: function () {
+            return Renderer.instance.fpause;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Renderer.prototype.render = function (time) {
-        this.renderers.visit(function (e) {
-            try {
-                e.get()();
+        time /= 1000;
+        if (this.fprevTick != undefined) {
+            // console.log(Renderer.timescale);
+            if (!this.fpause) {
+                this.fltime = this.ftime;
+                this.ftime += Renderer.timescale * (time - this.fprevTick);
             }
-            catch (err) {
-                console.error(err);
+            this.renderers.visit(function (e) {
+                try {
+                    e.get()();
+                }
+                catch (err) {
+                    console.error(err);
+                }
+            });
+            if (Math.floor(time) > Renderer.fprevTime) {
+                console.log("fps:", this.fps + 1);
+                Renderer.fprevTime = Math.floor(time);
+                this.fps = 0;
             }
-        });
-        if (Math.floor(time / 1000) > Renderer.prevTime) {
-            console.log("fps:", this.fps + 1);
-            Renderer.prevTime = Math.floor(time / 1000);
-            this.fps = 0;
+            this.fps += 1;
         }
-        this.fps += 1;
+        this.fprevTick = time;
         this.animationRequest = window.requestAnimationFrame(this.render.bind(this));
     };
+    Renderer.require = function (exts) {
+        if (typeof exts == "string") {
+            if (!(exts in Renderer.exts)) {
+                if (Renderer.exts[exts] = gl.getExtension(exts)) {
+                    ext[exts] = Renderer.exts[exts];
+                    // for (let x in Renderer.exts[exts]) {
+                    // 	ext[x] = Renderer.exts[exts][x];
+                    // }
+                }
+            }
+            return !!Renderer.exts[exts];
+        }
+        else {
+            for (var _i = 0, exts_1 = exts; _i < exts_1.length; _i++) {
+                var e = exts_1[_i];
+                if (!(e in Renderer.exts)) {
+                    if (Renderer.exts[e] = gl.getExtension(e)) {
+                        ext[e] = Renderer.exts[e];
+                        // for (let x in Renderer.exts[e]) {
+                        // 	ext[x] = Renderer.exts[e][x];
+                        // }
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                if (!Renderer.exts[e]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    };
+    Renderer.prototype.require = function (exts) {
+        return Renderer.require(exts);
+    };
     Renderer.context = null;
-    Renderer.prevTime = 0;
+    Renderer.fprevTime = 0;
+    Renderer.timescale = 1;
+    Renderer.exts = {};
     return Renderer;
 }());
 exports.Renderer = Renderer;
@@ -1315,10 +5088,10 @@ exports.Renderer = Renderer;
 
 /***/ }),
 
-/***/ "./src/scene/object.ts":
-/*!*****************************!*\
-  !*** ./src/scene/object.ts ***!
-  \*****************************/
+/***/ "./src/techniques/FFTWave.ts":
+/*!***********************************!*\
+  !*** ./src/techniques/FFTWave.ts ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1335,351 +5108,407 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
 var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
-var ObjBase = /** @class */ (function () {
-    function ObjBase() {
-        this.P = glm_1.glm.vec3(0, 0, 0);
-        this.S = glm_1.glm.vec3(1, 1, 1);
-        this.R = glm_1.glm.vec3(0, 0, 0);
-        this.translateModified = true;
-        this.scaleModified = true;
-        this.rotateModified = true;
-    }
-    ObjBase.prototype.scaleIdentity = function () {
-        this.S = glm_1.glm.vec3(1, 1, 1);
-        this.scaleModified = true;
-    };
-    ObjBase.prototype.scale = function (factor) {
-        this.S["*="](factor);
-        this.scaleModified = true;
-    };
-    Object.defineProperty(ObjBase.prototype, "scaleFactor", {
-        set: function (factor) {
-            if (typeof factor == "number") {
-                this.S = glm_1.glm.vec3(factor, factor, factor);
-            }
-            else {
-                this.S = factor;
-            }
-            this.scaleModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ObjBase.prototype.translateIdentity = function () {
-        this.P = glm_1.glm.vec3(0, 0, 0);
-        this.translateModified = true;
-    };
-    ObjBase.prototype.translate = function (diff) {
-        this.P["+="](diff);
-        this.translateModified = true;
-    };
-    Object.defineProperty(ObjBase.prototype, "position", {
-        get: function () {
-            return this.P;
-        },
-        set: function (pos) {
-            this.P = pos;
-            this.translateModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ObjBase.prototype.rotateIdentity = function () {
-        this.R = glm_1.glm.vec3(0, 0, 0);
-        this.rotateModified = true;
-    };
-    ObjBase.prototype.rotate = function (angle) {
-        this.R["+="](angle);
-        this.rotateModified = true;
-    };
-    ObjBase.prototype.getTrans = function () {
-        if (this.translateModified || this.scaleModified || this.rotateModified) {
-            if (this.translateModified) {
-                this.translateModified = false;
-                this.translateTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, this.P.x, this.P.y, this.P.z, 1);
-            }
-            if (this.rotateModified) {
-                this.rotateModified = false;
-                var sinx = Math.sin(this.R.x), siny = Math.sin(this.R.y), sinz = Math.sin(this.R.z), cosx = Math.cos(this.R.x), cosy = Math.cos(this.R.y), cosz = Math.cos(this.R.z), sycz = siny * cosz, sysz = siny * sinz;
-                this.rotateTrans = glm_1.glm.mat4(cosz * cosy, sinz * cosy, siny, 0, -cosx * sinz - sinx * sycz, cosx * cosz - sinx * sysz, sinx * cosy, 0, sinx * sinz - cosx * sycz, -sinx * cosz - cosx * sysz, cosx * cosy, 0, 0, 0, 0, 1);
-            }
-            if (this.scaleModified) {
-                this.scaleModified = false;
-                this.scaleTrans = glm_1.glm.mat4(this.S.x, 0, 0, 0, 0, this.S.y, 0, 0, 0, 0, this.S.z, 0, 0, 0, 0, 1);
-            }
-            this.trans = this.translateTrans["*"](this.rotateTrans["*"](this.scaleTrans));
-        }
-        return this.trans;
-    };
-    return ObjBase;
-}());
-var Obj = /** @class */ (function (_super) {
-    __extends(Obj, _super);
-    function Obj() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Obj.prototype.setViewMatrices = function (viewport) {
-        Obj.gWVP.set(viewport.getTrans()["*"](this.getTrans()));
-        Obj.gWorld.set(this.getTrans());
-        Obj.gVP.set(viewport.getTrans());
-        Obj.gCameraWorldPos.set(viewport.position);
-    };
-    Obj.gWVP = shader_1.Shader.uniform("mat4", "gWVP");
-    Obj.gWorld = shader_1.Shader.uniform("mat4", "gWorld");
-    Obj.gVP = shader_1.Shader.uniform("mat4", "gVP");
-    Obj.gCameraWorldPos = shader_1.Shader.uniform("vec3", "gCameraWorldPos");
-    return Obj;
-}(ObjBase));
-exports.default = Obj;
-
-
-/***/ }),
-
-/***/ "./src/scene/scene.ts":
-/*!****************************!*\
-  !*** ./src/scene/scene.ts ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var ulist_1 = __webpack_require__(/*! ../util/ulist */ "./src/util/ulist.ts");
-var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
-var communicator_1 = __webpack_require__(/*! ../gl/communicator */ "./src/gl/communicator.ts");
+var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
 var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
-var Scene = /** @class */ (function () {
-    function Scene() {
-        this.objects = new ulist_1.ulist();
-        this.viewports = new ulist_1.ulist();
-        this.techniques = new ulist_1.ulist();
-        this.communicators = new communicator_1.Communicators();
-        this.shader = shader_1.Shader.create("test");
-    }
-    Scene.prototype.createObject = function (object) {
-        return this.objects.push(object).translate();
-    };
-    Scene.prototype.createViewport = function (viewport) {
-        return this.viewports.push(viewport).translate();
-    };
-    Scene.prototype.createCommunicator = function (communicator) {
-        return this.communicators.add(communicator).translate();
-    };
-    Scene.prototype.createTechnique = function (technique) {
-        return this.techniques.push(technique).translate();
-    };
-    Scene.prototype.render = function () {
-        var _this = this;
-        this.techniques.visit(function (e) {
-            e.get().render(_this.objects, _this.viewports, _this.communicators);
-        });
-        renderer_1.gl.clear(renderer_1.gl.COLOR_BUFFER_BIT | renderer_1.gl.DEPTH_BUFFER_BIT);
-        this.techniques.visit(function (e) {
-            e.get().mainImage(_this.objects, _this.viewports, _this.communicators);
-        });
-        this.communicators.use();
-        this.viewports.visit(function (v) {
-            _this.objects.visit(function (e) {
-                e.get().render(v.get(), _this.shader);
-            });
-        });
-        this.communicators.unuse();
-    };
-    return Scene;
-}());
-exports.default = Scene;
-
-
-/***/ }),
-
-/***/ "./src/scene/technique.ts":
-/*!********************************!*\
-  !*** ./src/scene/technique.ts ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Technique = /** @class */ (function () {
-    function Technique() {
-    }
-    return Technique;
-}());
-exports.Technique = Technique;
-
-
-/***/ }),
-
-/***/ "./src/scene/viewport.ts":
-/*!*******************************!*\
-  !*** ./src/scene/viewport.ts ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
-var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
-var Viewport = /** @class */ (function () {
-    function Viewport(left, top, width, height) {
-        this.left = left;
-        this.top = top;
-        this.width = width;
-        this.height = height;
-        this.N = glm_1.glm.vec3(0, 1, 0);
-        this.P = glm_1.glm.vec3(0, 0, 0);
-        this.Up = glm_1.glm.vec3(0, 0, 1);
-        this.rotateModified = true;
-        this.translateModified = true;
-        if (left != undefined) {
-            renderer_1.gl.viewport(left, top, width, height);
+var offscreen_1 = __webpack_require__(/*! ../gl/offscreen */ "./src/gl/offscreen.ts");
+var FFTWave = /** @class */ (function (_super) {
+    __extends(FFTWave, _super);
+    function FFTWave(spectrum) {
+        var _this = _super.call(this, shader_1.Shader.create("fftsrc", false)) || this;
+        _this.spectrum = spectrum;
+        _this.textureA = [];
+        _this.textureB = [];
+        _this.offscreen = new offscreen_1.Offscreen();
+        _this.gN = shader_1.Shader.uniform("float", "gN");
+        _this.gStep = shader_1.Shader.uniform("float", "gStep");
+        _this.gPrev = [
+            shader_1.Shader.uniform("int", "gPrevH"),
+            shader_1.Shader.uniform("int", "gPrevDx"),
+            shader_1.Shader.uniform("int", "gPrevDy")
+        ];
+        _this.gSpectrum = shader_1.Shader.uniform("int", "gSpectrum");
+        _this.gTime = shader_1.Shader.uniform("float", "gTime");
+        _this.fsrc = shader_1.Shader.create("fftsrc", false);
+        _this.vs = shader_1.Shader.create("fftv", false);
+        _this.hs = shader_1.Shader.create("ffth", false);
+        _this.vrs = shader_1.Shader.create("fftvr", false);
+        _this.hrs = shader_1.Shader.create("ffthr", false);
+        _this.fend = shader_1.Shader.create("fftend", false);
+        if (spectrum.width != spectrum.height) {
+            throw "FFT spectrum must be square.";
         }
-        else {
-            this.left = 0;
-            this.top = 0;
-            this.width = renderer_1.Renderer.instance.canvas.width;
-            this.height = renderer_1.Renderer.instance.canvas.height;
+        _this.N = spectrum.width;
+        if (Math.pow(2, Math.log2(_this.N)) != _this.N) {
+            throw "FFT size must be 2^k";
         }
-    }
-    Object.defineProperty(Viewport.prototype, "target", {
-        get: function () {
-            return this.N;
-        },
-        set: function (target) {
-            this.N = glm_1.glm.normalize(target);
-            this.rotateModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Viewport.prototype, "up", {
-        get: function () {
-            return this.Up;
-        },
-        set: function (up) {
-            this.Up = glm_1.glm.normalize(up);
-            this.rotateModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Viewport.prototype.translate = function (diff) {
-        this.P["+="](diff);
-        this.translateModified = true;
-    };
-    Object.defineProperty(Viewport.prototype, "position", {
-        get: function () {
-            return this.P;
-        },
-        set: function (position) {
-            this.P = position;
-            this.translateModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Viewport.prototype.getTrans = function () {
-        if (this.translateModified || this.rotateModified) {
-            if (this.translateModified) {
-                this.translateModified = false;
-                this.translateTrans = glm_1.glm.mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -this.P.x, -this.P.y, -this.P.z, 1);
-            }
-            if (this.rotateModified) {
-                this.rotateModified = false;
-                var U = glm_1.glm.normalize(glm_1.glm.cross(this.N, this.Up));
-                var V = glm_1.glm.cross(U, this.N);
-                this.rotateTrans = glm_1.glm.mat4(U.x, V.x, -this.N.x, 0, U.y, V.y, -this.N.y, 0, U.z, V.z, -this.N.z, 0, 0, 0, 0, 1);
-            }
-            this.trans = this.rotateTrans["*"](this.translateTrans);
+        if (!renderer_1.gl2) {
+            throw "webgl 2.0 required.";
         }
-        return this.trans;
-    };
-    Viewport.prototype.modified = function () {
-        return this.translateModified || this.rotateModified;
-    };
-    return Viewport;
-}());
-exports.Viewport = Viewport;
-var PerspectiveViewport = /** @class */ (function (_super) {
-    __extends(PerspectiveViewport, _super);
-    function PerspectiveViewport(left, top, width, height) {
-        var _this = _super.call(this, left, top, width, height) || this;
-        _this.perspectiveModified = true;
-        _this.ffov = glm_1.glm.radians(60);
-        _this.fzNear = 1e-3;
-        _this.fzFar = 1e5;
+        _this.displacement = new texture_1.Texture2D({
+            component: renderer_1.gl.RGBA, type: renderer_1.gl.FLOAT, wrap: renderer_1.gl.REPEAT, filter: renderer_1.gl.LINEAR
+        }, _this.N, _this.N);
+        for (var i = 0; i != 3; ++i) {
+            _this.textureA[i] = new texture_1.Texture2D({
+                component: renderer_1.gl2.RG, type: renderer_1.gl.FLOAT, wrap: renderer_1.gl.REPEAT, filter: renderer_1.gl.NEAREST
+            }, _this.N, _this.N);
+        }
+        for (var i = 0; i != 3; ++i) {
+            _this.textureB[i] = new texture_1.Texture2D({
+                component: renderer_1.gl2.RG, type: renderer_1.gl.FLOAT, wrap: renderer_1.gl.REPEAT, filter: renderer_1.gl.NEAREST
+            }, _this.N, _this.N);
+        }
         return _this;
     }
-    PerspectiveViewport.prototype.getTrans = function () {
-        if (this.perspectiveModified || _super.prototype.modified.call(this)) {
-            if (this.perspectiveModified) {
-                this.perspectiveModified = false;
-                this.perspectiveTrans = glm_1.glm.perspective(this.ffov, this.width / this.height, this.fzNear, this.fzFar);
-            }
-            this.viewportTrans = this.perspectiveTrans["*"](_super.prototype.getTrans.call(this));
+    FFTWave.prototype.bindTextures = function () {
+        for (var i = 0; i != 3; ++i) {
+            this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0 + i, this.textureB[i]);
+            renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + this.channel[i]);
+            renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, this.textureA[i].handle);
+            this.gPrev[i].set(this.channel[i]);
         }
-        return this.viewportTrans;
     };
-    Object.defineProperty(PerspectiveViewport.prototype, "fov", {
+    FFTWave.prototype.render = function () {
+        renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+        renderer_1.gl.viewport(0, 0, this.N, this.N);
+        this.offscreen.bind();
+        this.channel = [
+            texture_1.Texture2D.genChannel(),
+            texture_1.Texture2D.genChannel(),
+            texture_1.Texture2D.genChannel()
+        ];
+        this.vao.bind();
+        // open MRT
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl.COLOR_ATTACHMENT0,
+            renderer_1.gl2.COLOR_ATTACHMENT1,
+            renderer_1.gl2.COLOR_ATTACHMENT2
+        ]);
+        // generate channels: H(t), Dx(t), Dy(t)
+        this.fsrc.use();
+        for (var i = 0; i != 3; ++i) {
+            this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0 + i, this.textureA[i]);
+        }
+        renderer_1.gl.activeTexture(renderer_1.gl.TEXTURE0 + this.channel[0]);
+        renderer_1.gl.bindTexture(renderer_1.gl.TEXTURE_2D, this.spectrum.handle);
+        this.gSpectrum.set(this.channel[0]);
+        this.gTime.set(renderer_1.Renderer.time);
+        this.vao.draw();
+        this.fsrc.unuse();
+        // vertical bit-reversal copy
+        this.vrs.use();
+        this.gN.set(this.N);
+        this.bindTextures();
+        this.vao.draw();
+        this.swapTextures();
+        this.vrs.unuse();
+        // vertical FFT
+        this.vs.use();
+        this.gN.set(this.N);
+        for (var i = 1; i < this.N; i *= 2) {
+            this.gStep.set(i);
+            this.bindTextures();
+            this.vao.draw();
+            this.swapTextures();
+        }
+        this.vs.unuse();
+        // horizontal bit-reversal copy
+        this.hrs.use();
+        this.gN.set(this.N);
+        this.bindTextures();
+        this.vao.draw();
+        this.swapTextures();
+        this.hrs.unuse();
+        // horizontal FFT
+        this.hs.use();
+        this.gN.set(this.N);
+        for (var i = 1; i < this.N; i *= 2) {
+            this.gStep.set(i);
+            this.bindTextures();
+            this.vao.draw();
+            this.swapTextures();
+        }
+        this.hs.unuse();
+        // combine H, Dx, Dy into displacement map
+        this.fend.use();
+        this.gN.set(this.N);
+        this.bindTextures();
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.displacement);
+        this.vao.draw();
+        this.fend.unuse();
+        // close MRT
+        renderer_1.gl2.drawBuffers([
+            renderer_1.gl.COLOR_ATTACHMENT0
+        ]);
+        this.vao.unbind();
+        for (var i = 0; i != 3; ++i) {
+            texture_1.Texture2D.restoreChannel(this.channel[i]);
+        }
+        this.offscreen.unbind();
+        renderer_1.gl.viewport(0, 0, renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height);
+        renderer_1.gl.enable(renderer_1.gl.DEPTH_TEST);
+    };
+    Object.defineProperty(FFTWave.prototype, "texture", {
         get: function () {
-            return this.ffov;
-        },
-        set: function (angle) {
-            this.ffov = angle;
-            this.perspectiveModified = true;
+            return this.displacement;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(PerspectiveViewport.prototype, "zNear", {
+    Object.defineProperty(FFTWave.prototype, "textures", {
         get: function () {
-            return this.fzNear;
-        },
-        set: function (z) {
-            this.fzNear = z;
-            this.perspectiveModified = true;
+            return this.textureA;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(PerspectiveViewport.prototype, "zFar", {
-        get: function () {
-            return this.fzFar;
-        },
-        set: function (z) {
-            this.fzFar = z;
-            this.perspectiveModified = true;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return PerspectiveViewport;
-}(Viewport));
-exports.PerspectiveViewport = PerspectiveViewport;
+    FFTWave.prototype.swapTextures = function () {
+        var t = this.textureA;
+        this.textureA = this.textureB;
+        this.textureB = t;
+    };
+    return FFTWave;
+}(postProcess_1.PostProcess));
+exports.FFTWave = FFTWave;
 
 
 /***/ }),
 
-/***/ "./src/techniques/lighting.ts":
+/***/ "./src/techniques/ambientCube.ts":
+/*!***************************************!*\
+  !*** ./src/techniques/ambientCube.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var viewport_1 = __webpack_require__(/*! ../gl/viewport */ "./src/gl/viewport.ts");
+var offscreen_1 = __webpack_require__(/*! ../gl/offscreen */ "./src/gl/offscreen.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var AmbientCube = /** @class */ (function () {
+    function AmbientCube() {
+        this.texture = new texture_1.TextureCube({ component: renderer_1.gl.RGBA }, renderer_1.Renderer.instance.canvas.height / 2, renderer_1.Renderer.instance.canvas.height / 2);
+        this.viewport = new viewport_1.Viewport(0, 0, renderer_1.Renderer.instance.canvas.height / 2, renderer_1.Renderer.instance.canvas.height / 2);
+        this.offscreen = new offscreen_1.Offscreen();
+        this.time = 0;
+        this.dayTimeSec = 0;
+        this.currRenderFace = 0;
+        this.gSpace = shader_1.Shader.uniform("mat4", "gSpace");
+        this.gSunPos = shader_1.Shader.uniform("vec3", "gSunPos");
+        this.gTime = shader_1.Shader.uniform("float", "gTime");
+        this.shader = shader_1.Shader.create("ambientCube", false);
+        this.dayScale = 24;
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos2"]);
+        vertices.set("pos2", [
+            -1, 1, 1, 1, 1, -1, -1, -1
+        ]);
+        this.vao = new vertexAttrs_1.VAO(vertices, [
+            0, 1, 2, 0, 2, 3
+        ]);
+    }
+    AmbientCube.prototype.setTime = function (hour) {
+        this.dayTimeSec = 3600 * (hour - 12);
+    };
+    AmbientCube.prototype.render = function () {
+        var refFactor = this.dayScale * renderer_1.Renderer.timescale / (24 * 60 * 0.08);
+        if (refFactor > 6) {
+            refFactor = 6;
+        }
+        else if (refFactor < 1 / 60) {
+            refFactor = 1 / 60;
+        }
+        var prevRenderFace = Math.floor(this.currRenderFace);
+        this.currRenderFace += refFactor;
+        this.dayTimeSec += this.dayScale * renderer_1.Renderer.dt;
+        if (Math.floor(this.currRenderFace) > prevRenderFace) {
+            this.offscreen.bind();
+            renderer_1.gl.disable(renderer_1.gl.DEPTH_TEST);
+            this.viewport.use();
+            this.shader.use();
+            var alpha = this.dayTimeSec * 2 * Math.PI / 24 / 3600;
+            this.gTime.set(renderer_1.Renderer.time);
+            this.gSunPos.set(glm_1.glm.vec3(Math.sin(alpha), 0, Math.cos(alpha)));
+            this.flightDir = glm_1.glm.vec3(-Math.sin(alpha), 0, -Math.cos(alpha));
+            // for (let i = 0; i != 6; ++i) {
+            for (var i = prevRenderFace; i != Math.floor(this.currRenderFace); ++i) {
+                this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.texture, i % 6);
+                // gl.clear(gl.COLOR_BUFFER_BIT);
+                this.gSpace.set(AmbientCube.spaceTrans[i % 6]);
+                this.vao.bind();
+                this.vao.draw();
+                this.vao.unbind();
+            }
+            this.shader.unuse();
+            this.viewport.unuse();
+            renderer_1.gl.enable(renderer_1.gl.DEPTH_TEST);
+            this.offscreen.unbind();
+        }
+        this.currRenderFace %= 6;
+    };
+    Object.defineProperty(AmbientCube.prototype, "lightDir", {
+        get: function () {
+            return this.flightDir;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AmbientCube.spaceTrans = [
+        glm_1.glm.mat4(0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1),
+        glm_1.glm.mat4(0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 0, 1),
+        glm_1.glm.mat4(1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1),
+        glm_1.glm.mat4(1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, -1, 0, 1),
+        glm_1.glm.mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1),
+        glm_1.glm.mat4(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1)
+    ];
+    return AmbientCube;
+}());
+exports.AmbientCube = AmbientCube;
+
+
+/***/ }),
+
+/***/ "./src/techniques/decodeImage.ts":
+/*!***************************************!*\
+  !*** ./src/techniques/decodeImage.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var DecodeImage = /** @class */ (function (_super) {
+    __extends(DecodeImage, _super);
+    function DecodeImage() {
+        return _super.call(this, shader_1.Shader.create("decodeImage", false)) || this;
+    }
+    return DecodeImage;
+}(postProcess_1.PostProcess));
+exports.DecodeImage = DecodeImage;
+
+
+/***/ }),
+
+/***/ "./src/techniques/deferImage.ts":
+/*!**************************************!*\
+  !*** ./src/techniques/deferImage.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var DeferImage = /** @class */ (function (_super) {
+    __extends(DeferImage, _super);
+    function DeferImage() {
+        return _super.call(this, shader_1.Shader.create("deferImage", false)) || this;
+    }
+    return DeferImage;
+}(postProcess_1.PostProcess));
+exports.DeferImage = DeferImage;
+
+
+/***/ }),
+
+/***/ "./src/techniques/gaussBlur.ts":
+/*!*************************************!*\
+  !*** ./src/techniques/gaussBlur.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var offscreen_1 = __webpack_require__(/*! ../gl/offscreen */ "./src/gl/offscreen.ts");
+var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
+var GaussBlur = /** @class */ (function () {
+    function GaussBlur() {
+        this.swapImage = new texture_1.Texture2D();
+        this.offscreen = new offscreen_1.Offscreen;
+        this.gRange = shader_1.Shader.uniform("int", "gRange");
+        this.iResolution = shader_1.Shader.uniform("vec2", "iResolution");
+        GaussBlur.vert || (GaussBlur.vert = shader_1.Shader.create("gaussBlurVert", false));
+        GaussBlur.hori || (GaussBlur.hori = shader_1.Shader.create("gaussBlurHori", false));
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos2"]);
+        vertices.set("pos2", [
+            -1, 1, 1, 1, 1, -1, -1, -1
+        ]);
+        this.vao = new vertexAttrs_1.VAO(vertices, [
+            0, 1, 2, 0, 2, 3
+        ]);
+    }
+    GaussBlur.prototype.setRadius = function (radius) {
+        this.radius = radius;
+    };
+    GaussBlur.prototype.render = function (texture, dest) {
+        this.offscreen.bind();
+        this.vao.bind();
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.swapImage);
+        texture.use("Image");
+        GaussBlur.vert.use();
+        this.gRange.set(this.radius);
+        this.iResolution.set(glm_1.glm.vec2(renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height));
+        this.vao.draw();
+        GaussBlur.vert.unuse();
+        texture.unuse();
+        this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, dest);
+        this.swapImage.use("Image");
+        GaussBlur.hori.use();
+        this.gRange.set(this.radius);
+        this.iResolution.set(glm_1.glm.vec2(renderer_1.Renderer.instance.canvas.width, renderer_1.Renderer.instance.canvas.height));
+        this.vao.draw();
+        GaussBlur.hori.unuse();
+        this.swapImage.unuse();
+        this.vao.unbind();
+        this.offscreen.unbind();
+    };
+    return GaussBlur;
+}());
+exports.GaussBlur = GaussBlur;
+
+
+/***/ }),
+
+/***/ "./src/techniques/gaussian.ts":
 /*!************************************!*\
-  !*** ./src/techniques/lighting.ts ***!
+  !*** ./src/techniques/gaussian.ts ***!
   \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -1697,164 +5526,23 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var communicator_1 = __webpack_require__(/*! ../gl/communicator */ "./src/gl/communicator.ts");
-var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
-var LightBase = /** @class */ (function (_super) {
-    __extends(LightBase, _super);
-    function LightBase(type) {
-        if (type === void 0) { type = undefined; }
-        var _this = _super.call(this, type ? type : "LightBase") || this;
-        _this.init({
-            color: {
-                type: "vec3",
-                init: glm_1.glm.vec3(1, 1, 1)
-            },
-            ambientIntensity: {
-                type: "float",
-                init: .5
-            },
-            diffuseIntensity: {
-                type: "float",
-                init: 1
-            }
-        });
-        return _this;
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var Gaussian = /** @class */ (function (_super) {
+    __extends(Gaussian, _super);
+    function Gaussian() {
+        return _super.call(this, shader_1.Shader.create("gaussian", false)) || this;
     }
-    return LightBase;
-}(communicator_1.Communicator));
-var PointLight = /** @class */ (function (_super) {
-    __extends(PointLight, _super);
-    function PointLight(type) {
-        if (type === void 0) { type = undefined; }
-        var _this = _super.call(this, type ? type : "PointLight") || this;
-        _this.init({
-            attenConstant: {
-                type: "float",
-                init: 1
-            },
-            attenLinear: {
-                type: "float",
-                init: .5
-            },
-            attenExp: {
-                type: "float",
-                init: .5
-            },
-            position: {
-                type: "vec3",
-                init: glm_1.glm.vec3(0, 0, 1)
-            }
-        });
-        return _this;
-    }
-    return PointLight;
-}(LightBase));
-exports.PointLight = PointLight;
+    return Gaussian;
+}(postProcess_1.PostProcess));
+exports.Gaussian = Gaussian;
 
 
 /***/ }),
 
-/***/ "./src/techniques/offscreen.ts":
-/*!*************************************!*\
-  !*** ./src/techniques/offscreen.ts ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var buffer_1 = __webpack_require__(/*! ../gl/buffer */ "./src/gl/buffer.ts");
-var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
-// class SingleChannelFBRB {
-// 	private rbo = new RBO();
-// 	private dbo = new RBO();
-// 	private fbo = new FBO();
-// 	constructor() {
-// 		this.fbo.bind();
-// 			this.rbo.bind();
-// 				if (gl2) {
-// 					gl.renderbufferStorage(gl.RENDERBUFFER, gl2.R32F, 
-// 						Renderer.instance.canvas.width, Renderer.instance.canvas.height);
-// 				} else {
-// 					gl.renderbufferStorage(gl.RENDERBUFFER, gl2.RGB, 
-// 						Renderer.instance.canvas.width, Renderer.instance.canvas.height);
-// 				}
-// 				this.fbo.setRenderBuffer(this.rbo, gl.COLOR_ATTACHMENT0);
-// 			this.rbo.unbind();
-// 			this.dbo.bind();
-// 				gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT,
-// 					Renderer.instance.canvas.width, Renderer.instance.canvas.height);
-// 				this.fbo.setRenderBuffer(this.dbo, gl.DEPTH_ATTACHMENT);
-// 			this.dbo.unbind();
-// 		this.fbo.unbind();
-// 	}
-// 	bind() {
-// 		this.fbo.bind();
-// 	}
-// 	unbind() {
-// 		this.rbo.bind();
-// 	}
-// }
-var RenderBuffer = /** @class */ (function () {
-    function RenderBuffer(component, width, height) {
-        this.type = "renderbuffer";
-        this.rbo = new buffer_1.RBO();
-        if (width == undefined) {
-            width = renderer_1.Renderer.instance.canvas.width;
-            height = renderer_1.Renderer.instance.canvas.height;
-        }
-        this.rbo.bind();
-        renderer_1.gl.renderbufferStorage(renderer_1.gl.RENDERBUFFER, component, width, height);
-        this.rbo.unbind();
-    }
-    return RenderBuffer;
-}());
-exports.RenderBuffer = RenderBuffer;
-var Offscreen = /** @class */ (function () {
-    function Offscreen() {
-        this.fbo = new buffer_1.FBO();
-    }
-    Offscreen.prototype.set = function (channel, second, face) {
-        if (second.type == "renderbuffer") {
-            var renderbuffer = second;
-            renderer_1.gl.framebufferRenderbuffer(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.RENDERBUFFER, renderbuffer.rbo.handle);
-        }
-        else {
-            var texture = second;
-            switch (texture.type) {
-                case renderer_1.gl.TEXTURE_2D:
-                    {
-                        renderer_1.gl.framebufferTexture2D(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.TEXTURE_2D, texture.handle, 0);
-                    }
-                    break;
-                case renderer_1.gl.TEXTURE_CUBE_MAP:
-                    {
-                        renderer_1.gl.framebufferTexture2D(renderer_1.gl.FRAMEBUFFER, channel, renderer_1.gl.TEXTURE_CUBE_MAP_POSITIVE_X + face, texture.handle, 0);
-                    }
-                    break;
-            }
-        }
-    };
-    Offscreen.prototype.bind = function () {
-        this.fbo.bind();
-    };
-    Offscreen.prototype.unbind = function () {
-        this.fbo.unbind();
-    };
-    Offscreen.prototype.check = function () {
-        this.fbo.check();
-    };
-    return Offscreen;
-}());
-exports.Offscreen = Offscreen;
-
-
-/***/ }),
-
-/***/ "./src/techniques/shadow.ts":
+/***/ "./src/techniques/normal.ts":
 /*!**********************************!*\
-  !*** ./src/techniques/shadow.ts ***!
+  !*** ./src/techniques/normal.ts ***!
   \**********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -1872,81 +5560,228 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var viewport_1 = __webpack_require__(/*! ../scene/viewport */ "./src/scene/viewport.ts");
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
 var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
-var offscreen_1 = __webpack_require__(/*! ../techniques/offscreen */ "./src/techniques/offscreen.ts");
-var communicator_1 = __webpack_require__(/*! ../gl/communicator */ "./src/gl/communicator.ts");
+var Normal = /** @class */ (function (_super) {
+    __extends(Normal, _super);
+    function Normal(N) {
+        if (N === void 0) { N = 256; }
+        var _this = _super.call(this, shader_1.Shader.create("normal", false)) || this;
+        _this.N = N;
+        _this.gN = shader_1.Shader.uniform("float", "gN");
+        return _this;
+    }
+    Normal.prototype.beforeRender = function () {
+        this.gN.set(this.N);
+    };
+    return Normal;
+}(postProcess_1.PostProcess));
+exports.Normal = Normal;
+
+
+/***/ }),
+
+/***/ "./src/techniques/perlinWave.ts":
+/*!**************************************!*\
+  !*** ./src/techniques/perlinWave.ts ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
 var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
-var texture_1 = __webpack_require__(/*! ../gl/texture */ "./src/gl/texture.ts");
+var PerlinWave = /** @class */ (function (_super) {
+    __extends(PerlinWave, _super);
+    function PerlinWave() {
+        var _this = _super.call(this, shader_1.Shader.create("perlinWave", false)) || this;
+        _this.gTime = shader_1.Shader.uniform("float", "gTime");
+        return _this;
+    }
+    PerlinWave.prototype.beforeRender = function () {
+        this.gTime.set(renderer_1.Renderer.time);
+    };
+    return PerlinWave;
+}(postProcess_1.PostProcess));
+exports.PerlinWave = PerlinWave;
+
+
+/***/ }),
+
+/***/ "./src/techniques/phillips.ts":
+/*!************************************!*\
+  !*** ./src/techniques/phillips.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var Phillips = /** @class */ (function (_super) {
+    __extends(Phillips, _super);
+    function Phillips() {
+        return _super.call(this, shader_1.Shader.create("phillips", false)) || this;
+    }
+    return Phillips;
+}(postProcess_1.PostProcess));
+exports.Phillips = Phillips;
+
+
+/***/ }),
+
+/***/ "./src/techniques/postProcess.ts":
+/*!***************************************!*\
+  !*** ./src/techniques/postProcess.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var PostProcess = /** @class */ (function () {
+    function PostProcess(shader) {
+        this.shader = shader;
+        var vertices = new vertexAttrs_1.VertexAttrs(["pos2"]);
+        vertices.set("pos2", [
+            -1, 1, 1, 1, 1, -1, -1, -1
+        ]);
+        this.vao = new vertexAttrs_1.VAO(vertices, [
+            0, 1, 2, 0, 2, 3
+        ]);
+    }
+    PostProcess.prototype.render = function () {
+        this.shader.use();
+        this.beforeRender();
+        this.vao.bind();
+        this.vao.draw();
+        this.vao.unbind();
+        this.afterRender();
+        this.shader.unuse();
+    };
+    PostProcess.prototype.beforeRender = function () { };
+    PostProcess.prototype.afterRender = function () { };
+    return PostProcess;
+}());
+exports.PostProcess = PostProcess;
+
+
+/***/ }),
+
+/***/ "./src/techniques/rect.ts":
+/*!********************************!*\
+  !*** ./src/techniques/rect.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var glm_1 = __webpack_require__(/*! ../util/glm */ "./src/util/glm.js");
-var technique_1 = __webpack_require__(/*! ../scene/technique */ "./src/scene/technique.ts");
-var ShadowCommunicator = /** @class */ (function (_super) {
-    __extends(ShadowCommunicator, _super);
-    function ShadowCommunicator() {
-        var _this = _super.call(this, "Shadow") || this;
-        _this.init({
-            ShadowMap: {
-                type: "int",
-                init: 0
-            }
-        });
-        return _this;
+var vertexAttrs_1 = __webpack_require__(/*! ../gl/vertexAttrs */ "./src/gl/vertexAttrs.ts");
+var renderer_1 = __webpack_require__(/*! ../renderer/renderer */ "./src/renderer/renderer.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var Rect = /** @class */ (function () {
+    function Rect(opts) {
+        this.displacement = glm_1.glm.vec2(0);
+        this.gDisplacement = shader_1.Shader.uniform("vec2", "gDisplacement");
+        var attrs = new vertexAttrs_1.VertexAttrs(["pos2", "tex2"]);
+        var w = renderer_1.Renderer.instance.canvas.width;
+        var h = renderer_1.Renderer.instance.canvas.height;
+        Rect.shader = Rect.shader || shader_1.Shader.create("rect", false);
+        attrs.set("pos2", [
+            opts.left / w * 2 - 1, 1 - opts.top / h * 2,
+            (opts.left + opts.width) / w * 2 - 1, 1 - opts.top / h * 2,
+            (opts.left + opts.width) / w * 2 - 1, 1 - (opts.top + opts.height) / h * 2,
+            opts.left / w * 2 - 1, 1 - (opts.top + opts.height) / h * 2,
+        ]);
+        attrs.set("tex2", [
+            opts.tex[0], opts.tex[1],
+            opts.tex[2], opts.tex[3],
+            opts.tex[4], opts.tex[5],
+            opts.tex[6], opts.tex[7]
+        ]);
+        this.vao = new vertexAttrs_1.VAO(attrs, [
+            0, 1, 2, 0, 2, 3
+        ]);
     }
-    return ShadowCommunicator;
-}(communicator_1.Communicator));
-var ShadowTechnique = /** @class */ (function (_super) {
-    __extends(ShadowTechnique, _super);
-    function ShadowTechnique() {
-        var _this = _super.call(this) || this;
-        _this.offscreen = new offscreen_1.Offscreen();
-        _this.shader = shader_1.Shader.create("shadow");
-        _this.communicator = null;
-        _this.gShadowMap = new ShadowCommunicator();
-        _this.shadowTexture = new texture_1.TextureCube(renderer_1.gl.RGB);
-        _this.lightCamera = new viewport_1.Viewport();
-        _this.offscreen.bind();
-        _this.offscreen.set(renderer_1.gl.DEPTH_ATTACHMENT, new offscreen_1.RenderBuffer(renderer_1.gl.DEPTH_COMPONENT16, renderer_1.Renderer.instance.canvas.height, renderer_1.Renderer.instance.canvas.height));
-        _this.offscreen.unbind();
-        return _this;
+    Rect.prototype.render = function () {
+        this.gDisplacement.set(this.displacement);
+        this.vao.bind();
+        this.vao.draw();
+        this.vao.unbind();
+    };
+    Rect.bindShader = function () {
+        !Rect.shader || Rect.shader.use();
+    };
+    Rect.unbindShader = function () {
+        !Rect.shader || Rect.shader.unuse();
+    };
+    return Rect;
+}());
+exports.Rect = Rect;
+
+
+/***/ }),
+
+/***/ "./src/techniques/uv.ts":
+/*!******************************!*\
+  !*** ./src/techniques/uv.ts ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var postProcess_1 = __webpack_require__(/*! ./postProcess */ "./src/techniques/postProcess.ts");
+var shader_1 = __webpack_require__(/*! ../gl/shader */ "./src/gl/shader.ts");
+var UV = /** @class */ (function (_super) {
+    __extends(UV, _super);
+    function UV() {
+        return _super.call(this, shader_1.Shader.create("uv", false)) || this;
     }
-    ShadowTechnique.prototype.render = function (objects, viewports, communicators) {
-        var _this = this;
-        renderer_1.gl.cullFace(renderer_1.gl.FRONT);
-        renderer_1.gl.clearColor(1, 1, 1, 1);
-        this.offscreen.bind();
-        communicators.use();
-        for (var i = 0; i != 6; ++i) {
-            this.offscreen.set(renderer_1.gl.COLOR_ATTACHMENT0, this.shadowTexture, i);
-            // this.offscreen.check();
-            renderer_1.gl.clear(renderer_1.gl.DEPTH_BUFFER_BIT | renderer_1.gl.COLOR_BUFFER_BIT);
-            _a = ShadowTechnique.cameraPositions[i], this.lightCamera.target = _a[0], this.lightCamera.up = _a[1];
-            objects.visit(function (e) {
-                e.get().render(_this.lightCamera, _this.shader);
-            });
-        }
-        communicators.unuse();
-        this.offscreen.unbind();
-        renderer_1.gl.clearColor(0, 0, 0, 0);
-        renderer_1.gl.cullFace(renderer_1.gl.BACK);
-        var _a;
-    };
-    ShadowTechnique.prototype.mainImage = function (objects, viewports, communicators) {
-        if (this.communicator != null) {
-            this.communicator.remove();
-        }
-        this.communicator = communicators.add(this.gShadowMap);
-    };
-    ShadowTechnique.cameraPositions = [
-        [glm_1.glm.vec3(1, 0, 0), glm_1.glm.vec3(0, -1, 0)],
-        [glm_1.glm.vec3(-1, 0, 0), glm_1.glm.vec3(0, -1, 0)],
-        [glm_1.glm.vec3(0, 1, 0), glm_1.glm.vec3(0, 0, 1)],
-        [glm_1.glm.vec3(0, -1, 0), glm_1.glm.vec3(0, 0, -1)],
-        [glm_1.glm.vec3(0, 0, 1), glm_1.glm.vec3(0, -1, 0)],
-        [glm_1.glm.vec3(0, 0, -1), glm_1.glm.vec3(0, -1, 0)]
-    ];
-    return ShadowTechnique;
-}(technique_1.Technique));
-exports.ShadowTechnique = ShadowTechnique;
+    return UV;
+}(postProcess_1.PostProcess));
+exports.UV = UV;
 
 
 /***/ }),
@@ -1976,6 +5811,16 @@ var assets = /** @class */ (function () {
             throw "failed to import asset due to previous errors: " + e;
         }
     };
+    assets.importObjAsync = function (filename, callback) {
+    };
+    assets.importJsonAsync = function (filename, callback) {
+        xhr_1.default.getAsync(filename, "text", function (err, data) {
+            if (err) {
+                throw "failed to import asset due to previous errors: " + err;
+            }
+            callback(JSON.parse(data));
+        });
+    };
     assets.import = function (filename) {
         var format = filename.substring(filename.lastIndexOf('.') + 1);
         format = format.toLowerCase();
@@ -1985,9 +5830,50 @@ var assets = /** @class */ (function () {
             default: throw "unknown model format: " + format;
         }
     };
+    assets.importAsync = function (filename, callback) {
+        var format = filename.substring(filename.lastIndexOf('.') + 1);
+        format = format.toLowerCase();
+        switch (format) {
+            case "json": return assets.importJsonAsync(filename, callback);
+            case "obj": return assets.importObjAsync(filename, callback);
+            default: throw "unknown model format: " + format;
+        }
+    };
     return assets;
 }());
 exports.default = assets;
+
+
+/***/ }),
+
+/***/ "./src/util/async.ts":
+/*!***************************!*\
+  !*** ./src/util/async.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var asyncutil = /** @class */ (function () {
+    function asyncutil() {
+    }
+    asyncutil.retrieve = function (N, get, finish) {
+        var data = [];
+        var _loop_1 = function (i) {
+            get(i, function (x) {
+                data[i] = x;
+                --N > 0 || finish(data);
+            });
+        };
+        for (var i = 0; i != N; ++i) {
+            _loop_1(i);
+        }
+    };
+    return asyncutil;
+}());
+exports.default = asyncutil;
 
 
 /***/ }),
@@ -2300,6 +6186,9 @@ var ulist_elem = /** @class */ (function () {
     ulist_elem.prototype.get = function () {
         return this.list.data[this.idx].elem;
     };
+    ulist_elem.prototype.set = function (value) {
+        this.list.data[this.idx].elem = value;
+    };
     ulist_elem.prototype.remove = function () {
         this.list.data[this.idx] = this.list.data[this.list.data.length - 1];
         this.list.data[this.idx].idx = this.idx;
@@ -2344,6 +6233,9 @@ var ulist = /** @class */ (function () {
     };
     ulist.prototype.subscribe = function (index) {
         return this.data.data[index];
+    };
+    ulist.prototype.clear = function () {
+        this.data.data = [];
     };
     return ulist;
 }());

@@ -1,0 +1,32 @@
+{
+	"maxSpeed": 24.5,
+	"jitter": {
+		"angle": 2,
+		"cycle": 10
+	},
+	"rudder": {
+		"maxOrient": 0.7,
+		"speed": 0.3
+	},
+	"particleGenerator": [{
+		"position": [0, 24.5, 10.0],
+		"velocity": [0, 0, 2],
+		"up": [1, 0, 0],
+		"scatter": 0.5,
+		"texture": "smoke",
+		"count": 200,
+		"lifetime": 12,
+		"color": [0, 0, 0],
+		"opacity": 0.33
+	}, {
+		"position": [0, -24, 12.5],
+		"velocity": [0, 0, 2],
+		"up": [1, 0, 0],
+		"scatter": 0.5,
+		"texture": "smoke",
+		"count": 200,
+		"lifetime": 12,
+		"color": [0, 0, 0],
+		"opacity": 0.33
+	}]
+}

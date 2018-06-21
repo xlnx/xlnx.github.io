@@ -1,0 +1,910 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# 创建的文件:07.05.2018 15:18:07
+
+newmtl _NCL_Fijidefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fijinormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_boat01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_boat01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_boat02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_boat02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cabindefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_cabinnormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cablu012sided_9c50c022d9729634
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cablu022sided_9c50c022d9729634
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cablu032sided_9c50c022d9729634
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cablu042sided_9c50c022d9729634
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cablu052sided_9c50c022d9729634
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_catapultnormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_catarg01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_catarg01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_catarg02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_catarg02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_cos02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_cos02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_crane01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_crane01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_crane02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_crane02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_DirMaindefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_DirMainnormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_DirSec01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_DirSec02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_DirSec03normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_plat01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_plat01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_plat02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_plat02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_plat03default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_plat03normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_plat04default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_plat04normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_propL01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_propL01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_propL02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_propL02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_propR01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_propR01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_propR02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_propR02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_ruddernormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_salupadefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_salupanormal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB03default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB03normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB04default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB04normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB05default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB05normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supB06default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supB06normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_supPR01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_supPR01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_Topcos01default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_Topcos01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_Walrusdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_Walrusnormal_94aac09c5b75f352
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Walrus.jpg
+	map_Kd Walrus.jpg
+
+newmtl _NCL_Fiji_watch01normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg
+
+newmtl _NCL_Fiji_watch02default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NCL_Fiji_watch02normal_9c50c02ad97227a0
+	Ns 0.4510
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NCL_Fiji_Class_Alpha.jpg
+	map_Kd NCL_Fiji_Class_Alpha.jpg

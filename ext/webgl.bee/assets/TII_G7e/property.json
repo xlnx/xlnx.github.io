@@ -1,0 +1,29 @@
+{
+	"maxSpeed": 28,
+	"lifetime": 100,
+	"particleGenerator": [{
+		"position": [0, -0.38, 0.02],
+		"velocity": [0, 0.3, 0],
+		"up": [0, 0, 1],
+		"scatter": 0.09,
+		"count": 200,
+		"lifetime": 10,
+		"texture": "track",
+		"color": [255, 255, 255],
+		"opacity": 0.94
+	}, {
+		"position": [0, -0.38, -0.02],
+		"velocity": [0, 0.3, 0],
+		"up": [0, 0, 1],
+		"scatter": 0.09,
+		"count": 200,
+		"lifetime": 10,
+		"texture": "track",
+		"color": [255, 255, 255],
+		"opacity": 0.9
+	}],
+	"collider": [
+		0.025, -0.4,
+		0.025, 0.3
+	]
+}

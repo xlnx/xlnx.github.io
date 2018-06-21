@@ -1,0 +1,542 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# 创建的文件:07.05.2018 16:28:07
+
+newmtl _NSS_Uboat7cdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NSS_Uboat7cTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door01_B_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door01_FLU_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door01_FLD_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door01_FRD_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door01_FRU_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door02_B_animdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NSS_Uboat7c_Door02_B_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Typ7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door02_FLD_animdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NSS_Uboat7c_Door02_FLD_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door02_FRU_animdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NSS_Uboat7c_Door02_FRU_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_plane_BTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_plane_FTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_propeller_LTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_Door02_FRD_animdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _NSS_Uboat7c_Door02_FRD_animTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_propeller_RTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_rudder_LTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _NSS_Uboat7c_rudder_RTyp7_955b4101ad6abc80
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_coning7c_Highdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _Turm7c_1_coning7c_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_ac_buso_1_Highdeck_95a260fc2b878040
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Turm7c_1_deck.jpg
+	map_Kd Turm7c_1_deck.jpg
+
+newmtl _Turm7c_1_ac_buso_2_Highdeck_95a260fc2b878040
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka Turm7c_1_deck.jpg
+	map_Kd Turm7c_1_deck.jpg
+
+newmtl _Turm7c_1_ac_telegraf_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_Antena2normal_9a58a0481fa52d9a
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka conning_stuff.jpg
+	map_Kd conning_stuff.jpg
+
+newmtl _Turm7c_1_geam_buso_1_Highgeamuri_95a260f02b85fe10
+	Ns 0.2980
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BRk_GLASS.jpg
+	map_Kd BRk_GLASS.jpg
+
+newmtl _Turm7c_1_geam_telegraf_Highgeamuri_95a260f02b85fe10
+	Ns 0.2980
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BRk_GLASS.jpg
+	map_Kd BRk_GLASS.jpg
+
+newmtl _Turm7c_1_geam_buso_2_Highgeamuri_95a260f02b85fe10
+	Ns 0.2980
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka BRk_GLASS.jpg
+	map_Kd BRk_GLASS.jpg
+
+newmtl _Turm7c_1_int_coning7c_Highdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _Turm7c_1_int_coning7c_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_periscop_B_Highdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _Turm7c_1_periscop_B_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_periscop_F_Highdefault
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl _Turm7c_1_periscop_F_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
+
+newmtl _Turm7c_1_Rod_Antenanormal_9a58a0481fa52d9a
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka conning_stuff.jpg
+	map_Kd conning_stuff.jpg
+
+newmtl _Turm7c_1_uzo_Highturm_7c_1_95a260f92b876e6c
+	Ns 0.2000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5774 0.5774 0.5774
+	Kd 0.5774 0.5774 0.5774
+	Ks 0.5774 0.5774 0.5774
+	Ke 0.0000 0.0000 0.0000
+	map_Ka NSS_Uboat7c_hull.jpg
+	map_Kd NSS_Uboat7c_hull.jpg
