@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[2018.June]]></title>
     <url>%2F2018%2F06%2F26%2F2018-June%2F</url>
-    <content type="text"><![CDATA[六月的时光悄悄地溜走了。 继续被UB和kano洗脑，被人叫做妥妥的声控，感觉很高兴 >w&lt; 换了新壁纸，并且已经同步到博客背景图上了~ 六月的小惊喜 因为图形学认识了更多的人，也有更多的人认识了我。真是很开心！>w&lt; github首个3+stars的repo（摔 社会实践安排上了… 说好的七舍变成五舍了！ 六月不平凡的日常 重新成为pixiv高级会员！（没错我就是来搜刮图的，才不做什么访问量分析呢） 手机经过长时间的虐待（从一米处跌落），充电口基本凉了。 在电脑屏下发现了sim卡插口，了解到可以改装4g天线加无限流量卡。不过对自己手艺不放心，目前不是很敢拆机… 梦幻的结束大作业的话，预先准备了将近十分钟的PPT，最后被告知要连着视频展示一起在5分钟内做完。。。和室友分工排练了半天，最终还是截去了很多内容… >_&lt; 不过最终放的视频效果还是可以的（虽然没放声音）。上台演讲的时候，内心完全是一片白空白的，虽然不是很怯场，但是还是莫名感觉有点僵硬。讲话的时候太 紧张 / 专心 导致基本没有看到台下同学们的反应。很想知道他们对我的印象如何。 下课后去问whz关于GL_TEXTUREX hardware mapping的事，发现之前的vessel rendering果然是sequencial的。。。另外顺便问了保研相关的事，得到的结果也是早有心理准备的… 从太美妙的梦中醒来后是很难面对残酷的现实的。]]></content>
+    <content type="text"><![CDATA[六月的时光悄悄地溜走了。 继续被UB和kano洗脑，被人叫做妥妥的声控，感觉很高兴 >w&lt; 换了新壁纸，并且已经同步到博客背景图上了~ 六月的小惊喜 因为图形学认识了更多的人，也有更多的人认识了我。真是很开心！>w&lt; github首个3+stars的repo（摔 社会实践安排上了… 说好的七舍变成五舍了！ 六月不平凡的日常 重新成为pixiv高级会员！（没错我就是来搜刮图的，才不做什么访问量分析呢） 手机经过长时间的虐待（从一米处跌落），充电口基本凉了。 在电脑屏下发现了sim卡插口，了解到可以改装4g天线加无限流量卡。不过对自己手艺不放心，目前不是很敢拆机… 梦幻的结束大作业的话，预先准备了将近十分钟的PPT，最后被告知要连着视频展示一起在5分钟内做完。。。和室友分工排练了半天，最终还是截去了很多内容… >_&lt; 不过最终放的视频效果还是可以的（虽然没放声音）。上台演讲的时候，内心完全是一片白空白的，虽然不是很怯场，但是还是莫名感觉有点僵硬。讲话的时候太 紧张 / 专心 导致基本没有看到台下同学们的反应。很想知道他们对我的印象如何。 希望を失えばまた誰も彼女を見なくなるだろう。路上の小石のように。]]></content>
       <tags>
         <tag>thoughts</tag>
       </tags>
@@ -52,8 +52,8 @@
     <content type="text"><![CDATA[前言最近在参考SH3的游戏截图的时候，发现船只在水里是有倒影的。 个人很喜欢这种效果，于是决定着手开始做。通过查阅相关资料，找到了对应的technique———屏幕空间反射（SSR）。 Post processSSR是一种后处理效果。所谓后处理，指的一般是先离屏将场景render到texture里，再用一个独立pass来加工texture。这时原先的buffer就可以通过一个sampler2D中获取。 既然画面和后处理不在同一趟pass，那么后处理时必然会缺失一些原场景中的信息（比如图元类型、顶点、法线、深度、位置等信息）。我们无法在后处理阶段获取任何原场景中的顶点信息（因为没有相应的存储结构），但是对于法线、深度、位置等信息，可以单独开一个pass将其写入texture中，这样在后处理阶段，每个像素对应的相应信息又可通过一个sampler2D来获取。 fragment attribute encodingopengl支持深度纹理、同时支持unsigned char、float、short、int等多种类型的纹理。而webgl 1.0似乎只支持unsigned char纹理，component也只有可怜的RGB、RGB565、RGBA、RGB5A1等几种。。。所以要将顶点信息映射到纹理坐标，首先要对其进行编码。 vec3一个三维向量，比如法线、颜色、位置等。 首先将该向量单位化（位置等跟模长有关的不能单位化，所以不能这么存），因为FragColor输出的rgb三个分量会被clamp到$[0, 1]$之间。要保证xyz三个坐标都在$[0, 1]$之间，需要再将单位化后的向量做变换：$X’ = 0.5 X + 0.5$。 解码用$X = 2 X’ - 1$即可。 float一个32bit的浮点数（比如深度）。 通过计算机组成，我们知道IEEE754的32位浮点数形如1-8-23这样，31位是符号位，23-30位是阶码。显然这个浮点数是不能直接通过FragColor的一个分量输出的。如上所述，FragColor会被clamp到$[0, 1]$之间（去掉阶码和符号位），并且被trunc掉尾数的后15位。 这样也很容易想到一个简单的浮点数编码方法（这里只针对单位化的浮点数），即直接去掉阶码和符号位，然后将尾数分段移位，保证每段有8个bit。这样做只需要23/8=3个float就可存储encode一个浮点数。这其实就是把浮点数当成定点数处理了，代码也很好写，只有几行： 12345678910111213141516// encodevec4 normfloat2vec4(float x)&#123; const vec4 bitShift = vec4(1.0, 256.0, 256.0 * 256.0, 256.0 * 256.0 * 256.0); const vec4 bitMask = vec4(1.0/256.0, 1.0/256.0, 1.0/256.0, 0.0); vec4 rgba = fract(x * bitShift); rgba -= rgba.gbaa * bitMask; return rgba;&#125;// decodefloat vec42normfloat(vec4 v)&#123; const vec4 bitShift = vec4(1.0, 1.0/256.0, 1.0/(256.0*256.0), 1.0/(256.0*256.0*256.0)); return dot(v, bitShift);&#125; compressed encoding对于一个场景而言，我们可能只需要它的深度信息和法线信息，这时用两个pass渲染场景可能有点浪费，如果场景中物体多了可能会吃不消。这时我们需要一种compressed method来编码发线和深度。 如上所述，如果我们用3个float来编码一个深度信息（透视投影的深度值总是单位化的），这是无损的。如果我们少用一个float，则我们会丢失深度值的最后7个bit，这在某些情况下是可以接受的。同理，我们可以将RGB32的法向量改用RGB565编码，这样会少用掉一个float。将这两个vec2合在一起，我们就可以在一个RGBA32（vec4）的纹理里同时存储法线和深度信息。 pros： 占用内存少 少一趟pass（对物体较多的场景比较适合） cons： 丢失精度 编码解码稍微复杂点 1234567891011121314151617181920212223242526272829303132333435363738394041424344// encodevec2 normfloat2vec2(float x)&#123; const vec2 bitShift = vec2(1.0, 256.0); const vec2 bitMask = vec2(1.0/256.0, 0.0); vec2 rg = fract(x * bitShift); rg -= rg.gg * bitMask; return rg;&#125;vec2 rgb2rgb565(vec3 rgb) &#123; float g1 = rgb.g / 32.; float g2 = fract(rgb.g * 8.); g2 -= fract(g2 * 8.) / 8.; return vec2(rgb.r - fract(rgb.r * 32.) / 32. + g1, g2 + rgb.b/8.);&#125;// FragColor = vec4(// rgb2rgb565(normalize((gV * vec4(Normal0, 0)).xyz) * .5 + .5), // normfloat2vec2(gl_FragCoord.z)// );// decodefloat vec22normfloat(vec2 v)&#123; const vec2 bitShift = vec2(1.0, 1.0/256.0); return dot(v, bitShift);&#125;vec3 rgb5652rgb(vec2 rgb565)&#123; float rr = fract(rgb565.r * 32.); float bb = fract(rgb565.g * 8.); return vec3(rgb565.r - rr / 32., rr + rgb565.g / 8. - bb / 64., bb);&#125;PointInfo decodePoint(vec2 uv)&#123; PointInfo info; vec4 tex = texture(gNormalDepth, (uv + 1.) * .5); info.normal = rgb5652rgb(tex.rg) * 2. - 1.; info.depth = vec22normfloat(tex.ba); return info;&#125; 我没有使用这种方法，原因有二： 场景比较空旷 对丢失景深精度比较敏感 Screen Space ReflectionReflection下面的所有向量都是在相机空间中的，因为在后处理阶段谈论世界空间一般来说是没有意义的。 为了计算fragment对应的反射向量，我们需要两个向量： 入射向量$I$ 法向量$N$ 法向量可以直接从uv对应的sampler2D中获取，这里主要讲入射向量。 入射向量是一个从相机到render point的向量（我们使用反向追踪）。相机在相机空间中的坐标是$[0, 0, 0, 1]^T$，故只需要算出当前render point在相机空间中的坐标即可。 我们知道，render point的uv坐标是在透视空间（屏幕空间）中的。要获取在相机空间中的坐标，乘一个透视矩阵的逆矩阵即可。glsl不具有求逆的功能，需要我们在cpu中先算好逆，再用uniform传进去。事实上，我们完全可以手动算出逆，然后直接hard code进shader里。 linearlizeDepth将透视空间中的z值refine回相机空间z值，事实上这个函数不是数学上正确的，但是可以得到近似的结果。 12345678910float linearlizeDepth(vec2 uv)&#123; return - gP[3].z / (1. - vec42normfloat(texture(gDepth, (uv + 1.) * .5)));&#125;vec3 refinePoint(vec2 uv)&#123; float z = linearlizeDepth(uv); return vec3(uv.x / gP[0].x, uv.y / gP[1].y, -1.) * z;&#125; 有了入射向量和法向量，我们就可以算出相机空间中的反射向量$R$。 Raymarching朴素的Raymarching想法是这样的：先refine当前position$P$，每次迭代加上一个$step \times R$，然后每次把新的$P$用透视矩阵投影到屏幕上，然后取depth。这样就要在每个iteration里做一次projection，耗费大概会比较大。 Depth based 2D Raymarching我们可以先把反射向量$R$做一次投影，算出它在屏幕空间的uv，然后只需要每次迭代加uv，并refine depth即可。 这种方法要注意的一个点是：屏幕空间不是一个线性空间（屏幕空间在乘了透视矩阵之后还将w分量归一化了，这里就非线性了）。对于点$[x, y, z, 1]^T$，在线性空间$W$中的对应点为$W \times [x, y, z, 1]^T$，所以对应的向量$[x, y, z, 0]^T$在$W$中的对应向量为$W \times [x, y, z, 0]^T$（$W \times [x_2, y_2, z_2, 1]^T - W \times [x_1, y_1, z_1, 1]^T = W \times [x, y, z, 0]^T$）。在透视空间$P$中，点$[x, y, z, 1]^T$对应的点为$W \times [x, y, z, 1]^T / z$，相应的向量$V = [x, y, z, 0]^T$也就不满足$V’ = P \times V / z$。实际上变换后的向量应该跟它的出发点有关，即得到屏幕空间中正确向量的做法是$V’ = P \times (O + V) / z_2 - P \times O / z_1$。 同样，透视空间中的深度也是非线性的，需要先做一遍refinement。 Enhancement - Binary search使用Binary search能保证用较少的迭代次数快速收敛到比较精确的深度。大概想法是在开始设置一个较大的步长，每次检测到碰撞（深度差值flip）后撤回上一步搜索并且减半步长。实际证明这种方法是非常有效的。 noise现在没做，以后再说。 会先看看Perlin noise等，之后再做。 Gallery相机空间法向量 透视空间深度 相机空间坐标 565法向量16深度纹理 屏幕空间反射 屏幕空间反射+水波 另外请自行想象一下debug shader是一种多么痛苦的过程。]]></content>
       <tags>
         <tag>GL</tag>
-        <tag>water-rendering</tag>
         <tag>raymarching</tag>
+        <tag>water-rendering</tag>
         <tag>WebGL</tag>
       </tags>
   </entry>
@@ -62,8 +62,8 @@
     <url>%2F2018%2F05%2F01%2F2018-Apr%2F</url>
     <content type="text"><![CDATA[最近我对rendering的痴迷程度达到了吃饭、上厕所和睡觉的时候都无法阻止去想的程度了。 CG换题和重构前一个拟题（巫师棋）被我废弃了。理由是对照老师的给分点，发现偏差比较大。最终题目定在了silent hunter的复刻版。 这可能是我最喜欢的一个题目，虽然当时还我不确定能不能做好，但是总要有一个破釜沉舟的决策出现。 对原C++17引擎用Tyoescript重构，只花了4天时间就超过了原有效果。 现在看了一眼整体的技术路线，除了烟雾、火光的粒子系统实现（可能需要抛弃所有webgl 1.0浏览器的支持）之外，所有技术路线都已经确定并可以实施。 实现了很多原有技术： Phong Lighting（已废弃，后续版本在渲染夜晚时可能加上） Shadow Cubemap（PCF不知道为什么崩了，现在去掉了阴影） Gerstner Wave（后续会被基于统计学模型的FFT替换） LOD（不一样的照搬，减少了DrawCall次数） 加入了很多新技术（很多是基于render screen square的）： Offscreen Rendering（Basis） Dynamic Ambient Cubemap（这个简直太棒了） Observer Viewport Fresnel Effect（目前处于崩溃状态） Defered Image 主要是重构了offscreen和texture的逻辑，使用起来达到了一种惊人的方便程度。终于可以放心地实现各种technique啦！ 后续马上要做的： Ubisoft Model Refinement FFT Raymarch based SSR（Screen Space Reflection） 下面是我的喃喃自语.. 数据库上半学期结束期中大程结束了。这裸js糊出来的工程我都不愿意多看一眼，交给助教验收的时候居然说我做的很好，WTF。 果然人类都是视觉动物啊。 动漫绘画结束希望老师不会因为我不是树莓的就拉低我的分（ 课程本身我还是很满意的，很休闲，最后几节课还能上板，很开心（ 计组计组有种要吃大礼包的感觉，平时得多加把劲了（ 职规这鬼课程终于没了（ 面向信息技术的沟通技巧我喜欢上陈越的课！ 夏学期突击计划，启动！整个周三和周二晚上都空出来了，一大块连续时间最适合做些莫名其妙的研究了.. ASC过了ASC之后可能会考虑退队，因为我已经不想再做一个既没有贡献又没有很大兴趣可言的队内寄生虫了。 然而我还是想和大家一起开心地玩啊>_&lt; 总结四月的时间（我醒着的时间）有三分之一在研究rendering，有三分之一在写代码，有三分之一在上课和写作业。娱乐时间基本没有，OSU和炉石都很少上了。总之，我个人还是很满意的（虽然还是亏欠了一些债务）。 希望自己能加把劲，继续努力。]]></content>
       <tags>
-        <tag>thoughts</tag>
         <tag>GL</tag>
+        <tag>thoughts</tag>
       </tags>
   </entry>
   <entry>
@@ -158,6 +158,11 @@
   </entry>
   <entry>
     <title></title>
+    <url>%2Fabout%2Fabout.css</url>
+    <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
+  </entry>
+  <entry>
+    <title></title>
     <url>%2F404%2Findex.html</url>
     <content type="text"><![CDATA[]]></content>
   </entry>
@@ -168,17 +173,12 @@
   </entry>
   <entry>
     <title></title>
-    <url>%2Fabout%2Fabout.css</url>
-    <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
+    <url>%2Fabout%2Fabout.js</url>
+    <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
   </entry>
   <entry>
     <title><![CDATA[about KoishiChan]]></title>
     <url>%2Fabout%2Findex.html</url>
     <content type="text"><![CDATA[KoishiChan不是很想写自我介绍，并且委屈地哭了起来.jpg 浙江大学·16级计科现浙江大学16级计算机系本科生之一。 github除了作业以外的一大半代码都在github上了，所以可能会显得比较杂乱还算比较绿，看得过去 常用语言 C++ Python Typescript Object Pascal pixiv咸鱼画手，主要发表草稿和涂鸦级别的作品，不过一直在坚持上色有奇怪倾向的同人插画 osu!2017.4 - ????.?咸鱼osu玩家，主要症状表现为 令人窒息的acc 压倒性的retry次数 pp虚高得很 skin koishi~(Enhanced) 2017/11/6 koishi~(Enhanced) 2017/11/22 koishi~(Enhanced) 2018/1/3 总结现阶段咸鱼一条，正在努力变得不那么咸中…]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>%2Fabout%2Fabout.js</url>
-    <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
   </entry>
 </search>
