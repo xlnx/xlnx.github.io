@@ -72,7 +72,7 @@
 
 
 
-  <meta name="keywords" content="koishi.top!" />
+  <meta name="keywords" content="thoughts," />
 
 
 
@@ -85,13 +85,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="KoishiChan&#39;s space">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta name="description" content="早就想动笔写写七月末的事了，很多事情都拖了下来，归根结底还是自己懒。 假期说好要一起做SRTP的室友沉迷刺客信条无法自拔，于是SRTP并没有很大进展。说好的社会实践偏偏在后半段因为路途艰险鸽掉了（改成杜撰）。对我来说，假期的前半程已经结束了。 看了一些SIGGRAPH上有趣的paper，读了three.js一些gems的源码，学了unity，杂七杂八的gems也都看了一些，复习了一下这学期CG课上">
+<meta name="keywords" content="thoughts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018.Jul">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/2018-Jul/index.html">
 <meta property="og:site_name" content="KoishiChan&#39;s space">
+<meta property="og:description" content="早就想动笔写写七月末的事了，很多事情都拖了下来，归根结底还是自己懒。 假期说好要一起做SRTP的室友沉迷刺客信条无法自拔，于是SRTP并没有很大进展。说好的社会实践偏偏在后半段因为路途艰险鸽掉了（改成杜撰）。对我来说，假期的前半程已经结束了。 看了一些SIGGRAPH上有趣的paper，读了three.js一些gems的源码，学了unity，杂七杂八的gems也都看了一些，复习了一下这学期CG课上">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T03:08:06.652Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KoishiChan&#39;s space">
+<meta name="twitter:title" content="2018.Jul">
+<meta name="twitter:description" content="早就想动笔写写七月末的事了，很多事情都拖了下来，归根结底还是自己懒。 假期说好要一起做SRTP的室友沉迷刺客信条无法自拔，于是SRTP并没有很大进展。说好的社会实践偏偏在后半段因为路途艰险鸽掉了（改成杜撰）。对我来说，假期的前半程已经结束了。 看了一些SIGGRAPH上有趣的paper，读了three.js一些gems的源码，学了unity，杂七杂八的gems也都看了一些，复习了一下这学期CG课上">
 
 
 
@@ -121,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/2/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/2018-Jul/"/>
 
 
 
 
 
-  <title>KoishiChan's space -  |</title>
+  <title>2018.Jul | KoishiChan's space -  |thoughts|</title>
   
 
 
@@ -146,8 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <script>
@@ -280,9 +284,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -295,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/Object-Picking/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/2018-Jul/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KoishiChan">
@@ -312,9 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/30/Object-Picking/" itemprop="url">Object Picking</a></h1>
+          <h1 class="post-title" itemprop="name headline">2018.Jul</h1>
         
 
         <div class="post-meta">
@@ -326,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-30T23:13:27+08:00">
-                2018-03-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T09:51:14+08:00">
+                2018-08-06
               </time>
             
 
@@ -339,6 +341,16 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/06/2018-Jul/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/08/06/2018-Jul/" itemprop="commentsCount"></span>
+                </a>
+              </span>
             
           
 
@@ -364,23 +376,21 @@
       
 
       
-        
-          <p>终于忙完了一摞奇怪的事，回来研究Object Picking了…</p>
-<p>目前了解到的Object Picking方法有以下两种：</p>
-<ul>
-<li>Ray Picking</li>
-<li>FBO Picking</li>
-</ul>
-<p>顾名思义，Ray Picking按射线方向对各物体判交，因为之前没有做几何检测（甚至AABB包围盒都没做），所以先pass掉了（SRTP对接VR手柄时这个是一定要做的）。另外一种方法（FBO Picking）比较有趣，此处做下记录。</p>
-<h1 id="FBO-Picking"><a href="#FBO-Picking" class="headerlink" title="FBO Picking"></a>FBO Picking</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/30/Object-Picking/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p>早就想动笔写写七月末的事了，很多事情都拖了下来，归根结底还是自己懒。</p>
+<h1 id="假期"><a href="#假期" class="headerlink" title="假期"></a>假期</h1><p>说好要一起做SRTP的室友沉迷刺客信条无法自拔，于是SRTP并没有很大进展。<del>说好的社会实践偏偏在后半段因为路途艰险鸽掉了（改成杜撰）</del>。对我来说，假期的前半程已经结束了。</p>
+<p>看了一些SIGGRAPH上有趣的paper，读了three.js一些gems的源码，学了unity，杂七杂八的gems也都看了一些，复习了一下这学期CG课上的内容。另外还读了CMU 15-462的lecture notes，弥补了课上讲的不太到位的一些部分，尤其是离线渲染。今天刚买了电子版的PBRT，打算继续深入地读一读。</p>
+<p>这个假期也必须保证有适当的代码量，最好能有一个自己喜欢的handy work。看了一下15462的第三个assignment，是在一个给定的framework上搭建自己的path tracer。和常见的只能渲染球之类基本几何体的path tracer不同，这个assignment要求手动实现一个用SAH优化的BVH来做mesh的空间管理，这样可以做到渲染任意三角形mesh。规划了假期做一个类似这种实现的path tracer，但目前还没有具体打算（感觉要鸽掉了）。另外打算基于pdf.js写个便于读书时记笔记的小工具。</p>
+<p>把ext目录整理了一下，便于查阅。<a href="http://koishi.top/ext" target="_blank" rel="external">&lt;链接&gt;</a></p>
+<a id="more"></a>
+<h1 id="玉泉"><a href="#玉泉" class="headerlink" title="玉泉"></a>玉泉</h1><p>五舍的生活水平比我想象的要好很多。室内空间比原来大了将近三分之一（没有独卫了），而且新弄的地板给人一种相当舒适的感觉（想让人在地板上打滚\>w&lt;/)。五舍斜对角的山上就是八舍（女生宿舍），不少同学调侃说很方便，但是对我来说并没有什么用。探访了一下食堂，感觉微凉，有种下学期要和外卖为伴的感觉。</p>
+<h1 id="闲暇时间"><a href="#闲暇时间" class="headerlink" title="闲暇时间"></a>闲暇时间</h1><p>打三国杀。国战是我很喜欢的一个模式，因为将池比较小，不会出现身份局的 “出来一个武将，不认识，看技能介绍看了半天才看懂且实战并不太会操作；且原画风格不一致很违和“ 的尴尬。另外，吐槽一下国战的选将槽，才5个，太TM少了。</p>
+<p>玩了一天Turmoil，圈钱采石油养气什么的有点有趣，推荐一下。</p>
+<p>据说，现实生活中的baka才会喜欢玩益智类小游戏，善于思考的人更喜欢玩简单粗暴的游戏来发泄自己（\cry</p>
+<h1 id="什么"><a href="#什么" class="headerlink" title="什么"></a>什么</h1><p>看起来这个假期大家基本都有自己要忙的事了，那我就很咸鱼了。</p>
+<p>有的时候真的很羡慕别人的生活。时而会怀疑和动摇，感觉自己把一切都毁了，而且已经无法控制了；会迷茫，不知道我向往的生活究竟在什么道路上，生活也许会被迫成为我很讨厌的样子。在独自前行的过程中，感觉不到有谁可以帮助我。</p>
+<p>要从幻想中解脱出来，看清楚些。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>写完这篇文章时，还有不到五个小时上飞机。</p>
+
       
     </div>
     
@@ -395,263 +405,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/28/2018-Mar/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/28/2018-Mar/" itemprop="url">2018.Mar</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T12:49:00+08:00">
-                2018-03-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/thoughts/" rel="tag"># thoughts</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p>最近心情很好，一直很开心。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/28/2018-Mar/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/20/three-js-GPU-particles/" rel="next" title="three.js GPU particles">
+                <i class="fa fa-chevron-left"></i> three.js GPU particles
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/18/简要记录一下最近的情况/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/18/简要记录一下最近的情况/" itemprop="url">简要记录一下最近的情况</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-18T23:59:32+08:00">
-                2018-03-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>简要记录一下最近的情况吧。</p>
-<p>开学阶段总是比较杂乱> &lt;</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/03/18/简要记录一下最近的情况/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -661,756 +444,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/27/水面LOD相关/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/27/水面LOD相关/" itemprop="url">水面LOD相关</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-27T20:51:11+08:00">
-                2018-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>看了<a href="http://www.gdcvault.com/play/1015517/Water-Technology-of" target="_blank" rel="external">GDC上Naughty Dog关于水体渲染的介绍</a>，准备写点LOD相关内容。</p>
-<h1 id="Level-of-Details"><a href="#Level-of-Details" class="headerlink" title="Level of Details"></a>Level of Details</h1><p>由于透视，近处的物体要比远处物体的细节丰富很多。在实时渲染时，如果一视同仁地渲染远处和近处的物体，不仅浪费了远处物体的细节，还降低了渲染速度，因此产生了LOD技术。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/27/水面LOD相关/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/22/基于Gerstner-Wave的水面shader/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/22/基于Gerstner-Wave的水面shader/" itemprop="url">基于Gerstner Wave的水面shader</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-22T14:18:20+08:00">
-                2018-02-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Gerstner-Wave"><a href="#Gerstner-Wave" class="headerlink" title="Gerstner Wave"></a>Gerstner Wave</h1><p>$$<br>\left\{<br>\begin{aligned}<br>\begin{array}{rl}<br>x &amp;= p - QDA\sin(D \cdot p - \omega t)\\<br>y &amp;= A\cos(D \cdot p - \omega t)<br>\end{array}<br>\end{aligned}<br>\right.<br>$$</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/22/基于Gerstner-Wave的水面shader/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/16/OpenGL学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/16/OpenGL学习/" itemprop="url">OpenGL学习</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T14:25:34+08:00">
-                2018-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h1><p>最近为学习下学期的计图做准备。刚刚读完<a href="http://blog.csdn.net/column/details/13062.html" target="_blank" rel="external">《一步步学习OpenGL3.3+》</a>，并阅读了<a href="https://github.com/zurl/ElfGE" target="_blank" rel="external">Zurl先辈的游戏引擎ElfGE</a>源码。在学习过程中将OpenGL进行了基本封装，加上Assimp，摄像机和灯光，构建了一个基本的3D绘制框架<a href="https://github.com/xlnx/bee" target="_blank" rel="external">bee</a>，并实现了一些可以渲染3D模型的实例。</p>
-<p>渲染结果看上去是这样的：<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/02/16/OpenGL学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/29/2017-Nov/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/29/2017-Nov/" itemprop="url">2017.Nov</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-29T23:49:49+08:00">
-                2017-11-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Nov"><a href="#Nov" class="headerlink" title="Nov"></a>Nov</h1><p>降温啦&gt;_&lt;</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/29/2017-Nov/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/09/blog加载速度优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/09/blog加载速度优化/" itemprop="url">blog加载速度优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-09T00:20:39+08:00">
-                2017-11-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>自开通blog后收到了数不胜数的 <b>网页加载过慢</b> 的投诉…<br>自己试了试，在关掉cache的情况下达到了非常不能忍的加载速度，大概加载完要50多秒…<br>在某些不加载完就不显示页面的浏览器上更让人抓狂（咳咳<br>由于以上原因决定试着做点优化…  </p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/09/blog加载速度优化/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/koishi-top/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/05/koishi-top/" itemprop="url">koishi.top!</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T19:01:46+08:00">
-                2017-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>打算给github page弄个域名，于是去万网逛了一圈发现了这个…<br><br><a href="http://www.koishi.top" target="_blank" rel="external">恋恋世界第一</a><br><br>未来十年也要做萝莉控啊QwQ</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
 
 
           </div>
@@ -1418,6 +456,17 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
 
         </div>
         
@@ -1438,8 +487,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -1557,6 +615,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#假期"><span class="nav-number">1.</span> <span class="nav-text">假期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#玉泉"><span class="nav-number">2.</span> <span class="nav-text">玉泉</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#闲暇时间"><span class="nav-number">3.</span> <span class="nav-text">闲暇时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么"><span class="nav-number">4.</span> <span class="nav-text">什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1691,6 +765,11 @@
 
 
   
+  <!--<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>-->
+<script type="text/javascript" src="/js/src/scrollspy.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -1744,6 +823,30 @@
       </style>
     
 
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xlnx',
+            repo: 'xlnx.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '0be2e9fa7c1308ec4e7913e4a9fd3bfe66f4f192',
+            
+                client_id: '2fc64c66059dcd4d228d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
     
 
 
@@ -2100,27 +1203,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-    <!--<script type="text/javascript" src="/js/src/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
   
 
 
