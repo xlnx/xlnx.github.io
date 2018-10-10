@@ -1823,7 +1823,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff78e3;
+  background: #304a6a;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3153,18 +3153,25 @@ body {
 }
 .sidebar {
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12);
-  background-color: rgba(255,255,255,0.63);
+  background-color: rgba(255,255,255,0);
 }
 .sidebar-inner {
 /* box-shadow: 0 10px 20px rgba(0,0,0,0.5); */
   overflow: hidden;
   box-sizing: border-box;
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(255,255,255,0.7);
+}
+.menu-item-active a,
+.menu-item a:hover {
+  background-color: rgba(255,255,255,0.7);
 }
 .site-meta {
   background-color: rgba(34,42,56,0.96);
   padding-top: 12px;
   padding-bottom: 12px;
+}
+.pagination {
+  background-color: rgba(255,255,255,0.7);
 }
 .headband {
   position: absolute;
@@ -3251,4 +3258,9 @@ body {
 .btn:hover {
   border-color: rgba(34,42,56,0.96);
   background: rgba(34,42,56,0.96);
+}
+code,
+figure.highlight,
+iframe {
+  opacity: 0.7;
 }
