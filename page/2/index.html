@@ -305,6 +305,157 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/2018-Apr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KoishiChan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KoishiChan's space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/01/2018-Apr/" itemprop="url">2018.Apr</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T13:00:10+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="最近"><a href="#最近" class="headerlink" title="最近"></a>最近</h1><p><strong>我对rendering的痴迷程度达到了吃饭、上厕所和睡觉的时候都无法阻止去想的程度了。</strong></p>
+<h2 id="CG换题和重构"><a href="#CG换题和重构" class="headerlink" title="CG换题和重构"></a>CG换题和重构</h2><p>前一个拟题（巫师棋）被我废弃了。理由是对照老师的给分点，发现偏差比较大。最终题目定在了silent hunter的复刻版。</p>
+<p>这可能是我最喜欢的一个题目，虽然当时还我不确定能不能做好，但是总要有一个破釜沉舟的决策出现。</p>
+<p>对原C++17引擎用Tyoescript重构，只花了4天时间就超过了原有效果。</p>
+<p>现在看了一眼整体的技术路线，除了烟雾、火光的粒子系统实现（可能需要抛弃所有webgl 1.0浏览器的支持）之外，所有技术路线都已经确定并可以实施。</p>
+<p>实现了很多原有技术：</p>
+<ul>
+<li>Phong Lighting（已废弃，后续版本在渲染夜晚时可能加上）</li>
+<li>Shadow Cubemap（PCF不知道为什么崩了，现在去掉了阴影）</li>
+<li>Gerstner Wave（后续会被基于统计学模型的FFT替换）</li>
+<li>LOD（不一样的照搬，减少了DrawCall次数）</li>
+</ul>
+<p>加入了很多新技术（很多是基于render screen square的）：</p>
+<ul>
+<li>Offscreen Rendering（Basis）</li>
+<li>Dynamic Ambient Cubemap（这个简直太棒了）</li>
+<li>Observer Viewport</li>
+<li>Fresnel Effect（目前处于崩溃状态）</li>
+<li>Defered Image</li>
+</ul>
+<p>主要是重构了offscreen和texture的逻辑，使用起来达到了一种惊人的方便程度。终于可以放心地实现各种technique啦！</p>
+<p>后续马上要做的：</p>
+<ul>
+<li>Ubisoft Model Refinement</li>
+<li>FFT</li>
+<li>Raymarch based SSR（Screen Space Reflection）</li>
+</ul>
+<p>下面是我的喃喃自语..</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/01/2018-Apr/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/关于迭代器失效/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1416,131 +1567,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/koishi-top/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/05/koishi-top/" itemprop="url">koishi.top!</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-05T19:01:46+08:00">
-                2017-11-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>打算给github page弄个域名，于是去万网逛了一圈发现了这个…<br><br><a href="http://www.koishi.top" target="_blank" rel="external">恋恋世界第一</a><br><br>未来十年也要做萝莉控啊QwQ</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1590,7 +1621,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1603,7 +1634,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
