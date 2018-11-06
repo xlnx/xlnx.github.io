@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[Path Tracer Dev 1]]></title>
     <url>%2F2018%2F11%2F06%2FPath-Tracer-Dev-1%2F</url>
-    <content type="text"><![CDATA[Github repocuda-raytracer Gallery3200spp, 48cores, fastNlMeansDenoising by opencv 2048spp, 48cores, fastNlMeansDenoising by opencv Sparks1. 异构程序设计占坑，目前还是多核阶段，完成了 CUDA 再写这部分。 2. BVHBVH，Bounding Volume Hierarchy，层次包围盒，是与OctoTree等数据结构类似的空间划分方法。 BVH是一颗二叉树，每个BVH节点将场景中的所有三角形划分到两个包围盒中（bbox），直到每个包围盒中的三角形个数在合理的范围内。 当光线与场景求交时，分别与场景BVH两孩子的bbox判交： 如果都不相交，则光线缺失 如果只与一个孩子相交，则递归（可变循环）查找该孩子 如果与两孩子都相交，递归查找两孩子并取交点最近的一个 BVH的构建方法希望保证光线期望查找深度最小，故引进了SAH（）方法。 我目前的算法尽量保证两侧mesh的表面积更接近，另外为了在GPU上使用采用一维数组实现。 另外，尽量减小两孩子节点bbox重叠部分的体积有助于减少进栈次数，所以一般更倾向于用一个 x-y|y-z|x-z 平面划分（其实是代码写起来简单）。 3. Dark Magic不算很Dark Magic的实现，在GCC4.8都能编译通过。 对CUDA device function做了一个特化，使得在不使用cuda时不会被实例化。 TODOs 各向同性 BRDF 的导入 ( 目前的 BRDF 是 10% reflect + 90% lambert) CUDA 随机数生成器 支持景深的采样器 把辐射度算法换成 Russian Roulette 实现 增强 Scene Importer HDR 折射和材质表达 场景 BVH]]></content>
+    <content type="text"><![CDATA[Github repocuda-raytracer Gallery3200spp, 48cores, fastNlMeansDenoising by opencv 2048spp, 48cores, fastNlMeansDenoising by opencv Sparks1. 异构程序设计占坑，目前还是多核阶段，完成了 CUDA 再写这部分。 2. BVHBVH，Bounding Volume Hierarchy，层次包围盒，是与OcTree等数据结构类似的空间划分方法。 BVH是一颗二叉树，每个BVH节点将场景中的所有三角形划分到两个包围盒中（bbox），直到每个包围盒中的三角形个数在合理的范围内。 当光线与场景求交时，分别与场景BVH两孩子的bbox判交： 如果都不相交，则光线缺失 如果只与一个孩子相交，则递归（可变循环）查找该孩子 如果与两孩子都相交，递归查找两孩子并取交点最近的一个 BVH的构建方法希望保证光线期望查找深度最小，故引进了SAH（）方法。 我目前的算法尽量保证两侧mesh的表面积更接近，另外为了在GPU上使用采用一维数组实现。 另外，尽量减小两孩子节点bbox重叠部分的体积有助于减少进栈次数，所以一般更倾向于用一个 x-y|y-z|x-z 平面划分（其实是代码写起来简单）。 3. Dark Magic不算很Dark Magic的实现，在GCC4.8都能编译通过。 对CUDA device function做了一个特化，使得在不使用cuda时不会被实例化。 TODOs 各向同性 BRDF 的导入 ( 目前的 BRDF 是 10% reflect + 90% lambert) CUDA 随机数生成器 支持景深的采样器 把辐射度算法换成 Russian Roulette 实现 增强 Scene Importer HDR 折射和材质表达 场景 BVH]]></content>
       <tags>
         <tag>CG</tag>
         <tag>PBRT</tag>
@@ -189,19 +189,19 @@
     <content type="text"><![CDATA[打算给github page弄个域名，于是去万网逛了一圈发现了这个…恋恋世界第一未来十年也要做萝莉控啊QwQ]]></content>
       <tags>
         <tag>thoughts</tag>
-        <tag>hello-world</tag>
         <tag>blog</tag>
+        <tag>hello-world</tag>
       </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2Fabout%2Fabout.css</url>
+    <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
   </entry>
   <entry>
     <title></title>
     <url>%2F404%2Findex.html</url>
     <content type="text"><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>%2Fabout%2Fabout.js</url>
-    <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
   </entry>
   <entry>
     <title><![CDATA[about KoishiChan]]></title>
@@ -210,13 +210,13 @@
   </entry>
   <entry>
     <title></title>
-    <url>%2Fsong%2Findex.html</url>
-    <content type="text"><![CDATA[]]></content>
+    <url>%2Fabout%2Fabout.js</url>
+    <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
   </entry>
   <entry>
     <title></title>
-    <url>%2Fabout%2Fabout.css</url>
-    <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
+    <url>%2Fsong%2Findex.html</url>
+    <content type="text"><![CDATA[]]></content>
   </entry>
   <entry>
     <title><![CDATA[tags]]></title>
