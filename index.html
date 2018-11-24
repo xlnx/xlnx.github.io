@@ -305,7 +305,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/Thinking/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/CUDA-Profiling-Day-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="KoishiChan">
@@ -324,7 +324,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/08/Thinking/" itemprop="url">Thinking</a></h1>
+                <a class="post-title-link" href="/2018/11/25/CUDA-Profiling-Day-1/" itemprop="url">CUDA Profiling Day 1</a></h1>
         
 
         <div class="post-meta">
@@ -336,8 +336,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-08T13:46:47+08:00">
-                2018-11-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T02:47:38+08:00">
+                2018-11-25
               </time>
             
 
@@ -376,10 +376,159 @@
       
         
           
-            <p>反省了一下自己代码风格问题，感觉把模板当作DSL并不是一种良好的解决方案，改变一次配置的代价是需要重新编译，与模块化的思想是相违背的…</p>
-<p>今后也应该多注意这方面的问题…</p>
+            <h1 id="nvprof"><a href="#nvprof" class="headerlink" title="nvprof"></a>nvprof</h1><p>使用<code>nvprof [options] [application] [application-args]</code>命令来profile cuda程序。</p>
+<ul>
+<li>使用<code>--metrics [metric-name,...]</code>选项来指定需要检测的项。<ul>
+<li>使用<code>--query-metrics</code>选项来查看所有available的metrics。</li>
+</ul>
+</li>
+<li>使用<code>--analysis-metrics</code>选项选择适配Visual Profiler的metrics。</li>
+</ul>
+<h1 id="nvvp-Visual-Profiler"><a href="#nvvp-Visual-Profiler" class="headerlink" title="nvvp (Visual Profiler)"></a>nvvp (Visual Profiler)</h1><p>使用姿势：在服务器上用<code>byobu</code>+<code>nvprof --analysis-metrics -o xx.nvvp ...</code>跑程序，跑完scp回本地用nvvp可视化profile结果。</p>
+<ul>
+<li>名义上支持导出结果到PDF。我测试了一下，抛出了<code>java.lang.reflect.InvocationTargetException</code>。</li>
+<li>支持Source mapping，但要在nvcc的编译选项里加<code>-lineinfo</code>。</li>
+</ul>
+<p>我profile的结果中stall主要由于global memory和inactive instructions组成，想一想基本合理，branch指令比较多（这里滚回去学习了一下cuda SIMT相关的基础知识，摔）</p>
+<p><img src="/img/2018/11/25/a.jpg" alt=""></p>
+<p><img src="/img/2018/11/25/b.jpg" alt=""></p>
+<p>另外，nvcc总是为每个thread分配<code>maxRegistersPerThread</code>数量的寄存器，结果是SM分配到<code>maxThreadsPerMultiprocessor</code>一半的线程时就用掉了SM中全部的寄存器，GPU utilization永远不到50%。这里其实可以使用<code>-maxrregcount</code>或<code>__launch_bounds__</code>在寄存器数和线程数之间做出一些权衡，但要考虑具体的硬件数值。我在一块Tesla K40上将<code>registerPerThread</code>减半以加倍SM线程数，内核性能提升比较明显（2.07s -&gt; 1.68s）。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>cuda documentation</li>
+<li>Shane Cook - CUDA Programming</li>
+<li>many references</li>
+<li><a href="https://stackoverflow.com/questions/17553417/cuda-registers-per-thread" target="_blank" rel="external">https://stackoverflow.com/questions/17553417/cuda-registers-per-thread</a></li>
+<li><a href="https://stackoverflow.com/questions/44704506/limiting-register-usage-in-cuda-launch-bounds-vs-maxrregcount" target="_blank" rel="external">https://stackoverflow.com/questions/44704506/limiting-register-usage-in-cuda-launch-bounds-vs-maxrregcount</a></li>
+</ul>
 
           
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/Template-Based-Component-Multiplexing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KoishiChan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KoishiChan's space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/25/Template-Based-Component-Multiplexing/" itemprop="url">Template Based Component Multiplexing</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T02:39:31+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我喜欢用C++模板做DSL。</p>
+<h1 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h1><p>使用模板DSL的劣势是需要configuration需要在编译时确定，对于实际应用而言这是不可容忍的。我们希望能通过运行时的配置来生成需要实例化的类。</p>
+<p>事实上，为了实例化所有的工厂类型<code>T&lt;&gt;</code>，只要在编译时对所有合法的configuration进行排列组合即可。我们可以为工厂传入合法的configuration，然后在工厂的构造函数中进行排列组合，再从中筛选出所有合法的枚举并注册它们。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// clang-format off</span></div><div class="line">Factory&lt;</div><div class="line">	templates2&lt;CPUMultiCoreTracer</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> KOISHI_USE_CUDA</span></div><div class="line">		, CudaSingleGPUTracer</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">	&gt;,</div><div class="line">	types&lt;</div><div class="line">		templates1&lt;Radiance, Normal&gt;,</div><div class="line">		types&lt;FakeRand, DRand48&gt;</div><div class="line">	&gt;,</div><div class="line">	types&lt;</div><div class="line">		HybridAllocator,</div><div class="line">		HostAllocator</div><div class="line">	&gt;</div><div class="line">&gt;</div><div class="line">	factory;</div><div class="line"><span class="comment">// clang-format on</span></div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/25/Template-Based-Component-Multiplexing/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1436,132 +1585,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/16/三天不重构就浑身难受/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/三天不重构就浑身难受/" itemprop="url">三天不重构就浑身难受</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T22:54:04+08:00">
-                2018-05-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>我又重构我的小引擎了！</p>
-<p>这些技术终于来了，令我觉得相见恨晚。</p>
-<p>可能是我太弱智了（</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/16/三天不重构就浑身难受/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1616,7 +1639,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -72,7 +72,7 @@
 
 
 
-  <meta name="keywords" content="koishi.top!" />
+  <meta name="keywords" content="CUDA," />
 
 
 
@@ -85,13 +85,21 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="KoishiChan&#39;s space">
-<meta property="og:url" content="http://yoursite.com/tags/Path-Tracer/index.html">
+<meta name="description" content="nvprof使用nvprof [options] [application] [application-args]命令来profile cuda程序。  使用--metrics [metric-name,...]选项来指定需要检测的项。 使用--query-metrics选项来查看所有available的metrics。   使用--analysis-metrics选项选择适配Visual Pro">
+<meta name="keywords" content="CUDA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CUDA Profiling Day 1">
+<meta property="og:url" content="http://yoursite.com/2018/11/25/CUDA-Profiling-Day-1/index.html">
 <meta property="og:site_name" content="KoishiChan&#39;s space">
+<meta property="og:description" content="nvprof使用nvprof [options] [application] [application-args]命令来profile cuda程序。  使用--metrics [metric-name,...]选项来指定需要检测的项。 使用--query-metrics选项来查看所有available的metrics。   使用--analysis-metrics选项选择适配Visual Pro">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/img/2018/11/25/a.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2018/11/25/b.jpg">
+<meta property="og:updated_time" content="2018-11-24T20:41:37.083Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KoishiChan&#39;s space">
+<meta name="twitter:title" content="CUDA Profiling Day 1">
+<meta name="twitter:description" content="nvprof使用nvprof [options] [application] [application-args]命令来profile cuda程序。  使用--metrics [metric-name,...]选项来指定需要检测的项。 使用--query-metrics选项来查看所有available的metrics。   使用--analysis-metrics选项选择适配Visual Pro">
+<meta name="twitter:image" content="http://yoursite.com/img/2018/11/25/a.jpg">
 
 
 
@@ -121,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Path-Tracer/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/25/CUDA-Profiling-Day-1/"/>
 
 
 
 
 
-  <title>标签: Path Tracer | KoishiChan's space -  |</title>
+  <title>CUDA Profiling Day 1 | KoishiChan's space -  |CUDA|</title>
   
 
 
@@ -146,7 +154,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <script>
@@ -290,54 +298,180 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Path Tracer<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/CUDA-Profiling-Day-1/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KoishiChan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KoishiChan's space">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/11/06/Path-Tracer-Dev-1/" itemprop="url">
-              
-                <span itemprop="name">Path Tracer Dev 1</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">CUDA Profiling Day 1</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-11-06T14:00:15+08:00"
-              content="2018-11-06" >
-          11-06
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T02:47:38+08:00">
+                2018-11-25
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/25/CUDA-Profiling-Day-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/25/CUDA-Profiling-Day-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="nvprof"><a href="#nvprof" class="headerlink" title="nvprof"></a>nvprof</h1><p>使用<code>nvprof [options] [application] [application-args]</code>命令来profile cuda程序。</p>
+<ul>
+<li>使用<code>--metrics [metric-name,...]</code>选项来指定需要检测的项。<ul>
+<li>使用<code>--query-metrics</code>选项来查看所有available的metrics。</li>
+</ul>
+</li>
+<li>使用<code>--analysis-metrics</code>选项选择适配Visual Profiler的metrics。</li>
+</ul>
+<h1 id="nvvp-Visual-Profiler"><a href="#nvvp-Visual-Profiler" class="headerlink" title="nvvp (Visual Profiler)"></a>nvvp (Visual Profiler)</h1><p>使用姿势：在服务器上用<code>byobu</code>+<code>nvprof --analysis-metrics -o xx.nvvp ...</code>跑程序，跑完scp回本地用nvvp可视化profile结果。</p>
+<ul>
+<li>名义上支持导出结果到PDF。我测试了一下，抛出了<code>java.lang.reflect.InvocationTargetException</code>。</li>
+<li>支持Source mapping，但要在nvcc的编译选项里加<code>-lineinfo</code>。</li>
+</ul>
+<p>我profile的结果中stall主要由于global memory和inactive instructions组成，想一想基本合理，branch指令比较多（这里滚回去学习了一下cuda SIMT相关的基础知识，摔）</p>
+<p><img src="/img/2018/11/25/a.jpg" alt=""></p>
+<p><img src="/img/2018/11/25/b.jpg" alt=""></p>
+<p>另外，nvcc总是为每个thread分配<code>maxRegistersPerThread</code>数量的寄存器，结果是SM分配到<code>maxThreadsPerMultiprocessor</code>一半的线程时就用掉了SM中全部的寄存器，GPU utilization永远不到50%。这里其实可以使用<code>-maxrregcount</code>或<code>__launch_bounds__</code>在寄存器数和线程数之间做出一些权衡，但要考虑具体的硬件数值。我在一块Tesla K40上将<code>registerPerThread</code>减半以加倍SM线程数，内核性能提升比较明显（2.07s -&gt; 1.68s）。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>cuda documentation</li>
+<li>Shane Cook - CUDA Programming</li>
+<li>many references</li>
+<li><a href="https://stackoverflow.com/questions/17553417/cuda-registers-per-thread" target="_blank" rel="external">https://stackoverflow.com/questions/17553417/cuda-registers-per-thread</a></li>
+<li><a href="https://stackoverflow.com/questions/44704506/limiting-register-usage-in-cuda-launch-bounds-vs-maxrregcount" target="_blank" rel="external">https://stackoverflow.com/questions/44704506/limiting-register-usage-in-cuda-launch-bounds-vs-maxrregcount</a></li>
+</ul>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CUDA/" rel="tag"># CUDA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/25/Template-Based-Component-Multiplexing/" rel="next" title="Template Based Component Multiplexing">
+                <i class="fa fa-chevron-left"></i> Template Based Component Multiplexing
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -345,6 +479,17 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
 
         </div>
         
@@ -365,8 +510,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -484,6 +638,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#nvprof"><span class="nav-number">1.</span> <span class="nav-text">nvprof</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nvvp-Visual-Profiler"><span class="nav-number">2.</span> <span class="nav-text">nvvp (Visual Profiler)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -618,6 +788,11 @@
 
 
   
+  <!--<script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>-->
+<script type="text/javascript" src="/js/src/scrollspy.min.js?v=3.2.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
@@ -671,6 +846,30 @@
       </style>
     
 
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xlnx',
+            repo: 'xlnx.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '0be2e9fa7c1308ec4e7913e4a9fd3bfe66f4f192',
+            
+                client_id: '2fc64c66059dcd4d228d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
     
 
 
@@ -1027,27 +1226,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-    <!--<script type="text/javascript" src="/js/src/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
   
 
 
