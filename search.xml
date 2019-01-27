@@ -67,8 +67,8 @@
     <content type="text"><![CDATA[前言最近有一个新目标：实现潜望镜被海浪拍击后的镜头模糊效果。 基本思路是在屏幕上采样一个圆周，记录一下在水面和水下的比例$e$。当$e$有突变时，即可判定镜头与水面有相交，高斯模糊之即可。这样就有两个基本问题： 如何高效地从Frame Buffer中获取数据 如何判定一个点在水面以上 Pixel RetrieveNaive首先想到了之前做鼠标检测的方法，直接用glReadPixels读Frame Buffer里的数据，于是我的fps从40掉到了15… 这样做的问题是显而易见的。打开Chrome Dev Panel，发现readPixels等待GPU同步的时间占到每一帧的95%，这显然是无法容忍的。 Async Demo的测试结果如下： Timing results readPixels (sync) readPixels (async) + getBufferSubData (sync) readPixels (async) + getBufferSubDataAsync time in synchronous picking code 3 ms 3 ms 0 ms pick triggered to render complete ~3.5 ms ~3.5 ms ~6.5 ms 1234567891011121314151617export default class asyncutil &#123; static retrieve(N: number, get: ( index: number, collect: (data: any) =&gt; void ) =&gt; void, finish: ( data: any[] ) =&gt; void ) &#123; let data = []; for (let i = 0; i != N; ++i) &#123; get(i, (x: any) =&gt; &#123; data[i] = x; --N &gt; 0 || finish(data); &#125;); &#125; &#125;&#125; 12345678910111213let r = 300, t = 16;gl2.readBuffer(gl2.COLOR_ATTACHMENT1);asyncutil.retrieve(t, (i: number, collect: (data) =&gt; void) =&gt; &#123; let ret = new PixelRetriver(new Float32Array(1)); gl2.readPixels( 600 + r*Math.cos(2*Math.PI * i/t), 450 + r*Math.sin(2*Math.PI * i/t), 1, 1, gl2.RED, gl.FLOAT, 0 ); ret.getDataAsync((buffer) =&gt; collect(buffer[0]));&#125;, (samples: any[]) =&gt; &#123; let s = 0; for (let x of samples) s += x; sample(s / t);&#125;); 123456if (this.blurTime &gt; 0) &#123; let t = this.swapBuffer; this.swapBuffer = this.worldBuffer; this.worldBuffer = t; this.gaussBlur.setRadius(8 * Math.sqrt(this.blurTime)); this.gaussBlur.render(this.swapBuffer, this.worldBuffer); this.blurTime -= Renderer.dt;&#125; P.S. WEBGL_get_buffer_sub_data_async属于webgl draft extension，需要在chrome flags里添加--enable-webgl-draft-extensions。 Stencil BufferGallery]]></content>
       <tags>
         <tag>GL</tag>
-        <tag>WebGL</tag>
         <tag>offscreen</tag>
+        <tag>WebGL</tag>
         <tag>pixel-retrieve</tag>
       </tags>
   </entry>
@@ -94,8 +94,8 @@
     <content type="text"><![CDATA[我又重构我的小引擎了！ 这些技术终于来了，令我觉得相见恨晚。 可能是我太弱智了（ Floating Point Texture听说你想要一个浮点纹理？我这里有啊！ 在webgl1.0中作为扩展的OES_texture_float在webgl2.0中已经转正啦！ 在webgl1.0中：12gl.getExtension("OES_texture_float"); // 使用浮点纹理gl.getExtension("OES_texture_float_linear"); // 使用浮点纹理的linear filter 在webgl2.0中：12gl2.getExtension("EXT_color_buffer_float"); // 渲染到浮点纹理gl2.getExtension("OES_texture_float_linear"); // 使用浮点纹理的linear filter 遇到的坑： webgl2.0原生支持浮点纹理，但是默认不允许渲染到浮点纹理（虽然大多数浏览器都支持），需要手动require一个扩展EXT_color_buffer_float。 在webgl2.0中，设置浮点纹理的internal format和webgl1.0中的处理办法可能不太相同。如：1234// webgl 2.0gl2.texImage2D(gl.TEXTRUE_2D, 0, gl2.RGBA32F, width, height, 0, gl.RGBA, gl.FLOAT, null); // 注意 gl2.RGBA32F 和 gl.RGBA，第一个是 internal format// webgl 1.0 + OES_texture_floatgl.texImage2D(gl.TEXTRUE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, null); // 不需要指定 internal format 参考： webgl 2.0 纹理数据类型一览 再也不用编码解码啦！ Multiple Render Targets听说你想一个pass渲染到多个纹理？用MRT吧！ 加了高模之后vertex shader需要的时间飞速增长。为了获取多种像素信息（法线、深度、高度、类型等），开多个pass渲染同一个场景显然是不明智的，这个时候MRT就派上用场了。 MRT允许你为像素着色器创建多个color attachment，在webgl2.0中，这些channel应为gl2.COLOR_ATTACHMENT0到gl2.COLOR_ATTACHMENT15。 流程： 绑定目标纹理到特定的attachment 设置当前激活的drawBuffers 在像素着色器中输出到attachment相对应的channel 恢复原先状态 使用MRT合并多个pass示例：123456789101112131415161718// set channels using gl.framebufferTexture2Dthis.offscreen.set(gl2.COLOR_ATTACHMENT0, this.mainImage);this.offscreen.set(gl2.COLOR_ATTACHMENT1, this.normalDepthImage);this.offscreen.set(gl2.COLOR_ATTACHMENT2, this.typeImage);// specify active channels list, order does not mattergl2.drawBuffers([ gl2.COLOR_ATTACHMENT0, gl2.COLOR_ATTACHMENT1, gl2.COLOR_ATTACHMENT2]);gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);// render your targets with specified fragment shader.gl2.drawBuffers([ gl2.COLOR_ATTACHMENT0]); 像素着色器：123456789101112131415161718#version 300 esprecision mediump float;// location corresponds to attachment idlayout (location = 0) out vec4 FragColor;layout (location = 1) out vec4 NormalDepth;layout (location = 2) out float Type;void main()&#123; // process data.. // output to three channels (corresponds to textures) FragColor = // ... NormalDepth = // ... Type = // ...&#125; Transform Feedback虽然有人认为这是webgl2.0的一个鸡肋功能（因为没有几何着色器），但我相信这玩意还是能有它自己的用途的。 TransformFeedback说白了就是这样一种功能：它可以捕获顶点着色器的输出变量（varyings），并且把它们的值存储到buffer里，这样你就不用在CPU上更新顶点数据并且频繁gl.bufferData了。 webgl不能输出到当前的输入buffer，这意味着我们需要使用双buffer。在bufferA中存储所有图元，然后渲染到bufferB，然后swap buffers。因为webgl2.0没有几何着色器，所以输出图元的数量和输入图元的数量应当是一样的，只要保证输出buffer的layout和输入buffer相同，我们就可以轻易地创建一个循环来完成所有的transform工作。 另外，TransformFeedback不能在光栅化前终止（意味着它不能不渲染到一个目标），所以片元着色器依然是必须的，这样可以认为它是需要结合离屏渲染使用的。 我目前想到的使用场景是计算 物体轨迹。（拉烟什么的） 后续会对这一部分进行深入研究。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566class TBO &#123; private handle1; private handle0; constructor() &#123; if (!gl2) &#123; throw "webgl 2.0 required."; &#125; this.handle0 = gl2.createBuffer(); this.handle1 = gl2.createBuffer(); &#125; bind() &#123; gl.bindBuffer(gl.ARRAY_BUFFER, this.handle0); gl2.bindBufferBase(gl2.TRANSFORM_FEEDBACK_BUFFER, 0, this.handle1); &#125; unbind() &#123; gl2.bindBufferBase(gl2.TRANSFORM_FEEDBACK_BUFFER, 0, null); gl.bindBuffer(gl.ARRAY_BUFFER, null); &#125; data(data: any[]) &#123; gl.bufferData(gl.ARRAY_BUFFER, 4 * data.length, gl2.DYNAMIC_COPY); this.unbind(); this.swap(); this.bind(); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl2.DYNAMIC_COPY); &#125; swap() &#123; let h = this.handle1; this.handle1 = this.handle0; this.handle0 = h; &#125; get handle(): any &#123; return this.handle0; &#125;&#125;class TransformFeedback &#123; public readonly handle: WebGLTransformFeedback; private vbo = new TBO(); constructor() &#123; if (!gl2) &#123; throw "webgl 2.0 required."; &#125; this.handle = gl2.createTransformFeedback(); &#125; bind() &#123; gl2.bindTransformFeedback(gl2.TRANSFORM_FEEDBACK, this.handle); &#125; unbind() &#123; gl2.bindTransformFeedback(gl2.TRANSFORM_FEEDBACK, null); &#125;&#125;class TAO &#123; // ... draw(first: number = undefined, count: number = undefined) &#123; gl2.beginTransformFeedback(gl.POINTS); if (first != undefined) &#123; gl.drawArrays(gl.POINTS, first, count); &#125; else &#123; gl.drawArrays(gl.POINTS, 0, this.numVertices); &#125; gl2.endTransformFeedback(); &#125; // ...&#125; 最后，成功让一个点在屏幕上动了起来，并且可以改变颜色。 参考： WebGL 2.0 Specification Derivatives一个方法，可以让你对插值后的像素着色器输入求关于x和y的偏导数。 实际微分的值是通过获取相邻像素的对应varying并做差分得到的近似值。 想到的实际用途：如果像素着色器输入一个高度场，则可以通过refined point的差分的叉积确定当前像素的法向量：normalize(cross(dx, dy))，这种方法不需要事先对高度场求偏导，至少可以节省一部分顶点着色器的开销（尤其是对于一些non-trival的高度场尤其适用）。 参考： 差分的硬件实现 Khronos官方介绍 Some other TechniquesCaustics参考一个接近完美的焦散demo，写出了一个很挫的效果。不说了，丢人。 基本想法是用一个mesh来模拟光线的集合，并且把折射前后的两个三角形面积作比，得到当前区域内的平均光照（焦散强度）。 别人的demo： 我的丢人demo： 参考： 在线demo 实现原理 Fresnel Blending我可能之前把公式拟合错了，某几个参数是不对的，后来手动调参数拟合了一下，发现基本对上了。 渲染结果： 参考： GLSLで環境マップ＆フレネル効果 Geogebra Filtering根据物体类型降噪，做了一些，现在好多了。 OtherVisual Studio Code Live Share这功能简直太好用了，强推！ 换了新桌面 换了新主题 没能在5月14日发表 >_&lt;参考 知乎：最值得期待的WebGL 2.0功能]]></content>
       <tags>
         <tag>GL</tag>
-        <tag>WebGL</tag>
         <tag>offscreen</tag>
+        <tag>WebGL</tag>
         <tag>technique</tag>
       </tags>
   </entry>
@@ -205,8 +205,8 @@
     <content type="text"><![CDATA[打算给github page弄个域名，于是去万网逛了一圈发现了这个…恋恋世界第一未来十年也要做萝莉控啊QwQ]]></content>
       <tags>
         <tag>thoughts</tag>
-        <tag>hello-world</tag>
         <tag>blog</tag>
+        <tag>hello-world</tag>
       </tags>
   </entry>
   <entry>
@@ -215,14 +215,14 @@
     <content type="text"><![CDATA[]]></content>
   </entry>
   <entry>
-    <title><![CDATA[tags]]></title>
-    <url>%2Ftags%2Findex.html</url>
-    <content type="text"></content>
-  </entry>
-  <entry>
     <title></title>
     <url>%2Fabout%2Fabout.css</url>
     <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2Fsong%2Findex.html</url>
+    <content type="text"><![CDATA[]]></content>
   </entry>
   <entry>
     <title></title>
@@ -230,9 +230,9 @@
     <content type="text"><![CDATA[// $(function(){ // $(".fold-button").click(function(){ // $(".fold-box").slideToggle("slow"); // $(".open").toggle(); // $(".close").toggle(); // }); // });]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>%2Fsong%2Findex.html</url>
-    <content type="text"><![CDATA[]]></content>
+    <title><![CDATA[tags]]></title>
+    <url>%2Ftags%2Findex.html</url>
+    <content type="text"></content>
   </entry>
   <entry>
     <title><![CDATA[about KoishiChan]]></title>
