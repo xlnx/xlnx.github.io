@@ -305,6 +305,177 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/29/Rust前端开发初步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="KoishiChan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KoishiChan's space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/29/Rust前端开发初步/" itemprop="url">Rust前端开发初步</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-29T20:34:50+08:00">
+                2019-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Rust的WASM工具链简介"><a href="#Rust的WASM工具链简介" class="headerlink" title="Rust的WASM工具链简介"></a>Rust的WASM工具链简介</h1><p>Rust不仅支持基于LLVM-IR的Emscripten后端<code>wasm32-unknown-emscripten</code>，还支持一个名为<code>wasm32-unknown-unknown</code>的原生后端：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ rustup target add wasm32-unknown-unknown &amp;&amp; rustup show | grep wasm</div><div class="line">wasm32-unknown-unknown</div></pre></td></tr></table></figure>
+<p>除了构建工具以外，Rust还提供了围绕WASM的一系列开发工具：</p>
+<ul>
+<li><code>wasm-bindgen</code>：为导出的<code>*.wasm</code>模块生成js loader及<code>d.ts</code>定义，支持导出Rust结构体。</li>
+<li><code>wasm-pack</code>：封装整个WASM构建流程。</li>
+<li><code>wasm-nm</code>：与<code>nm</code>类似。</li>
+<li>…</li>
+</ul>
+<p>以上工具均可使用<code>cargo install</code>安装。</p>
+<h1 id="使用Rust和Typescript和Webpack混合构建WASM应用"><a href="#使用Rust和Typescript和Webpack混合构建WASM应用" class="headerlink" title="使用Rust和Typescript和Webpack混合构建WASM应用"></a>使用<code>Rust</code>和<code>Typescript</code>和<code>Webpack</code>混合构建WASM应用</h1><p>参考官方的<code>Javascript</code>示例工程：<a href="https://github.com/rustwasm/rust-webpack-template" target="_blank" rel="external">rustwasm/rust-webpack-template</a></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>先本地安装<code>wasm-pack</code>与<code>wasm-bindgen</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cargo install wasm-pack wasm-bindgen</div></pre></td></tr></table></figure>
+<p>新建Cargo lib和npm工程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ cargo new wasm_example --lib &amp;&amp; <span class="built_in">cd</span> ./wasm_example &amp;&amp; npm init &amp;&amp; tree</div><div class="line">.</div><div class="line">├── Cargo.toml</div><div class="line">├── package.json</div><div class="line">└── src</div><div class="line">    └── lib.rs</div></pre></td></tr></table></figure>
+<h2 id="配置Cargo工程"><a href="#配置Cargo工程" class="headerlink" title="配置Cargo工程"></a>配置Cargo工程</h2><p>配置<code>Cargo.toml</code>如下：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="section">[package]</span></div><div class="line"><span class="attr">name</span> = <span class="string">"crate"</span></div><div class="line">...</div><div class="line"></div><div class="line"><span class="section">[dependencies]</span></div><div class="line"><span class="attr">wasm-bindgen</span> = &#123; version = <span class="string">"^0.2"</span>, features = [<span class="string">"serde-serialize"</span>] &#125;</div><div class="line"><span class="attr">serde</span> = <span class="string">"^1.0.85"</span></div><div class="line"><span class="attr">serde_derive</span> = <span class="string">"^1.0.85"</span></div><div class="line"></div><div class="line"><span class="section">[lib]</span></div><div class="line"><span class="attr">path</span> = <span class="string">"src/lib.rs"</span></div><div class="line"><span class="attr">crate-type</span> = [<span class="string">"cdylib"</span>]</div></pre></td></tr></table></figure>
+<p>其中<code>serde</code>为Rust知名序列化库，<code>wasm-bindgen</code>支持使用<code>serde</code>将函数入参的<code>Javascript</code>对象转换为可序列化的<code>Rust</code>结构体。</p>
+<p>使用<code>rust-bindgen</code>官方的示例代码为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vim src/lib.rs</div></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="keyword">crate</span> wasm_bindgen;</div><div class="line"><span class="keyword">use</span> wasm_bindgen::prelude::*;</div><div class="line"></div><div class="line"><span class="meta">#[wasm_bindgen]</span></div><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</div><div class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">alert</span></span>(s: &amp;<span class="built_in">str</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#[wasm_bindgen]</span></div><div class="line"><span class="keyword">pub</span> <span class="function"><span class="keyword">fn</span> <span class="title">greet</span></span>(name: &amp;<span class="built_in">str</span>) &#123;</div><div class="line">    alert(&amp;<span class="built_in">format!</span>(<span class="string">"Hello, &#123;&#125;!"</span>, name));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中<code>extern &quot;C&quot;</code>从<code>Javascript</code>引入了<code>alert()</code>函数。标注有<code>#[wasm_bindgen]</code>的函数可以通过<code>wasm-bindgen</code>工具生成可调用的WASM字节码和接口。</p>
+<p>我们先直接使用<code>cargo</code>编译工程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ cargo build --target wasm32-unknown-unknown &amp;&amp; tree</div><div class="line">.</div><div class="line">├── Cargo.lock</div><div class="line">├── Cargo.toml</div><div class="line">├── package.json</div><div class="line">├── src</div><div class="line">│   └── lib.rs</div><div class="line">└── target</div><div class="line">    ├── debug</div><div class="line">    └── wasm32-unknown-unknown</div><div class="line">        └── debug</div><div class="line">            ├── crate.wasm</div><div class="line">            └── ...</div></pre></td></tr></table></figure>
+<p>可以发现生成了对应的<code>crate.wasm</code>，使用<code>wasm-nm</code>查看符号表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">$ du -h target/wasm32-unknown-unknown/debug/crate.wasm &amp;&amp; wasm-nm target/wasm32-unknown-unknown/debug/crate.wasm -P </div><div class="line">1.5M	target/wasm32-unknown-unknown/debug/crate.wasm</div><div class="line">i __wbindgen_describe</div><div class="line">i __wbg_alert_21c93b491b8d536b</div><div class="line">i __wbindgen_throw</div><div class="line">p __wasm_call_ctors</div><div class="line">p _ZN65_<span class="variable">$LT</span><span class="variable">$alloc</span>..string..String<span class="variable">$u20</span><span class="variable">$as</span><span class="variable">$u20</span><span class="variable">$core</span>..ops..deref..Deref<span class="variable">$GT</span><span class="variable">$5deref17h42790b41121b87feE</span></div><div class="line">p __wbindgen_describe___wbg_alert_21c93b491b8d536b</div><div class="line">p _ZN5crate5alert17h7be08caca3619f94E</div><div class="line">p _ZN5crate5greet17h5f1b31bc71e69dc0E</div><div class="line">e __wbindgen_describe___wbg_alert_21c93b491b8d536b</div><div class="line">p __wbindgen_describe_greet</div><div class="line">p _ZN66_<span class="variable">$LT</span><span class="variable">$T</span><span class="variable">$u20</span><span class="variable">$as</span><span class="variable">$u20</span><span class="variable">$wasm_bindgen</span>..convert..traits..ReturnWasmAbi<span class="variable">$GT</span><span class="variable">$10return_abi17h40a1b1e3d3cc056dE</span></div><div class="line">e greet</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>可以发现模块中包含了符合<code>C-abi</code>的<code>greet</code>函数，但是也有大量冗余符号。</p>
+<p>接下来使用<code>wasm-pack</code>来重新编译工程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ wasm-pack build &amp;&amp; tree</div><div class="line">.</div><div class="line">├── Cargo.lock</div><div class="line">├── Cargo.toml</div><div class="line">├── package.json</div><div class="line">├── pkg</div><div class="line">│   ├── crate_bg.d.ts</div><div class="line">│   ├── crate_bg.wasm</div><div class="line">│   ├── crate.d.ts</div><div class="line">│   ├── crate.js</div><div class="line">│   └── package.json</div><div class="line">├── src</div><div class="line">│   └── lib.rs</div><div class="line">└── target</div><div class="line">    ├── debug</div><div class="line">    └── wasm32-unknown-unknown</div><div class="line">        └── debug</div><div class="line">            ├── crate.wasm</div><div class="line">            └── ...</div></pre></td></tr></table></figure>
+<p><code>wasm-pack</code>编译生成的WASM模块被自动部署到了<code>pkg</code>目录下，并生成了<code>d.ts</code>文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ du -h ./pkg/crate_bg.wasm &amp;&amp; wasm-nm -P ./pkg/crate_bg.wasm</div><div class="line">24K	./pkg/crate_bg.wasm</div><div class="line">i __wbg_alert_21c93b491b8d536b</div><div class="line">p greet</div><div class="line">e greet</div><div class="line">...</div></pre></td></tr></table></figure>
+<p><code>wasm-pack</code>自动去除了模块中的无用符号。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat crate.d.ts</div></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* tslint:disable */</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">greet</span>(<span class="params">arg0: <span class="built_in">string</span></span>): <span class="title">void</span></span>;</div></pre></td></tr></table></figure>
+<p>在<code>./pkg</code>目录下生成了Rust中导出函数的定义。</p>
+<h2 id="使用Webpack进行打包"><a href="#使用Webpack进行打包" class="headerlink" title="使用Webpack进行打包"></a>使用Webpack进行打包</h2><p>安装npm依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cnpm install -D webpack webpack-cli webpack-dev-server \</div><div class="line">                  typescript awesome-typescript-loader \</div><div class="line">                  <span class="built_in">source</span>-map-loader html-webpack-plugin</div></pre></td></tr></table></figure>
+<p>先配置<code>tsc</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vim tsconfig.json</div></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	<span class="attr">"compilerOptions"</span>: &#123;</div><div class="line">		<span class="attr">"allowJs"</span>: <span class="literal">true</span>,</div><div class="line">		<span class="attr">"noImplicitAny"</span>: <span class="literal">true</span>,</div><div class="line">		<span class="attr">"strict"</span>: <span class="literal">true</span>,</div><div class="line">		<span class="attr">"sourceMap"</span>: <span class="literal">true</span>,</div><div class="line">		<span class="attr">"lib"</span>: [</div><div class="line">			<span class="string">"es2015"</span>,</div><div class="line">			<span class="string">"dom"</span></div><div class="line">		],</div><div class="line">		<span class="attr">"typeRoots"</span>: [</div><div class="line">			<span class="string">"node_modules/@types/"</span>,</div><div class="line">			<span class="string">"./typings/*.d.ts"</span></div><div class="line">		]</div><div class="line">	&#125;,</div><div class="line">	<span class="attr">"exclude"</span>: [</div><div class="line">		<span class="string">"node_modules"</span></div><div class="line">	]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Node</code>目前不支持静态import WASM文件，而<code>Typescript</code>的动态<code>import</code>有点小问题，所以需要用<code>Javascript</code>做一个bootstrap：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// js/bootstrap.js</span></div><div class="line"><span class="keyword">import</span>(<span class="string">"../pkg"</span>).then(<span class="function"><span class="params">wasm</span> =&gt;</span> &#123;</div><div class="line">	<span class="keyword">const</span> &#123; main &#125; = <span class="built_in">require</span>(<span class="string">"./main"</span>)</div><div class="line">	main(wasm)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>主函数如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// js/main.ts</span></div><div class="line">export function main(wasm: typeof import("../pkg/crate")) &#123;</div><div class="line">	wasm.greet(<span class="string">"Rust"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>配置<code>webpack.config.js</code>如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</div><div class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">"html-webpack-plugin"</span>)</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">	entry: <span class="string">'./js/bootstrap.js'</span>,</div><div class="line">	output: &#123;</div><div class="line">		path: path.resolve(__dirname, <span class="string">'out'</span>),</div><div class="line">		filename: <span class="string">'bundle.js'</span></div><div class="line">	&#125;,</div><div class="line">	resolve: &#123;</div><div class="line">		extensions: [<span class="string">".ts"</span>, <span class="string">".tsx"</span>, <span class="string">".js"</span>, <span class="string">".json"</span>, <span class="string">".wasm"</span>]</div><div class="line">	&#125;,</div><div class="line">	devtool: <span class="string">"source-map"</span>,</div><div class="line">	<span class="built_in">module</span>: &#123;</div><div class="line">		rules: [</div><div class="line">			&#123; <span class="attr">test</span>: <span class="regexp">/\.tsx?$/</span>, <span class="attr">loader</span>: <span class="string">"awesome-typescript-loader"</span> &#125;,</div><div class="line">			&#123; <span class="attr">enforce</span>: <span class="string">"pre"</span>, <span class="attr">test</span>: <span class="regexp">/\.js$/</span>, <span class="attr">loader</span>: <span class="string">"source-map-loader"</span> &#125;</div><div class="line">		]</div><div class="line">	&#125;,</div><div class="line">	mode: <span class="string">"development"</span>,</div><div class="line">	plugins: [</div><div class="line">		<span class="keyword">new</span> HtmlWebpackPlugin(&#123;</div><div class="line">			template: <span class="string">'index.html'</span></div><div class="line">		&#125;)</div><div class="line">	]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>工程结构如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── Cargo.lock</div><div class="line">├── Cargo.toml</div><div class="line">├── js</div><div class="line">│   ├── bootstrap.js</div><div class="line">│   └── main.ts</div><div class="line">├── package.json</div><div class="line">├── pkg</div><div class="line">├── src</div><div class="line">│   └── lib.rs</div><div class="line">├── target</div><div class="line">└── webpack.config.js</div></pre></td></tr></table></figure>
+<p>使用<code>webpack-dev-server</code>运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ webpack-dev-server -d</div></pre></td></tr></table></figure>
+<p>浏览器将<code>alert(&quot;Hello, Rust!&quot;)</code>。</p>
+<h2 id="定制自动化构建"><a href="#定制自动化构建" class="headerlink" title="定制自动化构建"></a>定制自动化构建</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat package.json</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  ...</div><div class="line">  "scripts": &#123;</div><div class="line">    "start": "webpack-dev-server -d",</div><div class="line">    "build-js": "npx webpack",</div><div class="line">    "build-rs": "wasm-pack build --release",</div><div class="line">    "build": "npm run build-rs &amp;&amp; npm run build-js",</div><div class="line">    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1"</div><div class="line">  &#125;,</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/CUDA-Profiling-Day-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1455,136 +1626,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Statistic-Ocean-Wave-Model/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="KoishiChan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KoishiChan's space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/18/Statistic-Ocean-Wave-Model/" itemprop="url">Statistic Ocean Wave Model</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T13:42:01+08:00">
-                2018-05-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Brief"><a href="#Brief" class="headerlink" title="Brief"></a>Brief</h1><p>NV的流程图介绍该算法简直再清楚不过了：</p>
-<p><img src="/img/2018/5/18/nv-brief.jpg" alt=""></p>
-<h1 id="Phillips-Spectrum"><a href="#Phillips-Spectrum" class="headerlink" title="Phillips Spectrum"></a>Phillips Spectrum</h1><p>统计模型的示例频谱是Phillips Spectrum：</p>
-<p>$$<br>P_h(\vec k) = \left \langle { \left | {\widetilde h}^*(\vec k, t) \right | }^2 \right \rangle<br>$$</p>
-<p>在统计学上使用如下模型来模拟Phillips Spectrum：</p>
-<p>$$<br>P_h(\vec k) = \frac A { |\vec k|^4} { | \hat k \cdot \hat \omega | }^2 {e^{-\frac 1 { { |\vec k| }^2 L^2}}}<br>$$</p>
-<p>生成Phillips Spectrum的像素着色器如下：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/18/Statistic-Ocean-Wave-Model/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1639,7 +1680,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

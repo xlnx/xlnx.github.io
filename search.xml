@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Rust前端开发初步]]></title>
+    <url>%2F2019%2F01%2F29%2FRust%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E5%88%9D%E6%AD%A5%2F</url>
+    <content type="text"><![CDATA[Rust的WASM工具链简介Rust不仅支持基于LLVM-IR的Emscripten后端wasm32-unknown-emscripten，还支持一个名为wasm32-unknown-unknown的原生后端： 12$ rustup target add wasm32-unknown-unknown &amp;&amp; rustup show | grep wasmwasm32-unknown-unknown 除了构建工具以外，Rust还提供了围绕WASM的一系列开发工具： wasm-bindgen：为导出的*.wasm模块生成js loader及d.ts定义，支持导出Rust结构体。 wasm-pack：封装整个WASM构建流程。 wasm-nm：与nm类似。 … 以上工具均可使用cargo install安装。 使用Rust和Typescript和Webpack混合构建WASM应用参考官方的Javascript示例工程：rustwasm/rust-webpack-template 准备工作先本地安装wasm-pack与wasm-bindgen： 1cargo install wasm-pack wasm-bindgen 新建Cargo lib和npm工程： 123456$ cargo new wasm_example --lib &amp;&amp; cd ./wasm_example &amp;&amp; npm init &amp;&amp; tree.├── Cargo.toml├── package.json└── src └── lib.rs 配置Cargo工程配置Cargo.toml如下： 123456789101112[package]name = "crate"...[dependencies]wasm-bindgen = &#123; version = "^0.2", features = ["serde-serialize"] &#125;serde = "^1.0.85"serde_derive = "^1.0.85"[lib]path = "src/lib.rs"crate-type = ["cdylib"] 其中serde为Rust知名序列化库，wasm-bindgen支持使用serde将函数入参的Javascript对象转换为可序列化的Rust结构体。 使用rust-bindgen官方的示例代码为例： 1$ vim src/lib.rs 123456789101112extern crate wasm_bindgen;use wasm_bindgen::prelude::*;#[wasm_bindgen]extern "C" &#123; fn alert(s: &amp;str);&#125;#[wasm_bindgen]pub fn greet(name: &amp;str) &#123; alert(&amp;format!("Hello, &#123;&#125;!", name));&#125; 其中extern &quot;C&quot;从Javascript引入了alert()函数。标注有#[wasm_bindgen]的函数可以通过wasm-bindgen工具生成可调用的WASM字节码和接口。 我们先直接使用cargo编译工程： 12345678910111213$ cargo build --target wasm32-unknown-unknown &amp;&amp; tree.├── Cargo.lock├── Cargo.toml├── package.json├── src│ └── lib.rs└── target ├── debug └── wasm32-unknown-unknown └── debug ├── crate.wasm └── ... 可以发现生成了对应的crate.wasm，使用wasm-nm查看符号表： 123456789101112131415$ du -h target/wasm32-unknown-unknown/debug/crate.wasm &amp;&amp; wasm-nm target/wasm32-unknown-unknown/debug/crate.wasm -P 1.5M target/wasm32-unknown-unknown/debug/crate.wasmi __wbindgen_describei __wbg_alert_21c93b491b8d536bi __wbindgen_throwp __wasm_call_ctorsp _ZN65_$LT$alloc..string..String$u20$as$u20$core..ops..deref..Deref$GT$5deref17h42790b41121b87feEp __wbindgen_describe___wbg_alert_21c93b491b8d536bp _ZN5crate5alert17h7be08caca3619f94Ep _ZN5crate5greet17h5f1b31bc71e69dc0Ee __wbindgen_describe___wbg_alert_21c93b491b8d536bp __wbindgen_describe_greetp _ZN66_$LT$T$u20$as$u20$wasm_bindgen..convert..traits..ReturnWasmAbi$GT$10return_abi17h40a1b1e3d3cc056dEe greet... 可以发现模块中包含了符合C-abi的greet函数，但是也有大量冗余符号。 接下来使用wasm-pack来重新编译工程： 12345678910111213141516171819$ wasm-pack build &amp;&amp; tree.├── Cargo.lock├── Cargo.toml├── package.json├── pkg│ ├── crate_bg.d.ts│ ├── crate_bg.wasm│ ├── crate.d.ts│ ├── crate.js│ └── package.json├── src│ └── lib.rs└── target ├── debug └── wasm32-unknown-unknown └── debug ├── crate.wasm └── ... wasm-pack编译生成的WASM模块被自动部署到了pkg目录下，并生成了d.ts文件： 123456$ du -h ./pkg/crate_bg.wasm &amp;&amp; wasm-nm -P ./pkg/crate_bg.wasm24K ./pkg/crate_bg.wasmi __wbg_alert_21c93b491b8d536bp greete greet... wasm-pack自动去除了模块中的无用符号。 1$ cat crate.d.ts 12/* tslint:disable */export function greet(arg0: string): void; 在./pkg目录下生成了Rust中导出函数的定义。 使用Webpack进行打包安装npm依赖： 123$ cnpm install -D webpack webpack-cli webpack-dev-server \ typescript awesome-typescript-loader \ source-map-loader html-webpack-plugin 先配置tsc： 1$ vim tsconfig.json 12345678910111213141516171819&#123; "compilerOptions": &#123; "allowJs": true, "noImplicitAny": true, "strict": true, "sourceMap": true, "lib": [ "es2015", "dom" ], "typeRoots": [ "node_modules/@types/", "./typings/*.d.ts" ] &#125;, "exclude": [ "node_modules" ]&#125; Node目前不支持静态import WASM文件，而Typescript的动态import有点小问题，所以需要用Javascript做一个bootstrap： 12345// js/bootstrap.jsimport("../pkg").then(wasm =&gt; &#123; const &#123; main &#125; = require("./main") main(wasm)&#125;) 主函数如下： 1234// js/main.tsexport function main(wasm: typeof import("../pkg/crate")) &#123; wasm.greet("Rust")&#125; 配置webpack.config.js如下： 1234567891011121314151617181920212223242526const path = require('path')const HtmlWebpackPlugin = require("html-webpack-plugin")module.exports = &#123; entry: './js/bootstrap.js', output: &#123; path: path.resolve(__dirname, 'out'), filename: 'bundle.js' &#125;, resolve: &#123; extensions: [".ts", ".tsx", ".js", ".json", ".wasm"] &#125;, devtool: "source-map", module: &#123; rules: [ &#123; test: /\.tsx?$/, loader: "awesome-typescript-loader" &#125;, &#123; enforce: "pre", test: /\.js$/, loader: "source-map-loader" &#125; ] &#125;, mode: "development", plugins: [ new HtmlWebpackPlugin(&#123; template: 'index.html' &#125;) ]&#125; 工程结构如下： 12345678910111213$ tree.├── Cargo.lock├── Cargo.toml├── js│ ├── bootstrap.js│ └── main.ts├── package.json├── pkg├── src│ └── lib.rs├── target└── webpack.config.js 使用webpack-dev-server运行： 1$ webpack-dev-server -d 浏览器将alert(&quot;Hello, Rust!&quot;)。 定制自动化构建1$ cat package.json 1234567891011&#123; ... "scripts": &#123; "start": "webpack-dev-server -d", "build-js": "npx webpack", "build-rs": "wasm-pack build --release", "build": "npm run build-rs &amp;&amp; npm run build-js", "test": "echo \"Error: no test specified\" &amp;&amp; exit 1" &#125;, ...&#125;]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[CUDA Profiling Day 1]]></title>
     <url>%2F2018%2F11%2F25%2FCUDA-Profiling-Day-1%2F</url>
     <content type="text"><![CDATA[nvprof使用nvprof [options] [application] [application-args]命令来profile cuda程序。 使用--metrics [metric-name,...]选项来指定需要检测的项。 使用--query-metrics选项来查看所有available的metrics。 使用--analysis-metrics选项选择适配Visual Profiler的metrics。 nvvp (Visual Profiler)使用姿势：在服务器上用byobu+nvprof --analysis-metrics -o xx.nvvp ...跑程序，跑完scp回本地用nvvp可视化profile结果。 名义上支持导出结果到PDF。我测试了一下，抛出了java.lang.reflect.InvocationTargetException。 支持Source mapping，但要在nvcc的编译选项里加-lineinfo。 我profile的结果中stall主要由于global memory和inactive instructions组成，想一想基本合理，branch指令比较多（这里滚回去学习了一下cuda SIMT相关的基础知识，摔） 另外，nvcc总是为每个thread分配maxRegistersPerThread数量的寄存器，结果是SM分配到maxThreadsPerMultiprocessor一半的线程时就用掉了SM中全部的寄存器，GPU utilization永远不到50%。这里其实可以使用-maxrregcount或__launch_bounds__在寄存器数和线程数之间做出一些权衡，但要考虑具体的硬件数值。我在一块Tesla K40上将registerPerThread减半以加倍SM线程数，内核性能提升比较明显（2.07s -&gt; 1.68s）。 Reference cuda documentation Shane Cook - CUDA Programming many references https://stackoverflow.com/questions/17553417/cuda-registers-per-thread https://stackoverflow.com/questions/44704506/limiting-register-usage-in-cuda-launch-bounds-vs-maxrregcount]]></content>
@@ -216,13 +221,18 @@
   </entry>
   <entry>
     <title></title>
+    <url>%2Fsong%2Findex.html</url>
+    <content type="text"><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title></title>
     <url>%2Fabout%2Fabout.css</url>
     <content type="text"><![CDATA[.koishi-block { width: 300px; }]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>%2Fsong%2Findex.html</url>
-    <content type="text"><![CDATA[]]></content>
+    <title><![CDATA[about KoishiChan]]></title>
+    <url>%2Fabout%2Findex.html</url>
+    <content type="text"><![CDATA[KoishiChan不是很想写自我介绍，并且委屈地哭了起来.jpg 浙江大学·16级计科现浙江大学16级计算机系本科生之一。 github除了作业以外的一大半代码都在github上了，所以可能会显得比较杂乱还算比较绿，看得过去 常用语言 C++ Python Typescript Object Pascal pixiv咸鱼画手，主要发表草稿和涂鸦级别的作品，不过一直在坚持上色有奇怪倾向的同人插画 osu!2017.4 - ????.?咸鱼osu玩家，主要症状表现为 令人窒息的acc 压倒性的retry次数 pp虚高得很 skin koishi~(Enhanced) 2017/11/6 koishi~(Enhanced) 2017/11/22 koishi~(Enhanced) 2018/1/3 总结现阶段咸鱼一条，正在努力变得不那么咸中…]]></content>
   </entry>
   <entry>
     <title></title>
@@ -233,10 +243,5 @@
     <title><![CDATA[tags]]></title>
     <url>%2Ftags%2Findex.html</url>
     <content type="text"></content>
-  </entry>
-  <entry>
-    <title><![CDATA[about KoishiChan]]></title>
-    <url>%2Fabout%2Findex.html</url>
-    <content type="text"><![CDATA[KoishiChan不是很想写自我介绍，并且委屈地哭了起来.jpg 浙江大学·16级计科现浙江大学16级计算机系本科生之一。 github除了作业以外的一大半代码都在github上了，所以可能会显得比较杂乱还算比较绿，看得过去 常用语言 C++ Python Typescript Object Pascal pixiv咸鱼画手，主要发表草稿和涂鸦级别的作品，不过一直在坚持上色有奇怪倾向的同人插画 osu!2017.4 - ????.?咸鱼osu玩家，主要症状表现为 令人窒息的acc 压倒性的retry次数 pp虚高得很 skin koishi~(Enhanced) 2017/11/6 koishi~(Enhanced) 2017/11/22 koishi~(Enhanced) 2018/1/3 总结现阶段咸鱼一条，正在努力变得不那么咸中…]]></content>
   </entry>
 </search>
