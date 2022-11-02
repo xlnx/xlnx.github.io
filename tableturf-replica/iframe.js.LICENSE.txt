@@ -117,6 +117,16 @@ object-assign
  */
 
 /*!
+ * @pixi/tilemap - v3.2.2
+ * Compiled Fri, 22 Oct 2021 12:27:49 UTC
+ *
+ * @pixi/tilemap is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ * 
+ * Copyright 2019-2020, Ivan Popelyshev, All Rights Reserved
+ */
+
+/*!
  * @pixi/utils - v6.5.6
  * Compiled Tue, 11 Oct 2022 18:23:26 UTC
  *
