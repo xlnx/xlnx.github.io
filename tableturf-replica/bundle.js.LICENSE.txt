@@ -61,14 +61,6 @@ object-assign
  */
 
 /*!
- * @pixi/mesh-extras - v6.5.6
- * Compiled Tue, 11 Oct 2022 18:23:26 UTC
- *
- * @pixi/mesh-extras is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
  * @pixi/mixin-get-child-by-name - v6.5.6
  * Compiled Tue, 11 Oct 2022 18:23:26 UTC
  *
@@ -97,6 +89,14 @@ object-assign
  * Compiled Tue, 11 Oct 2022 18:23:26 UTC
  *
  * @pixi/prepare is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/runner - v6.5.6
+ * Compiled Tue, 11 Oct 2022 18:23:26 UTC
+ *
+ * @pixi/runner is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
