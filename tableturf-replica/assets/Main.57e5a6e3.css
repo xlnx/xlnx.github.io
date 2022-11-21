@@ -1,0 +1,1 @@
+html{font-size:32px}.msg-bar-enter-active,.msg-bar-exit-active{transition:all .25s ease-out}.msg-bar-enter{transform:translate(150%);max-height:0px}.msg-bar-enter-active{transform:translate(0);max-height:80px}.msg-bar-exit{transform:translate(0)}.msg-bar-exit-active{transform:translate(150%)}
